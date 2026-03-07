@@ -46,4 +46,4 @@ INSERT INTO Fines (rental_id, member_id, fine_amount, fine_reason, fine_date, pa
 (7, 2, 6.00, 'Overdue', '2026-03-05', 'partial', 3.00, NULL),
 (8, 7, 25.00, 'Damaged', '2026-03-01', 'unpaid', 0.00, NULL),
 (9, 3, 25.00, 'Damaged', '2026-03-03', 'paid', 25.00, '2026-03-03'),
-(10, 6, 60.00, 'Lost', '2026-02-25', 'paid', 60.00, '2026-02-27');
+(10, 6, 60.00, 'Lost', '2026-02-25', 'paid', 50.00, '2026-02-27');

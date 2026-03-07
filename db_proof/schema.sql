@@ -1,3 +1,7 @@
+-- Create database and select it
+CREATE DATABASE IF NOT EXISTS library_system;
+USE library_system;
+
 -- Drop tables if they exist
 DROP TABLE IF EXISTS Fines;
 DROP TABLE IF EXISTS Returns;
@@ -21,7 +25,7 @@ CREATE TABLE Books (
     -- Primary Key
     CONSTRAINT pk_books PRIMARY KEY (book_id),
     -- Check Constraints
-    CONSTRAINT chk_publication_year CHECK (publication_year > 1400 AND publication_year <= YEAR(CURDATE())),
+    CONSTRAINT chk_publication_year CHECK (publication_year > 1400 AND publication_year <= 2030),
     CONSTRAINT chk_total_copies CHECK (total_copies >= 0),
     CONSTRAINT chk_available_copies CHECK (available_copies >= 0 AND available_copies <= total_copies)
 );
@@ -52,6 +56,7 @@ CREATE TABLE Rentals (
     member_id INT NOT NULL,
     rental_date DATE NOT NULL,
     due_date DATE NOT NULL,
+    status ENUM('active', 'overdue', 'returned') NOT NULL DEFAULT 'active',
     -- Primary Key
     CONSTRAINT pk_rentals PRIMARY KEY (rental_id),
     -- Foreign Keys
