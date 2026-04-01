@@ -45,7 +45,10 @@ CREATE TABLE Members (
     -- Primary Key
     CONSTRAINT pk_members PRIMARY KEY (member_id),
     -- Check Constraints
-    CONSTRAINT chk_max_books CHECK (max_books_allowed > 0)
+    CONSTRAINT chk_max_books CHECK (
+        (status = 'suspended' AND max_books_allowed = 0)
+        OR (status <> 'suspended' AND max_books_allowed > 0)
+    )
 );
 
 -- TABLE: Rentals 
