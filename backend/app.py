@@ -8,10 +8,8 @@ from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
 
-#we import the 10 queries we made from the report_queries.py file, they are used to display the reports on the reports page.
-from report_queries import REPORT_SQL
-# we import dashboard queries
-from dashboard_queries import DASHBOARD_SQL
+#we import the 5 dashboard basic stats queries and the 10 queries we made from the queries.py file, they are used to display all queries on the dashboard page.
+from queries import DASHBOARD_SQL, QUERIES_SQL
 
 # variables that stores the path to the frontend directory, it is used to serve the static frontend files to the browser.
 _REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -395,24 +393,12 @@ def api_stats():
     return jsonify(stats)
 
 
-@app.route('/api/dashboard/recent-rentals')
-def api_dashboard_recent_rentals():
-    rows = query_db(DASHBOARD_SQL[6])
-    return jsonify(rows or [])
-
-
-@app.route('/api/dashboard/overdue')
-def api_dashboard_overdue():
-    rows = query_db(DASHBOARD_SQL[7])
-    return jsonify(rows or [])
-
-
 @app.route('/api/reports/overdue')
 def api_report_overdue():
     if _has_view('overdue_books_view'):
         rows = query_db("SELECT * FROM overdue_books_view ORDER BY days_overdue DESC")
     else:
-        rows = query_db(REPORT_SQL[1])
+        rows = query_db(QUERIES_SQL[1])
     return jsonify(rows or [])
 
 
@@ -421,7 +407,7 @@ def api_report_popular():
     if _has_view('popular_books_view'):
         rows = query_db("SELECT * FROM popular_books_view ORDER BY times_borrowed DESC LIMIT 20")
     else:
-        rows = query_db(REPORT_SQL[3])
+        rows = query_db(QUERIES_SQL[3])
     return jsonify(rows or [])
 
 @app.route('/api/reports/availability')
@@ -429,7 +415,7 @@ def api_report_availability():
     if _has_view('book_availability_view'):
         rows = query_db("SELECT * FROM book_availability_view ORDER BY title")
     else:
-        rows = query_db(REPORT_SQL[2])
+        rows = query_db(QUERIES_SQL[2])
     return jsonify(rows or [])
 
 
@@ -444,7 +430,7 @@ def api_reports_dash(dash_id):
 
 @app.route('/api/reports/<int:report_id>')
 def api_report(report_id):
-    sql = REPORT_SQL.get(report_id)
+    sql = QUERIES_SQL.get(report_id)
     if sql is None:
         return jsonify({'error': 'Unknown report'}), 404
     rows = query_db(sql)

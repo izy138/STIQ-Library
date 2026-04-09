@@ -120,6 +120,18 @@ body {
   box-shadow: var(--card-shadow);
 }
 
+.stat-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.stat-card-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
 .stat-card.primary { border-left: 4px solid var(--primary); }
 .stat-card.success { border-left: 4px solid var(--success); }
 .stat-card.warning { border-left: 4px solid var(--warning); }

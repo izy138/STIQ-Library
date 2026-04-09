@@ -44,11 +44,11 @@
   function viewDashboard() {
     app.innerHTML = '<div class="dashboard-page"><h1 class="page-title">Dashboard</h1><p class="page-subtitle">Library overview</p>' +
       '<div id="stats" class="stats-grid">' +
-      '<div class="stat-card primary"><h3 id="stat-books">–</h3><p>Total Books</p></div>' +
-      '<div class="stat-card success"><h3 id="stat-members">–</h3><p>Active Members</p></div>' +
-      '<div class="stat-card danger"><h3 id="stat-rentals">–</h3><p>Active Rentals</p></div>' +
-      '<div class="stat-card warning"><h3 id="stat-overdue">–</h3><p>Overdue</p></div>' +
-      '<div class="stat-card secondary"><h3 id="stat-fines">–</h3><p>Outstanding Fines</p></div></div>' +
+      '<a href="#books" class="stat-card stat-card-link primary"><h3 id="stat-books">–</h3><p>Total Books</p></a>' +
+      '<a href="#members" class="stat-card stat-card-link success"><h3 id="stat-members">–</h3><p>Active Members</p></a>' +
+      '<a href="#rentals" class="stat-card stat-card-link danger"><h3 id="stat-rentals">–</h3><p>Active Rentals</p></a>' +
+      '<a href="#report-1" class="stat-card stat-card-link warning"><h3 id="stat-overdue">–</h3><p>Overdue</p></a>' +
+      '<a href="#fines" class="stat-card stat-card-link secondary"><h3 id="stat-fines">–</h3><p>Outstanding Fines</p></a></div>' +
       '<h2 class="page-title" style="margin-top:1.5rem;font-size:1.35rem">Queries</h2>' +
       '<p class="page-subtitle">Open any query</p>' +
       '<div id="dashboard-report-cards" class="report-grid"></div></div>';
