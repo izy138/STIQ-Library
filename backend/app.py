@@ -99,6 +99,16 @@ def execute_db(sql, params=None):
         return False
 
 
+# check if the view exists in the database first
+# views are used to store the data in a table format so we can display it
+def _has_view(name):
+    rows = query_db(
+        "SELECT 1 FROM information_schema.views WHERE table_schema = DATABASE() AND table_name = %s",
+        (name,),
+    )
+    return bool(rows)
+
+
 # the route for the index page, it sends the index.html file to the browser
 @app.route('/')
 def index():
@@ -114,40 +124,34 @@ def static_file(path):
 #this routes to the books table page, it sends the books data from the db to the browser to display all he books in a table.
 @app.route('/api/books')
 def api_books():
-    # book search for a book by title, author, or isbn
+    # book search for a book by title, author, or isbn.
     search = request.args.get('search', '')
-    # if the book_availability_view exists, we use it to get the availability status of the books.
+    # status is derived from available_copies on Books (not the book_availability_view).
     sql = """
-        SELECT v.book_id, b.isbn, v.title, v.author, b.publisher, b.publication_year, v.category,
-               v.total_copies, v.available_copies,
-               CASE
-                   WHEN v.availability_status = 'Low Availability' THEN 'Low Stock'
-                   ELSE v.availability_status
-               END AS status
-        FROM book_availability_view v
-        INNER JOIN Books b ON b.book_id = v.book_id
+        SELECT book_id, isbn, title, author, publisher, publication_year, category,
+               total_copies, available_copies,
+               CASE WHEN available_copies = 0 THEN 'Unavailable'
+                    WHEN available_copies <= 2 THEN 'Low Stock' ELSE 'Available' END AS status
+        FROM Books
         WHERE 1=1
     """
     # this parameter is used for the search query. When the user tries to search for a book by title, author, or isbn, this parameter is used to filter the books.
     params = []
     if search:
         like = f"%{search}%"
-        # this appends the search keyword to the books table query.
-        sql += " AND (v.title LIKE %s OR v.author LIKE %s OR b.isbn LIKE %s)"
+        sql += " AND (title LIKE %s OR author LIKE %s OR isbn LIKE %s)"
         params.extend([like, like, like])
-    #orders the books by title
-    sql += " ORDER BY v.title"
-    # executes query and returns the book data from the db
+    sql += " ORDER BY title"
     rows = query_db(sql, tuple(params) if params else None)
     return jsonify(rows or [])
 
-
+#this route gets all the distinct categories from the books table, it is used to display the categories in a dropdown filter on the frontend. It takes the data from the database and sends it to the frontend to display in a dropdown format.
 @app.route('/api/books/categories')
 def api_books_categories():
     rows = query_db("SELECT DISTINCT category FROM Books WHERE category IS NOT NULL ORDER BY category")
     return jsonify([r['category'] for r in (rows or [])])
 
-
+#this route lets the user add a new book to the books table, it takes the data from the frontend and inserts it into the database.
 @app.route('/api/books', methods=['POST'])
 def api_books_post():
     data = request.get_json()
@@ -171,7 +175,7 @@ def api_books_post():
         return jsonify({'error': 'Insert failed'}), 500
     return jsonify({'ok': True}), 201
 
-
+#this route updates an existing book in the books table, it takes the data from the frontend and updates the database.
 @app.route('/api/books/<int:book_id>', methods=['PUT'])
 def api_books_put(book_id):
     data = request.get_json()
@@ -196,7 +200,7 @@ def api_books_put(book_id):
         return jsonify({'error': 'Update failed'}), 500
     return jsonify({'ok': True})
 
-
+#this route deletes a book from the books table using book_id, it takes the book_id as a parameter and deletes the corresponding row from the database.
 @app.route('/api/books/<int:book_id>', methods=['DELETE'])
 def api_books_delete(book_id):
     ok = execute_db("DELETE FROM Books WHERE book_id = %s", (book_id,))
@@ -223,7 +227,7 @@ def api_members():
     rows = query_db(sql, tuple(params) if params else None)
     return jsonify(rows or [])
 
-
+#this route lets the user add a new member to the members table, it takes the data from the frontend and inserts it into the database. 
 @app.route('/api/members', methods=['POST'])
 def api_members_post():
     data = request.get_json()
@@ -245,7 +249,7 @@ def api_members_post():
         return jsonify({'error': 'Insert failed'}), 500
     return jsonify({'ok': True}), 201
 
-
+#this route updates an existing member in the members table, it takes the data from the frontend and updates the database.
 @app.route('/api/members/<int:member_id>', methods=['PUT'])
 def api_members_put(member_id):
     data = request.get_json()
@@ -288,7 +292,7 @@ def api_rentals():
     """)
     return jsonify(rows or [])
 
-
+#this route handles checking out a book, it takes the data from the frontend and inserts it into the Rentals table in the database. 
 @app.route('/api/rentals/checkout', methods=['POST'])
 def api_checkout():
     data = request.get_json()
@@ -323,7 +327,7 @@ def api_returns():
     """)
     return jsonify(rows or [])
 
-
+#this route gets all active rentals that have not been returned yet, it is used to display the active rentals. It takes the data from the database and sends it to the frontend to display in a table format. 
 @app.route('/api/returns/active-rentals')
 def api_returns_active_rentals():
     rows = query_db("""
@@ -337,7 +341,7 @@ def api_returns_active_rentals():
     """)
     return jsonify(rows or [])
 
-
+#this route handles returning a book, it inserts a new row into Returns, updates the rental status, and increases the available copies of the book.
 @app.route('/api/returns', methods=['POST'])
 def api_returns_post():
     data = request.get_json()
@@ -393,6 +397,50 @@ def api_stats():
     stats['outstanding_fines'] = float(query[0]['outstanding']) if query and query[0]['outstanding'] is not None else 0.0
     return jsonify(stats)
 
+#these are the 3 main reports that are displayed on the homepage, they show the overdue books, the popular books, and the availability of books. they use views if they exist, otherwise they run the raw sql query from queries.py
+@app.route('/api/reports/overdue')
+def api_report_overdue():
+    if _has_view('overdue_books_view'):
+        rows = query_db("SELECT * FROM overdue_books_view ORDER BY days_overdue DESC")
+    else:
+        rows = query_db(QUERIES_SQL[1])
+    return jsonify(rows or [])
+
+#this route gets the 20 most popular books based on the number of times they have been borrowed, it is used to display the popular books. It takes the data from the database and sends it to the frontend to display in a table format.
+@app.route('/api/reports/popular')
+def api_report_popular():
+    if _has_view('popular_books_view'):
+        rows = query_db("SELECT * FROM popular_books_view ORDER BY times_borrowed DESC LIMIT 20")
+    else:
+        rows = query_db(QUERIES_SQL[3])
+    return jsonify(rows or [])
+#this route gets the availability of all books, it is used to display the availability of books. It takes the data from the database and sends it to the frontend to display in a table format.
+@app.route('/api/reports/availability')
+def api_report_availability():
+    if _has_view('book_availability_view'):
+        rows = query_db("SELECT * FROM book_availability_view ORDER BY title")
+    else:
+        rows = query_db(QUERIES_SQL[2])
+    return jsonify(rows or [])
+
+#this route is used to run any of the 10 queries we made for the dashboard, it takes the dash_id as a parameter and runs the corresponding sql query from queries.py. It then sends the data to the frontend to display in a table format.
+@app.route('/api/reports/dash/<int:dash_id>')
+def api_reports_dash(dash_id):
+    sql = DASHBOARD_SQL.get(dash_id)
+    if sql is None:
+        return jsonify({'error': 'Unknown dashboard query'}), 404
+    rows = query_db(sql)
+    return jsonify(rows or [])
+
+#this route is used to run any of the 10 queries we made for the reports page, it takes the report_id as a parameter and runs the corresponding sql query from queries.py. It then sends the data to the frontend to display in a table format.
+@app.route('/api/reports/<int:report_id>')
+def api_report(report_id):
+    sql = QUERIES_SQL.get(report_id)
+    if sql is None:
+        return jsonify({'error': 'Unknown report'}), 404
+    rows = query_db(sql)
+    return jsonify(rows or [])
+
 
 @app.route('/api/queries/<int:query_id>')
 def api_query(query_id):
@@ -402,7 +450,7 @@ def api_query(query_id):
     rows = query_db(sql)
     return jsonify(rows or [])
 
-
+# this is the main function that runs the app
 if __name__ == '__main__':
     print("http://localhost:5002")
     app.run(debug=True, host='0.0.0.0', port=5002)
