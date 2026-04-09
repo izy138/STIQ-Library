@@ -1,6 +1,7 @@
 USE library_system;
 
--- TEST 1: Foreign Key Constraints
+-- TEST 1: Foreign Key Constraints-- ============================================================
+
 -- Attempt to insert a rental with a non-existent book_id.
 INSERT INTO Rentals (book_id, member_id, rental_date, due_date, status)
 VALUES (999, 1, '2026-03-01', '2026-03-10', 'active');
