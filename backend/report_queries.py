@@ -30,7 +30,7 @@ SELECT
 FROM book_availability_view
 ORDER BY category, title
 """,
-    3: """
+    4: """
 SELECT
     b.title,
     b.author,
@@ -43,7 +43,7 @@ LEFT JOIN Rentals r ON b.book_id = r.book_id
 WHERE r.rental_id IS NULL
 ORDER BY b.publication_year DESC
 """,
-    4: """
+    5: """
 SELECT
     m.member_id,
     CONCAT(m.first_name, ' ', m.last_name) AS member_name,
@@ -58,7 +58,7 @@ INNER JOIN Fines f ON m.member_id = f.member_id
 GROUP BY m.member_id, m.first_name, m.last_name, m.email, m.status
 ORDER BY outstanding_balance DESC, total_fines_assessed DESC
 """,
-    5: """
+    3: """
 SELECT
     book_id,
     title,
