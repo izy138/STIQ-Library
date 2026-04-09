@@ -320,6 +320,54 @@
     load();
   }
 
+  function isMoneyColumn(key) {
+    const k = String(key).toLowerCase();
+    // Keep currency formatting limited to monetary fields, not counters like number_of_fines.
+    return (
+      k.endsWith('_amount') ||
+      k.endsWith('_balance') ||
+      k === 'estimated_fine' ||
+      k === 'outstanding_balance' ||
+      k === 'paid_amount' ||
+      k === 'total_paid' ||
+      k === 'fine_amount' ||
+      k === 'total_fines_assessed' ||
+      /price|cost|revenue/.test(k)
+    );
+  }
+
+  // Matches backend/report_queries.py SELECT order (fallback if JSON key order is lost).
+  const REPORT_TABLE_COLUMNS = {
+    1: ['book_id', 'book_title', 'member_id', 'member_name', 'rental_id', 'rental_date', 'due_date', 'days_overdue', 'estimated_fine'],
+    2: ['book_id', 'title', 'author', 'category', 'total_copies', 'available_copies', 'copies_on_loan', 'availability_status', 'next_available_date'],
+    3: ['title', 'author', 'category', 'publication_year', 'total_copies', 'book_id'],
+    4: ['member_id', 'member_name', 'email', 'status', 'number_of_fines', 'total_fines_assessed', 'total_paid', 'outstanding_balance'],
+    5: ['book_id', 'title', 'author', 'category', 'times_borrowed', 'total_copies', 'available_copies', 'last_borrowed_date'],
+    6: ['rental_id', 'book_title', 'member_name', 'rental_date', 'due_date', 'rental_status', 'return_date', 'condition_status', 'return_timing'],
+    7: ['rental_id', 'book_title', 'author', 'member_name', 'email', 'rental_date', 'due_date', 'rental_status'],
+    8: ['return_id', 'book_title', 'member_name', 'email', 'return_date', 'fine_reason', 'fine_amount', 'paid_status'],
+    9: ['month', 'total_rentals', 'unique_members', 'unique_books'],
+    10: ['fine_id', 'fine_date', 'member_name', 'book_title', 'fine_reason', 'fine_amount', 'paid_amount', 'outstanding_balance', 'paid_status']
+  };
+
+  function reportColumnOrder(reportId, row0) {
+    const preferred = REPORT_TABLE_COLUMNS[reportId];
+    if (!preferred || !row0) return Object.keys(row0);
+    const present = new Set(Object.keys(row0));
+    const ordered = preferred.filter(function (c) { return present.has(c); });
+    const extra = Object.keys(row0).filter(function (k) { return ordered.indexOf(k) === -1; });
+    return ordered.concat(extra);
+  }
+
+  function formatReportCell(col, val) {
+    if (val == null || val === '') return '–';
+    if (isMoneyColumn(col)) {
+      const n = Number(val);
+      if (!Number.isNaN(n)) return '$' + n.toFixed(2);
+    }
+    return escapeHtml(String(val));
+  }
+
   // ----- Reports hub -----
   function viewReports() {
     const reportMeta = [
@@ -341,7 +389,20 @@
   }
 
   function viewReportById(id) {
-    app.innerHTML = '<a href="#reports" class="back-link">← Back to Reports</a><h1 class="page-title">Report ' + id + '</h1><p class="page-subtitle">Query ' + id + ' results</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
+    const reportTitleById = {
+      1: 'Overdue Books',
+      2: 'Book Availability',
+      3: 'Never Borrowed Books',
+      4: 'Fines by Member',
+      5: 'Most Popular Books',
+      6: 'Rental + Return History',
+      7: 'Recent Rentals (7 Days)',
+      8: 'Damaged or Lost Returns',
+      9: 'Monthly Rental Activity',
+      10: 'Unpaid/Partial Fines'
+    };
+    const reportTitle = reportTitleById[id] || ('Report ' + id);
+    app.innerHTML = '<a href="#reports" class="back-link">← Back to Reports</a><h1 class="page-title">' + escapeHtml(reportTitle) + '</h1><p class="page-subtitle">Query ' + id + ' results</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
     API.report(id).then(rows => {
       const wrap = el('table-wrap');
       if (!wrap) return;
@@ -349,9 +410,9 @@
         wrap.innerHTML = '<p class="empty-state">No rows returned.</p>';
         return;
       }
-      const cols = Object.keys(rows[0]);
+      const cols = reportColumnOrder(id, rows[0]);
       wrap.innerHTML = '<table><thead><tr>' + cols.map(c => '<th>' + escapeHtml(c.replaceAll('_', ' ')) + '</th>').join('') + '</tr></thead><tbody>' +
-        rows.map(r => '<tr>' + cols.map(c => '<td>' + escapeHtml(String(r[c] == null ? '' : r[c])) + '</td>').join('') + '</tr>').join('') +
+        rows.map(r => '<tr>' + cols.map(c => '<td>' + formatReportCell(c, r[c]) + '</td>').join('') + '</tr>').join('') +
         '</tbody></table>';
     }).catch(() => {
       const w = el('table-wrap');
