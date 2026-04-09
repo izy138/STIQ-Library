@@ -30,7 +30,7 @@ DB_Connection = {
 }
 
 #this is needed to open a connection to the database
-#if the connection fails it returns None and lets us know there is a DB error. 
+#if the connection fails it returns None and lets us know there is a DB error.
 #it takes our DB_Connection info and connects with mysql.connector.connect()
 def get_db():
     try:
@@ -47,7 +47,7 @@ def query_db(sql, params=None):
         return []
     try:
         #we create a cursor object and the cursor allows us to execute the sql query
-        #dictionary=True means we want the results to be returned as a dictionary 
+        #dictionary=True means we want the results to be returned as a dictionary
         # without this it means we get our data listed like: (1, 'The Great Gatsby', 'F. Scott Fitzgerald', 1925, 'Scribner', 'Classic') instead of including the column names, which we need to display the data in a table format.
         cursor = connection.cursor(dictionary=True)
         #we execute the sql query with the cursor.execute() method
@@ -58,7 +58,7 @@ def query_db(sql, params=None):
         #we close the cursor and the connection to the database because we are done and dont need the connection to stay open
         cursor.close()
         connection.close()
-        
+
         # rebuild each row in the SELECT column order so the frontend table matches the query/view.
         #we loop through the rows, columns, and data. then  convert the date objects to isoformat so we can display the data in a table format. isoformat is a way to format dates and times. without it we get the date as a string, when we need it to be a date object.
         out = []
@@ -99,16 +99,6 @@ def execute_db(sql, params=None):
         return False
 
 
-# check if the view exists in the database first
-# views are used to store the data in a table format so we can display it
-def _has_view(name):
-    rows = query_db(
-        "SELECT 1 FROM information_schema.views WHERE table_schema = DATABASE() AND table_name = %s",
-        (name,),
-    )
-    return bool(rows)
-
-
 # the route for the index page, it sends the index.html file to the browser
 @app.route('/')
 def index():
@@ -126,22 +116,28 @@ def static_file(path):
 def api_books():
     # book search for a book by title, author, or isbn.
     search = request.args.get('search', '')
-    # status is derived from available_copies on Books (not the book_availability_view).
+    # if the book_availability_view exists, we use it to get the availability status of the books.
     sql = """
-        SELECT book_id, isbn, title, author, publisher, publication_year, category,
-               total_copies, available_copies,
-               CASE WHEN available_copies = 0 THEN 'Unavailable'
-                    WHEN available_copies <= 2 THEN 'Low Stock' ELSE 'Available' END AS status
-        FROM Books
+        SELECT v.book_id, b.isbn, v.title, v.author, b.publisher, b.publication_year, v.category,
+               v.total_copies, v.available_copies,
+               CASE
+                   WHEN v.availability_status = 'Low Availability' THEN 'Low Stock'
+                   ELSE v.availability_status
+               END AS status
+        FROM book_availability_view v
+        INNER JOIN Books b ON b.book_id = v.book_id
         WHERE 1=1
     """
     # this parameter is used for the search query. When the user tries to search for a book by title, author, or isbn, this parameter is used to filter the books.
     params = []
     if search:
         like = f"%{search}%"
-        sql += " AND (title LIKE %s OR author LIKE %s OR isbn LIKE %s)"
+        # this appends the search keyword to the books table query.
+        sql += " AND (v.title LIKE %s OR v.author LIKE %s OR b.isbn LIKE %s)"
         params.extend([like, like, like])
-    sql += " ORDER BY title"
+    #orders the books by title
+    sql += " ORDER BY v.title"
+    # executes query and returns the book data from the db
     rows = query_db(sql, tuple(params) if params else None)
     return jsonify(rows or [])
 
@@ -227,7 +223,7 @@ def api_members():
     rows = query_db(sql, tuple(params) if params else None)
     return jsonify(rows or [])
 
-#this route lets the user add a new member to the members table, it takes the data from the frontend and inserts it into the database. 
+#this route lets the user add a new member to the members table, it takes the data from the frontend and inserts it into the database.
 @app.route('/api/members', methods=['POST'])
 def api_members_post():
     data = request.get_json()
@@ -292,7 +288,7 @@ def api_rentals():
     """)
     return jsonify(rows or [])
 
-#this route handles checking out a book, it takes the data from the frontend and inserts it into the Rentals table in the database. 
+#this route handles checking out a book, it takes the data from the frontend and inserts it into the Rentals table in the database.
 @app.route('/api/rentals/checkout', methods=['POST'])
 def api_checkout():
     data = request.get_json()
@@ -327,7 +323,7 @@ def api_returns():
     """)
     return jsonify(rows or [])
 
-#this route gets all active rentals that have not been returned yet, it is used to display the active rentals. It takes the data from the database and sends it to the frontend to display in a table format. 
+#this route gets all active rentals that have not been returned yet, it is used to display the active rentals. It takes the data from the database and sends it to the frontend to display in a table format.
 @app.route('/api/returns/active-rentals')
 def api_returns_active_rentals():
     rows = query_db("""
@@ -378,7 +374,6 @@ def api_fines():
     return jsonify(rows or [])
 
 
-
 #these are the 5 stats at the top of the homepage, they show the total books in the library, the total members, the total overdue books, and the total active rentals. The outstanding fines is the total amount of fines that are not paid.
 @app.route('/api/stats')
 def api_stats():
@@ -397,51 +392,7 @@ def api_stats():
     stats['outstanding_fines'] = float(query[0]['outstanding']) if query and query[0]['outstanding'] is not None else 0.0
     return jsonify(stats)
 
-#these are the 3 main reports that are displayed on the homepage, they show the overdue books, the popular books, and the availability of books. they use views if they exist, otherwise they run the raw sql query from queries.py
-@app.route('/api/reports/overdue')
-def api_report_overdue():
-    if _has_view('overdue_books_view'):
-        rows = query_db("SELECT * FROM overdue_books_view ORDER BY days_overdue DESC")
-    else:
-        rows = query_db(QUERIES_SQL[1])
-    return jsonify(rows or [])
-
-#this route gets the 20 most popular books based on the number of times they have been borrowed, it is used to display the popular books. It takes the data from the database and sends it to the frontend to display in a table format.
-@app.route('/api/reports/popular')
-def api_report_popular():
-    if _has_view('popular_books_view'):
-        rows = query_db("SELECT * FROM popular_books_view ORDER BY times_borrowed DESC LIMIT 20")
-    else:
-        rows = query_db(QUERIES_SQL[3])
-    return jsonify(rows or [])
-#this route gets the availability of all books, it is used to display the availability of books. It takes the data from the database and sends it to the frontend to display in a table format.
-@app.route('/api/reports/availability')
-def api_report_availability():
-    if _has_view('book_availability_view'):
-        rows = query_db("SELECT * FROM book_availability_view ORDER BY title")
-    else:
-        rows = query_db(QUERIES_SQL[2])
-    return jsonify(rows or [])
-
-#this route is used to run any of the 10 queries we made for the dashboard, it takes the dash_id as a parameter and runs the corresponding sql query from queries.py. It then sends the data to the frontend to display in a table format.
-@app.route('/api/reports/dash/<int:dash_id>')
-def api_reports_dash(dash_id):
-    sql = DASHBOARD_SQL.get(dash_id)
-    if sql is None:
-        return jsonify({'error': 'Unknown dashboard query'}), 404
-    rows = query_db(sql)
-    return jsonify(rows or [])
-
-#this route is used to run any of the 10 queries we made for the reports page, it takes the report_id as a parameter and runs the corresponding sql query from queries.py. It then sends the data to the frontend to display in a table format.
-@app.route('/api/reports/<int:report_id>')
-def api_report(report_id):
-    sql = QUERIES_SQL.get(report_id)
-    if sql is None:
-        return jsonify({'error': 'Unknown report'}), 404
-    rows = query_db(sql)
-    return jsonify(rows or [])
-
-
+#this route is used to run any of the 10 queries we made for the dashboard, it takes the query_id as a parameter and runs the corresponding sql query from queries.py. It then sends the data to the frontend to display in a table format.
 @app.route('/api/queries/<int:query_id>')
 def api_query(query_id):
     sql = QUERIES_SQL.get(query_id)
@@ -449,6 +400,7 @@ def api_query(query_id):
         return jsonify({'error': 'Unknown query'}), 404
     rows = query_db(sql)
     return jsonify(rows or [])
+
 
 # this is the main function that runs the app
 if __name__ == '__main__':
