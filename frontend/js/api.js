@@ -1,5 +1,5 @@
 /**
- * API client for Library Management System (vanilla frontend).
+ * API client for Library Management System frontend
  */
 (function () {
   const base = window.API_BASE || '';
@@ -17,17 +17,9 @@
   };
 
   window.LibraryAPI = {
-    get: (path) => api(path),
-    post: (path, body) => api(path, { method: 'POST', body: JSON.stringify(body) }),
-    put: (path, body) => api(path, { method: 'PUT', body: JSON.stringify(body) }),
-    delete: (path) => api(path, { method: 'DELETE' }),
-
     stats: () => api('/stats'),
-    recentRentals: () => api('/dashboard/recent-rentals'),
-    overdue: () => api('/dashboard/overdue'),
 
     books: (params) => api('/books' + (params && Object.keys(params).length ? '?' + new URLSearchParams(params) : '')),
-    categories: () => api('/books/categories'),
     addBook: (data) => api('/books', { method: 'POST', body: JSON.stringify(data) }),
     updateBook: (id, data) => api('/books/' + id, { method: 'PUT', body: JSON.stringify(data) }),
     deleteBook: (id) => api('/books/' + id, { method: 'DELETE' }),
@@ -45,10 +37,6 @@
 
     fines: (params) => api('/fines' + (params && Object.keys(params).length ? '?' + new URLSearchParams(params) : '')),
 
-    report: (id) => api('/reports/' + encodeURIComponent(id)),
-    reportOverdue: () => api('/reports/overdue'),
-    reportUnpaidFines: () => api('/reports/unpaid-fines'),
-    reportPopular: () => api('/reports/popular'),
-    reportAvailability: () => api('/reports/availability')
+    query: (id) => api('/queries/' + encodeURIComponent(id))
   };
 })();

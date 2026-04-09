@@ -34,7 +34,6 @@ WHERE paid_status IN ('unpaid', 'partial')
 """,
 }
 
-
 # These 10 quereies are the exact same as our queries on queries.sql. They are executed trhough the app.py file using the Flask query_db() function.
 # Queries 1, 2, 3 are our views queries from views.sql.
 QUERIES_SQL = {

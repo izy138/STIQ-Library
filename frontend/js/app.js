@@ -27,7 +27,7 @@
     });
   }
 
-  const REPORT_META = [
+  const QUERY_META = [
     { id: 1, icon: '⚠️', title: 'Overdue Books', desc: 'Past-due active and overdue rentals' },
     { id: 2, icon: '📚', title: 'Book Availability', desc: 'Catalog stock and loan availability' },
     { id: 3, icon: '📈', title: 'Most Popular Books', desc: 'Top borrowed titles by rental count' },
@@ -47,11 +47,11 @@
       '<a href="#books" class="stat-card stat-card-link primary"><h3 id="stat-books">–</h3><p>Total Books</p></a>' +
       '<a href="#members" class="stat-card stat-card-link success"><h3 id="stat-members">–</h3><p>Active Members</p></a>' +
       '<a href="#rentals" class="stat-card stat-card-link danger"><h3 id="stat-rentals">–</h3><p>Active Rentals</p></a>' +
-      '<a href="#report-1" class="stat-card stat-card-link warning"><h3 id="stat-overdue">–</h3><p>Overdue</p></a>' +
+      '<a href="#query-1" class="stat-card stat-card-link warning"><h3 id="stat-overdue">–</h3><p>Overdue</p></a>' +
       '<a href="#fines" class="stat-card stat-card-link secondary"><h3 id="stat-fines">–</h3><p>Outstanding Fines</p></a></div>' +
       '<h2 class="page-title" style="margin-top:1.5rem;font-size:1.35rem">Queries</h2>' +
       '<p class="page-subtitle">Open any query</p>' +
-      '<div id="dashboard-report-cards" class="report-grid"></div></div>';
+      '<div id="dashboard-query-cards" class="report-grid"></div></div>';
     API.stats().then(s => {
       el('stat-books').innerHTML = (s.total_books || 0) + '<br><span style="font-size:0.8em;font-weight:600">(' + (s.total_copies || 0) + ' copies)</span>';
       el('stat-members').textContent = s.active_members || 0;
@@ -59,18 +59,18 @@
       el('stat-rentals').textContent = s.active_rentals || 0;
       el('stat-fines').textContent = '$' + Number(s.outstanding_fines != null ? s.outstanding_fines : 0).toFixed(2);
     }).catch(() => { if (el('stat-fines')) el('stat-fines').textContent = 'Unable to load stats'; });
-    renderDashboardReportCards();
+    renderDashboardQueryCards();
   }
 
-  function renderDashboardReportCards() {
-    const host = el('dashboard-report-cards');
+  function renderDashboardQueryCards() {
+    const host = el('dashboard-query-cards');
     if (!host) return;
     const dashboardOrder = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const orderedMeta = dashboardOrder.map(function (id) {
-      return REPORT_META.find(function (r) { return r.id === id; });
+      return QUERY_META.find(function (r) { return r.id === id; });
     }).filter(Boolean);
     host.innerHTML = orderedMeta.map(function (r) {
-      return '<a href="#report-' + r.id + '" class="report-card"><div class="icon">' + r.icon + '</div><h3>' + escapeHtml(r.title) + '</h3><p>' + escapeHtml(r.desc) + '</p><span class="btn btn-secondary">View Query</span></a>';
+      return '<a href="#query-' + r.id + '" class="report-card"><div class="icon">' + r.icon + '</div><h3>' + escapeHtml(r.title) + '</h3><p>' + escapeHtml(r.desc) + '</p><span class="btn btn-secondary">View Query</span></a>';
     }).join('');
   }
 
@@ -325,8 +325,8 @@
     );
   }
 
-  // Matches backend/report_queries.py SELECT order (fallback if JSON key order is lost).
-  const REPORT_TABLE_COLUMNS = {
+  // Matches backend/queries.py SELECT order (fallback if JSON key order is lost).
+  const QUERY_TABLE_COLUMNS = {
     1: ['book_id', 'book_title', 'member_id', 'member_name', 'rental_id', 'rental_date', 'due_date', 'days_overdue', 'estimated_fine'],
     2: ['book_id', 'title', 'author', 'category', 'total_copies', 'available_copies', 'copies_on_loan', 'availability_status', 'next_available_date'],
     3: ['book_id', 'title', 'author', 'category', 'times_borrowed', 'total_copies', 'available_copies', 'last_borrowed_date'],
@@ -339,8 +339,8 @@
     10: ['fine_id', 'fine_date', 'member_name', 'book_title', 'fine_reason', 'fine_amount', 'paid_amount', 'outstanding_balance', 'paid_status']
   };
 
-  function reportColumnOrder(reportId, row0) {
-    const preferred = REPORT_TABLE_COLUMNS[reportId];
+  function queryColumnOrder(queryId, row0) {
+    const preferred = QUERY_TABLE_COLUMNS[queryId];
     if (!preferred || !row0) return Object.keys(row0);
     const present = new Set(Object.keys(row0));
     const ordered = preferred.filter(function (c) { return present.has(c); });
@@ -357,82 +357,26 @@
     return escapeHtml(String(val));
   }
 
-  // ----- Reports hub -----
-  function viewReports() {
-    const cards = REPORT_META.map(r =>
-      '<a href="#report-' + r.id + '" class="report-card"><div class="icon">' + r.icon + '</div><h3>' + escapeHtml(r.title) + '</h3><p>' + escapeHtml(r.desc) + '</p><span class="btn btn-secondary">View Report</span></a>'
-    ).join('');
-    app.innerHTML = '<h1 class="page-title">Queries</h1><p class="page-subtitle">Database reports and analytics</p><div class="report-grid">' + cards + '</div>';
-  }
-
-  function viewReportById(id) {
-    const meta = REPORT_META.find(function (r) { return r.id === id; });
-    const reportTitle = meta ? meta.title : ('Report ' + id);
-    const reportTitleWithView = (id === 1 || id === 2 || id === 3) ? (reportTitle + ' VIEW') : reportTitle;
-    app.innerHTML = '<a href="#dashboard" class="back-link">← Back to Dashboard</a><h1 class="page-title">' + escapeHtml(reportTitleWithView) + '</h1><p class="page-subtitle">Query ' + id + ' results</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
-    API.report(id).then(rows => {
+  function viewQueryById(id) {
+    const meta = QUERY_META.find(function (r) { return r.id === id; });
+    const queryTitle = meta ? meta.title : ('Query ' + id);
+    const queryTitleWithView = (id === 1 || id === 2 || id === 3) ? (queryTitle + ' VIEW') : queryTitle;
+    app.innerHTML = '<a href="#dashboard" class="back-link">← Back to Dashboard</a><h1 class="page-title">' + escapeHtml(queryTitleWithView) + '</h1><p class="page-subtitle">Query ' + id + ' results</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
+    API.query(id).then(rows => {
       const wrap = el('table-wrap');
       if (!wrap) return;
       if (!rows || !rows.length) {
         wrap.innerHTML = '<p class="empty-state">No rows returned.</p>';
         return;
       }
-      const cols = reportColumnOrder(id, rows[0]);
+      const cols = queryColumnOrder(id, rows[0]);
       wrap.innerHTML = '<table><thead><tr>' + cols.map(c => '<th>' + escapeHtml(c.replaceAll('_', ' ')) + '</th>').join('') + '</tr></thead><tbody>' +
         rows.map(r => '<tr>' + cols.map(c => '<td>' + formatReportCell(c, r[c]) + '</td>').join('') + '</tr>').join('') +
         '</tbody></table>';
     }).catch(() => {
       const w = el('table-wrap');
-      if (w) w.innerHTML = '<p class="alert alert-error">Failed to load report.</p>';
+      if (w) w.innerHTML = '<p class="alert alert-error">Failed to load query.</p>';
     });
-  }
-
-  // ----- Report: Overdue -----
-  function viewReportOverdue() {
-    app.innerHTML = '<a href="#dashboard" class="back-link">← Back to Dashboard</a><h1 class="page-title">Overdue Books</h1><p class="page-subtitle">Books past due date</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
-    API.reportOverdue().then(rows => {
-      const wrap = el('table-wrap');
-      if (!wrap) return;
-      if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No overdue books.</p>'; return; }
-      wrap.innerHTML = '<table><thead><tr><th>Rental</th><th>Book</th><th>Member</th><th>Due</th><th>Days Overdue</th><th>Est. Fine</th></tr></thead><tbody>' +
-        rows.map(r => '<tr><td>' + r.rental_id + '</td><td><strong>' + escapeHtml(r.book_title) + '</strong><br><small>' + escapeHtml(r.author) + '</small></td><td>' + escapeHtml(r.member_name) + '</td><td>' + (r.due_date || '') + '</td><td><span class="badge danger">' + (r.days_overdue || 0) + '</span></td><td>$' + Number(r.estimated_fine || 0).toFixed(2) + '</td></tr>').join('') + '</tbody></table>';
-    }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert alert-error">Failed to load or view not found.</p>'; });
-  }
-
-  // ----- Report: Unpaid Fines -----
-  function viewReportUnpaidFines() {
-    app.innerHTML = '<a href="#dashboard" class="back-link">← Back to Dashboard</a><h1 class="page-title">Unpaid Fines</h1><p class="page-subtitle">Outstanding balances</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
-    API.reportUnpaidFines().then(rows => {
-      const wrap = el('table-wrap');
-      if (!wrap) return;
-      if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No unpaid fines.</p>'; return; }
-      wrap.innerHTML = '<table><thead><tr><th>Fine ID</th><th>Member</th><th>Book</th><th>Amount</th><th>Paid</th><th>Outstanding</th><th>Status</th></tr></thead><tbody>' +
-        rows.map(r => '<tr><td>' + r.fine_id + '</td><td>' + escapeHtml(r.member_name) + '</td><td>' + escapeHtml(r.book_title) + '</td><td>$' + Number(r.fine_amount || 0).toFixed(2) + '</td><td>$' + Number(r.paid_amount || 0).toFixed(2) + '</td><td><strong>$' + Number(r.outstanding_balance != null ? r.outstanding_balance : (r.fine_amount - (r.paid_amount || 0))).toFixed(2) + '</strong></td><td><span class="badge warning">' + escapeHtml(r.paid_status) + '</span></td></tr>').join('') + '</tbody></table>';
-    }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert alert-error">Failed to load or view not found.</p>'; });
-  }
-
-  // ----- Report: Popular -----
-  function viewReportPopular() {
-    app.innerHTML = '<a href="#dashboard" class="back-link">← Back to Dashboard</a><h1 class="page-title">Popular Books</h1><p class="page-subtitle">Most borrowed titles</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
-    API.reportPopular().then(rows => {
-      const wrap = el('table-wrap');
-      if (!wrap) return;
-      if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No data.</p>'; return; }
-      wrap.innerHTML = '<table><thead><tr><th>#</th><th>Title</th><th>Author</th><th>Category</th><th>Times Borrowed</th><th>Copies</th><th>Available</th></tr></thead><tbody>' +
-        rows.map((r, i) => '<tr><td>' + (i + 1) + '</td><td><strong>' + escapeHtml(r.title) + '</strong></td><td>' + escapeHtml(r.author) + '</td><td>' + (r.category ? '<span class="badge secondary">' + escapeHtml(r.category) + '</span>' : '–') + '</td><td><span class="badge primary">' + (r.times_borrowed || 0) + '</span></td><td>' + (r.total_copies || '') + '</td><td>' + (r.available_copies != null ? r.available_copies : '') + '</td></tr>').join('') + '</tbody></table>';
-    }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert alert-error">Failed to load or view not found.</p>'; });
-  }
-
-  // ----- Report: Availability -----
-  function viewReportAvailability() {
-    app.innerHTML = '<a href="#dashboard" class="back-link">← Back to Dashboard</a><h1 class="page-title">Book Availability</h1><p class="page-subtitle">Stock and availability</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
-    API.reportAvailability().then(rows => {
-      const wrap = el('table-wrap');
-      if (!wrap) return;
-      if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No data.</p>'; return; }
-      wrap.innerHTML = '<table><thead><tr><th>ISBN</th><th>Title</th><th>Author</th><th>Total</th><th>Available</th><th>On Loan</th><th>Status</th></tr></thead><tbody>' +
-        rows.map(r => '<tr><td><small>' + escapeHtml(r.isbn) + '</small></td><td><strong>' + escapeHtml(r.title) + '</strong></td><td>' + escapeHtml(r.author) + '</td><td>' + (r.total_copies || '') + '</td><td>' + (r.available_copies != null ? r.available_copies : '') + '</td><td>' + (r.copies_on_loan != null ? r.copies_on_loan : '') + '</td><td><span class="badge ' + (r.availability_status === 'Available' ? 'success' : r.availability_status === 'Unavailable' ? 'danger' : 'warning') + '">' + escapeHtml(r.availability_status) + '</span></td></tr>').join('') + '</tbody></table>';
-    }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert alert-error">Failed to load or view not found.</p>'; });
   }
 
   const routes = {
@@ -444,25 +388,20 @@
     'returns': viewReturns,
     'checkout': viewCheckout,
     'process-return': viewProcessReturn,
-    'fines': viewFines,
-    'reports': viewReports,
-    'report-overdue': viewReportOverdue,
-    'report-unpaid-fines': viewReportUnpaidFines,
-    'report-popular': viewReportPopular,
-    'report-availability': viewReportAvailability
+    'fines': viewFines
   };
 
   function render() {
     const route = getRoute();
-    const reportMatch = /^report-(\d+)$/.exec(route);
-    if (reportMatch) {
-      viewReportById(parseInt(reportMatch[1], 10));
+    const queryMatch = /^query-(\d+)$/.exec(route);
+    if (queryMatch) {
+      viewQueryById(parseInt(queryMatch[1], 10));
       setActiveNav('dashboard');
       return;
     }
     const view = routes[route] || viewDashboard;
     view();
-    setActiveNav(route === 'dashboard' ? 'dashboard' : route === 'checkout' ? 'rentals' : route === 'process-return' ? 'returns' : route.startsWith('report-') ? 'dashboard' : route);
+    setActiveNav(route === 'dashboard' ? 'dashboard' : route === 'checkout' ? 'rentals' : route === 'process-return' ? 'returns' : route.startsWith('query-') ? 'dashboard' : route);
   }
 
   window.addEventListener('hashchange', render);

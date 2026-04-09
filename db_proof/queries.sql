@@ -63,7 +63,7 @@ SELECT
 FROM Books b
 LEFT JOIN Rentals r ON b.book_id = r.book_id
 WHERE r.rental_id IS NULL
-ORDER BY b.title DESC;
+ORDER BY b.publication_year DESC;
 
 -- QUERY 5: Total Fines by Member
 -- JOIN, GROUP BY, aggregates members who have at least one fine.

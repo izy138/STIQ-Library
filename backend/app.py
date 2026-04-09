@@ -99,15 +99,6 @@ def execute_db(sql, params=None):
         return False
 
 
-# check if the view exists in the database first
-# views are used to store the data in a table format so we can display it
-def _has_view(name):
-    rows = query_db(
-        "SELECT 1 FROM information_schema.views WHERE table_schema = DATABASE() AND table_name = %s",
-        (name,),
-    )
-    return bool(rows)
-
 # the route for the index page, it sends the index.html file to the browser
 @app.route('/')
 def index():
@@ -123,8 +114,9 @@ def static_file(path):
 #this routes to the books table page, it sends the books data from the db to the browser to display all he books in a table.
 @app.route('/api/books')
 def api_books():
-    # book search for a book by title, author, or isbn; availability from book_availability_view.
+    # book search for a book by title, author, or isbn
     search = request.args.get('search', '')
+    # if the book_availability_view exists, we use it to get the availability status of the books.
     sql = """
         SELECT v.book_id, b.isbn, v.title, v.author, b.publisher, b.publication_year, v.category,
                v.total_copies, v.available_copies,
@@ -136,12 +128,16 @@ def api_books():
         INNER JOIN Books b ON b.book_id = v.book_id
         WHERE 1=1
     """
+    # this parameter is used for the search query. When the user tries to search for a book by title, author, or isbn, this parameter is used to filter the books.
     params = []
     if search:
         like = f"%{search}%"
+        # this appends the search keyword to the books table query.
         sql += " AND (v.title LIKE %s OR v.author LIKE %s OR b.isbn LIKE %s)"
         params.extend([like, like, like])
+    #orders the books by title
     sql += " ORDER BY v.title"
+    # executes query and returns the book data from the db
     rows = query_db(sql, tuple(params) if params else None)
     return jsonify(rows or [])
 
@@ -377,55 +373,32 @@ def api_fines():
     """)
     return jsonify(rows or [])
 
+
+
 #these are the 5 stats at the top of the homepage, they show the total books in the library, the total members, the total overdue books, and the total active rentals. The outstanding fines is the total amount of fines that are not paid.
 @app.route('/api/stats')
 def api_stats():
     stats = {}
-    r = query_db(DASHBOARD_SQL[1])
-    if r:
-        stats['total_books'] = r[0]['total'] or 0
-        stats['total_copies'] = r[0]['copies'] or 0
-    r = query_db(DASHBOARD_SQL[2])
-    stats['active_members'] = r[0]['total'] if r else 0
-    r = query_db(DASHBOARD_SQL[3])
-    stats['overdue_count'] = r[0]['total'] if r else 0
-    r = query_db(DASHBOARD_SQL[4])
-    stats['active_rentals'] = r[0]['total'] if r else 0
-    r = query_db(DASHBOARD_SQL[5])
-    stats['outstanding_fines'] = float(r[0]['outstanding']) if r and r[0]['outstanding'] is not None else 0.0
+    query = query_db(DASHBOARD_SQL[1])
+    if query:
+        stats['total_books'] = query[0]['total'] or 0
+        stats['total_copies'] = query[0]['copies'] or 0
+    query = query_db(DASHBOARD_SQL[2])
+    stats['active_members'] = query[0]['total'] if query else 0
+    query = query_db(DASHBOARD_SQL[3])
+    stats['overdue_count'] = query[0]['total'] if query else 0
+    query = query_db(DASHBOARD_SQL[4])
+    stats['active_rentals'] = query[0]['total'] if query else 0
+    query = query_db(DASHBOARD_SQL[5])
+    stats['outstanding_fines'] = float(query[0]['outstanding']) if query and query[0]['outstanding'] is not None else 0.0
     return jsonify(stats)
 
 
-@app.route('/api/reports/overdue')
-def api_report_overdue():
-    if _has_view('overdue_books_view'):
-        rows = query_db("SELECT * FROM overdue_books_view ORDER BY days_overdue DESC")
-    else:
-        rows = query_db(QUERIES_SQL[1])
-    return jsonify(rows or [])
-
-@app.route('/api/reports/availability')
-def api_report_availability():
-    if _has_view('book_availability_view'):
-        rows = query_db("SELECT * FROM book_availability_view ORDER BY title")
-    else:
-        rows = query_db(QUERIES_SQL[2])
-    return jsonify(rows or [])
-
-@app.route('/api/reports/popular')
-def api_report_popular():
-    if _has_view('popular_books_view'):
-        rows = query_db("SELECT * FROM popular_books_view ORDER BY times_borrowed DESC LIMIT 10")
-    else:
-        rows = query_db(QUERIES_SQL[3])
-    return jsonify(rows or [])
-
-
-@app.route('/api/reports/<int:report_id>')
-def api_report(report_id):
-    sql = QUERIES_SQL.get(report_id)
+@app.route('/api/queries/<int:query_id>')
+def api_query(query_id):
+    sql = QUERIES_SQL.get(query_id)
     if sql is None:
-        return jsonify({'error': 'Unknown report'}), 404
+        return jsonify({'error': 'Unknown query'}), 404
     rows = query_db(sql)
     return jsonify(rows or [])
 

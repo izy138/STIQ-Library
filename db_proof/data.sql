@@ -1,6 +1,6 @@
 USE library_system;
 
--- 42 books, books 40-42 have no rentals.
+-- 43 books some have no rentals.
 INSERT INTO Books (isbn, title, author, publisher, publication_year, category, total_copies, available_copies) VALUES
 ('9783869711423', 'Romeo and Juliet', 'William Shakespeare', 'Bantam Classics', 1980, 'Literature', 5, 5),
 ('9780141439518', 'Pride and Prejudice', 'Jane Austen', 'Penguin Classics', 2003, 'Literature', 5, 5),
