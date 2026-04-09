@@ -1,7 +1,43 @@
-# There 10 quereies are the exact same as our queries on queries.sql. They are executed trhough the app.py file using the Flask query_db() function.
-# Queries 1, 2, 3 are our views queries from views.sql.
+# All SQL used by backend/app.py in one place.
 
-REPORT_SQL = {
+# Dashboard basic statsqueries:
+# 1 total books + copies
+# 2 active members
+# 3 overdue count
+# 4 active rentals
+# 5 outstanding fines
+DASHBOARD_SQL = {
+    1: """
+SELECT COUNT(*) AS total, COALESCE(SUM(total_copies), 0) AS copies
+FROM Books
+""",
+    2: """
+SELECT COUNT(*) AS total
+FROM Members
+WHERE status = 'active'
+""",
+    3: """
+SELECT COUNT(*) AS total
+FROM Rentals
+WHERE status IN ('active', 'overdue')
+  AND due_date < CURDATE()
+""",
+    4: """
+SELECT COUNT(*) AS total
+FROM Rentals
+WHERE status IN ('active', 'overdue')
+""",
+    5: """
+SELECT COALESCE(SUM(fine_amount - paid_amount), 0) AS outstanding
+FROM Fines
+WHERE paid_status IN ('unpaid', 'partial')
+""",
+}
+
+
+# These 10 quereies are the exact same as our queries on queries.sql. They are executed trhough the app.py file using the Flask query_db() function.
+# Queries 1, 2, 3 are our views queries from views.sql.
+QUERIES_SQL = {
     1: """
 SELECT
     book_id,
@@ -30,6 +66,20 @@ SELECT
 FROM book_availability_view
 ORDER BY category, title
 """,
+    3: """
+SELECT
+    book_id,
+    title,
+    author,
+    category,
+    times_borrowed,
+    total_copies,
+    available_copies,
+    last_borrowed_date
+FROM popular_books_view
+ORDER BY times_borrowed DESC
+LIMIT 10
+""",
     4: """
 SELECT
     b.title,
@@ -57,20 +107,6 @@ FROM Members m
 INNER JOIN Fines f ON m.member_id = f.member_id
 GROUP BY m.member_id, m.first_name, m.last_name, m.email, m.status
 ORDER BY outstanding_balance DESC, total_fines_assessed DESC
-""",
-    3: """
-SELECT
-    book_id,
-    title,
-    author,
-    category,
-    times_borrowed,
-    total_copies,
-    available_copies,
-    last_borrowed_date
-FROM popular_books_view
-ORDER BY times_borrowed DESC
-LIMIT 10
 """,
     6: """
 SELECT
@@ -156,5 +192,4 @@ JOIN Books b ON r.book_id = b.book_id
 WHERE f.paid_status IN ('unpaid', 'partial')
 ORDER BY f.fine_date DESC
 """,
-
 }
