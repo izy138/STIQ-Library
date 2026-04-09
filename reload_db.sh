@@ -1,7 +1,6 @@
-#!/bin/bash
-# Reload database with schema + data. Run from project root.
-# Usage: ./reload_db.sh   (or: bash reload_db.sh)
-# Add -p after -u root if MySQL needs a password.
+# Reload database with schema + data + views + triggers. YOU MUST RUN THIS FROM THE PROJECT ROOT.
+# In the terminal run: ./reload_db.sh
+# Press enter when prompted for the password.
 
 DB=library_system
 USER=root
@@ -12,10 +11,10 @@ mysql -u $USER $DB < db_proof/schema.sql
 echo "Loading data..."
 mysql -u $USER $DB < db_proof/data.sql
 
-echo "Loading triggers (if exists)..."
-[ -f triggers.sql ] && mysql -u $USER $DB < triggers.sql
+echo "Loading views..."
+[ -f backend/views.sql ] && mysql -u $USER $DB < backend/views.sql
 
-echo "Loading views (if exists)..."
-[ -f views.sql ] && mysql -u $USER $DB < views.sql
+echo "Loading triggers..."
+[ -f backend/triggers.sql ] && mysql -u $USER $DB < backend/triggers.sql
 
 echo "Done. Database reloaded."
