@@ -1,5 +1,5 @@
-# SELECT statements mirror db_proof/queries.sql (queries 1–9) for execution via Flask query_db().
-# Queries 1, 2, 5 select from views (load backend/views.sql before running the app).
+# There 10 quereies are the exact same as our queries on queries.sql. They are executed trhough the app.py file using the Flask query_db() function.
+# Queries 1, 2, 3 are our views queries from views.sql.
 
 REPORT_SQL = {
     1: """
