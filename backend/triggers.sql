@@ -41,7 +41,7 @@ BEGIN
 
     UPDATE Books
     SET available_copies = available_copies + 1
-    WHERE book_id = v_book_id;
+    WHERE book_id = trig_book_id;
 
 END//
 
@@ -97,7 +97,7 @@ DELIMITER ;
 
 -- TRIGGER 4: Prevent a Rental If Suspended
 -- used to prevent any members from renting a book if the account is suspended. 
---This has beentested and shows an error message.
+-- This has been tested and shows an error message.
 DELIMITER //
 
 CREATE TRIGGER prevent_rental_if_suspended

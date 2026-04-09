@@ -24,7 +24,7 @@ INSERT INTO Books (isbn, title, author, publisher, publication_year, category, t
 ('9780385737951', 'The Maze Runner', 'James Dashner', 'Delacorte Press', 2010, 'Young Adult', 3, 2),
 ('9780316769174', 'The Catcher in the Rye', 'J.D. Salinger', 'Little Brown', 1951, 'Young Adult', 4, 3),
 ('9780544336261', 'The Giver', 'Lois Lowry', 'HarperCollins', 1993, 'Young Adult', 4, 3),
-('978-0141393056', 'Animal Farm', 'George Orwell', 'Penguin Classics', 1996, 'Adult Fiction', 4, 3),
+('9780141393056', 'Animal Farm', 'George Orwell', 'Penguin Classics', 1996, 'Adult Fiction', 4, 3),
 ('9780399501487', 'The Lord of the Flies', 'William Golding', 'Penguin', 2003, 'Adult Fiction', 4, 3),
 ('9780307269751', 'The Girl with the Dragon Tattoo', 'Stieg Larsson', 'Knopf', 2008, 'Adult Fiction', 4, 3),
 ('9781594631931', 'The Kite Runner', 'Khaled Hosseini', 'Riverhead Books', 2003, 'Adult Fiction', 5, 4),
@@ -42,10 +42,13 @@ INSERT INTO Books (isbn, title, author, publisher, publication_year, category, t
 ('9780553103540', 'A Game of Thrones', 'George R.R. Martin', 'Bantam Spectra', 1996, 'Fantasy', 4, 3),
 ('9780618640157', 'The Lord of the Rings', 'J.R.R. Tolkien', 'Allen and Unwin', 1954, 'Fantasy', 5, 5),
 ('9780547928227', 'The Hobbit', 'J.R.R. Tolkien', 'Houghton Mifflin', 1937, 'Fantasy', 5, 5),
-('9780064471046', 'The Lion the Witch and the Wardrobe', 'C.S. Lewis', 'HarperCollins', 1950, 'Fantasy', 4, 4);
+('9780064471046', 'The Lion the Witch and the Wardrobe', 'C.S. Lewis', 'HarperCollins', 1950, 'Fantasy', 4, 4),
+('9781101905555', 'The Martian', 'Andy Weir', 'Crown Publishing', 2011, 'Science Fiction', 4, 4),
+('9780307887450', 'Ready Player One', 'Ernest Cline', 'Crown Publishing', 2011, 'Science Fiction', 3, 2);
 
---36 members: 4 Staff, 32 students/faculty
---suspended members have max_books_allowed = 0
+
+-- 36 members: 4 Staff, 32 students/faculty
+-- suspended members have max_books_allowed = 0
 -- member_id 8, 9, 18, 21, 28, 31 are suspended/expired
 INSERT INTO Members (first_name, last_name, email, phone, membership_type, registration_date, status, max_books_allowed) VALUES
 ('Tiffany', 'Ortiz', 'tortiz@library.fiu.edu', '3055552000', 'Staff', '2026-01-01', 'active', 10),
@@ -117,13 +120,13 @@ INSERT INTO Rentals (book_id, member_id, rental_date, due_date, status) VALUES
 (14, 34, '2026-02-28', '2026-03-21', 'returned'),
 (14, 35, '2026-03-01', '2026-03-22', 'returned'),
 (15, 36, '2026-03-02', '2026-03-23', 'returned'),
-(15, 1, '2026-03-03', '2026-03-24', 'returned'),
-(16, 2, '2026-03-04', '2026-03-25', 'returned'),
-(16, 3, '2026-03-05', '2026-03-26', 'returned'),
-(16, 4, '2026-03-06', '2026-03-27', 'returned'),
-(17, 5, '2026-03-07', '2026-03-28', 'returned'),
-(17, 6, '2026-03-08', '2026-03-29', 'returned'),
-(17, 7, '2026-03-09', '2026-03-30', 'returned'),
+(15, 11, '2026-03-03', '2026-03-24', 'returned'),
+(16, 12, '2026-03-04', '2026-03-25', 'returned'),
+(16, 13, '2026-03-05', '2026-03-26', 'returned'),
+(16, 14, '2026-03-06', '2026-03-27', 'returned'),
+(17, 15, '2026-03-07', '2026-03-28', 'returned'),
+(17, 16, '2026-03-08', '2026-03-29', 'returned'),
+(17, 17, '2026-03-09', '2026-03-30', 'returned'),
 (18, 10, '2026-03-10', '2026-03-31', 'returned'),
 (18, 11, '2026-03-11', '2026-04-01', 'returned'),
 (19, 12, '2026-03-12', '2026-04-02', 'returned'),
@@ -147,13 +150,13 @@ INSERT INTO Rentals (book_id, member_id, rental_date, due_date, status) VALUES
 (32, 34, '2026-04-07', '2026-04-28', 'active'),
 (33, 35, '2026-04-08', '2026-04-29', 'active'),
 (34, 36, '2026-04-09', '2026-04-30', 'active'),
-(35, 1, '2026-04-05', '2026-04-26', 'active'),
-(36, 2, '2026-04-06', '2026-04-27', 'active'),
-(37, 3, '2026-04-07', '2026-04-28', 'active'),
-(38, 4, '2026-04-08', '2026-04-29', 'active'),
-(39, 5, '2026-04-09', '2026-04-30', 'active');
+(35, 5, '2026-04-05', '2026-04-26', 'active'),
+(36, 6, '2026-04-06', '2026-04-27', 'active'),
+(37, 7, '2026-04-07', '2026-04-28', 'active'),
+(38, 10, '2026-04-08', '2026-04-29', 'active'),
+(39, 11, '2026-04-09', '2026-04-30', 'active');
 
---40 returns
+-- 40 returns
 INSERT INTO Returns (rental_id, return_date, condition_status, notes, processed_by) VALUES
 (1, '2026-02-22', 'Good', '', 1),
 (2, '2026-02-23', 'Good', '', 2),
@@ -196,9 +199,9 @@ INSERT INTO Returns (rental_id, return_date, condition_status, notes, processed_
 (39, '2026-04-01', 'Good', '', 3),
 (40, '2026-04-02', 'Good', '', 4);
 
---Fine rules: Overdue = $1.00 × days after due_date 
---Damaged - $25.00 in addition to any overdue 
---Lost - $50.00 flat
+-- Fine rules: Overdue = $1.00 x days after due_date
+-- Damaged - $25.00 in addition to any overdue
+-- Lost - $50.00 flat
 INSERT INTO Fines (rental_id, member_id, fine_amount, fine_reason, fine_date, paid_status, paid_amount, paid_date) VALUES
 (3, 3, 4.00, 'Overdue', '2026-02-28', 'unpaid', 0.00, NULL),
 (7, 7, 25.00, 'Damaged', '2026-02-28', 'paid', 25.00, '2026-02-28'),
