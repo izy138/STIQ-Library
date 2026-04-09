@@ -70,7 +70,7 @@ SELECT
     last_borrowed_date
 FROM popular_books_view
 ORDER BY times_borrowed DESC
-LIMIT 5
+LIMIT 10
 """,
     6: """
 SELECT
@@ -92,7 +92,6 @@ INNER JOIN Books b ON r.book_id = b.book_id
 INNER JOIN Members m ON r.member_id = m.member_id
 LEFT JOIN Returns ret ON r.rental_id = ret.rental_id
 ORDER BY r.rental_date DESC
-LIMIT 20
 """,
     7: """
 SELECT
