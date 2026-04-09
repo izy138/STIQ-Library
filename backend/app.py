@@ -123,22 +123,25 @@ def static_file(path):
 #this routes to the books table page, it sends the books data from the db to the browser to display all he books in a table.
 @app.route('/api/books')
 def api_books():
-    # book search for a book by title, author, or isbn.
+    # book search for a book by title, author, or isbn; availability from book_availability_view.
     search = request.args.get('search', '')
     sql = """
-        SELECT book_id, isbn, title, author, publisher, publication_year, category,
-               total_copies, available_copies,
-               CASE WHEN available_copies = 0 THEN 'Unavailable'
-                    WHEN available_copies <= 2 THEN 'Low Stock' ELSE 'Available' END AS status
-        FROM Books
+        SELECT v.book_id, b.isbn, v.title, v.author, b.publisher, b.publication_year, v.category,
+               v.total_copies, v.available_copies,
+               CASE
+                   WHEN v.availability_status = 'Low Availability' THEN 'Low Stock'
+                   ELSE v.availability_status
+               END AS status
+        FROM book_availability_view v
+        INNER JOIN Books b ON b.book_id = v.book_id
         WHERE 1=1
     """
     params = []
     if search:
         like = f"%{search}%"
-        sql += " AND (title LIKE %s OR author LIKE %s OR isbn LIKE %s)"
+        sql += " AND (v.title LIKE %s OR v.author LIKE %s OR b.isbn LIKE %s)"
         params.extend([like, like, like])
-    sql += " ORDER BY title"
+    sql += " ORDER BY v.title"
     rows = query_db(sql, tuple(params) if params else None)
     return jsonify(rows or [])
 
@@ -401,15 +404,6 @@ def api_report_overdue():
         rows = query_db(QUERIES_SQL[1])
     return jsonify(rows or [])
 
-
-@app.route('/api/reports/popular')
-def api_report_popular():
-    if _has_view('popular_books_view'):
-        rows = query_db("SELECT * FROM popular_books_view ORDER BY times_borrowed DESC LIMIT 20")
-    else:
-        rows = query_db(QUERIES_SQL[3])
-    return jsonify(rows or [])
-
 @app.route('/api/reports/availability')
 def api_report_availability():
     if _has_view('book_availability_view'):
@@ -418,13 +412,12 @@ def api_report_availability():
         rows = query_db(QUERIES_SQL[2])
     return jsonify(rows or [])
 
-
-@app.route('/api/reports/dash/<int:dash_id>')
-def api_reports_dash(dash_id):
-    sql = DASHBOARD_SQL.get(dash_id)
-    if sql is None:
-        return jsonify({'error': 'Unknown dashboard query'}), 404
-    rows = query_db(sql)
+@app.route('/api/reports/popular')
+def api_report_popular():
+    if _has_view('popular_books_view'):
+        rows = query_db("SELECT * FROM popular_books_view ORDER BY times_borrowed DESC LIMIT 10")
+    else:
+        rows = query_db(QUERIES_SQL[3])
     return jsonify(rows or [])
 
 

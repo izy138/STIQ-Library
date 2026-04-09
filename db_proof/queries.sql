@@ -63,7 +63,7 @@ SELECT
 FROM Books b
 LEFT JOIN Rentals r ON b.book_id = r.book_id
 WHERE r.rental_id IS NULL
-ORDER BY b.publication_year DESC;
+ORDER BY b.title DESC;
 
 -- QUERY 5: Total Fines by Member
 -- JOIN, GROUP BY, aggregates members who have at least one fine.
@@ -203,32 +203,3 @@ WHERE status IN ('active', 'overdue');
 SELECT COALESCE(SUM(fine_amount - paid_amount), 0) AS outstanding_fines
 FROM Fines
 WHERE paid_status IN ('unpaid', 'partial');
-
--- Dashboard Query 6: 10 most recent rentals 
-SELECT
-    r.rental_id,
-    b.title,
-    CONCAT(m.first_name, ' ', m.last_name) AS member_name,
-    r.rental_date,
-    r.due_date,
-    r.status
-FROM Rentals r
-JOIN Books b ON r.book_id = b.book_id
-JOIN Members m ON r.member_id = m.member_id
-ORDER BY r.rental_date DESC
-LIMIT 10;
-
--- Dashboard Query 7: show sthe latest 10 overdue rentals.
-SELECT
-    r.rental_id,
-    b.title,
-    CONCAT(m.first_name, ' ', m.last_name) AS member_name,
-    r.due_date,
-    DATEDIFF(CURDATE(), r.due_date) AS days_overdue
-FROM Rentals r
-JOIN Books b ON r.book_id = b.book_id
-JOIN Members m ON r.member_id = m.member_id
-WHERE r.status IN ('active', 'overdue')
-  AND r.due_date < CURDATE()
-ORDER BY r.due_date ASC
-LIMIT 10;
