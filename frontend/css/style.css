@@ -176,7 +176,7 @@ body {
 
 .report-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
@@ -215,6 +215,64 @@ body {
   margin-bottom: 0.5rem;
 }
 
+.dashboard-page .page-title {
+  font-size: 1.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.dashboard-page .page-subtitle {
+  font-size: 0.82rem;
+  margin-bottom: 0.7rem;
+}
+
+.dashboard-page .stats-grid {
+  gap: 0.65rem;
+  margin-bottom: 0.7rem;
+}
+
+.dashboard-page .stat-card {
+  padding: 0.65rem 0.75rem;
+}
+
+.dashboard-page .stat-card h3 {
+  font-size: 1.65rem;
+  line-height: 1.15;
+  margin-bottom: 0.15rem;
+}
+
+.dashboard-page .stat-card p {
+  font-size: 0.75rem;
+}
+
+.dashboard-page .report-grid {
+  gap: 0.65rem;
+  margin-bottom: 0.25rem;
+}
+
+.dashboard-page .report-card {
+  padding: 0.65rem 0.55rem;
+}
+
+.dashboard-page .report-card .icon {
+  font-size: 1.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.dashboard-page .report-card h3 {
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.dashboard-page .report-card p {
+  font-size: 0.72rem;
+  margin-bottom: 0.45rem;
+}
+
+.dashboard-page .report-card .btn {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.45rem;
+}
+
 .dash-doc-row {
   margin: 0 0 0.75rem 0;
 }
@@ -234,6 +292,10 @@ body {
 
 @media (max-width: 768px) {
   .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .report-grid {
     grid-template-columns: 1fr;
   }
 }

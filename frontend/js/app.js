@@ -27,39 +27,51 @@
     });
   }
 
+  const REPORT_META = [
+    { id: 1, icon: '⚠️', title: 'Overdue Books', desc: 'Past-due active and overdue rentals' },
+    { id: 2, icon: '📚', title: 'Book Availability', desc: 'Catalog stock and loan availability' },
+    { id: 3, icon: '📈', title: 'Most Popular Books', desc: 'Top borrowed titles by rental count' },
+    { id: 4, icon: '🆕', title: 'Never Borrowed Books', desc: 'Books with no rental history' },
+    { id: 5, icon: '💵', title: 'Fines by Member', desc: 'Total fines, paid amount, outstanding balance' },
+    { id: 6, icon: '🧾', title: 'Rental + Return History', desc: 'Rental timeline with return timing status' },
+    { id: 7, icon: '🗓️', title: 'Recent Rentals (7 Days)', desc: 'All checkouts created in the last week' },
+    { id: 8, icon: '🛠️', title: 'Damaged or Lost Returns', desc: 'Condition issues and related fines' },
+    { id: 9, icon: '📅', title: 'Monthly Rental Activity', desc: 'Monthly totals, members, and unique books' },
+    { id: 10, icon: '💰', title: 'Unpaid/Partial Fines', desc: 'Open fine balances by member and book' }
+  ];
+
   // ----- Dashboard -----
   function viewDashboard() {
-    app.innerHTML = '<h1 class="page-title">Dashboard</h1><p class="page-subtitle">Library overview</p>' +
+    app.innerHTML = '<div class="dashboard-page"><h1 class="page-title">Dashboard</h1><p class="page-subtitle">Library overview</p>' +
       '<div id="stats" class="stats-grid">' +
       '<div class="stat-card primary"><h3 id="stat-books">–</h3><p>Total Books</p></div>' +
       '<div class="stat-card success"><h3 id="stat-members">–</h3><p>Active Members</p></div>' +
+      '<div class="stat-card danger"><h3 id="stat-rentals">–</h3><p>Active Rentals</p></div>' +
       '<div class="stat-card warning"><h3 id="stat-overdue">–</h3><p>Overdue</p></div>' +
-      '<div class="stat-card danger"><h3 id="stat-rentals">–</h3><p>Active Rentals</p></div></div>' +
-      '<div class="card"><div class="card-header">Outstanding Fines</div><div class="card-body"><p id="stat-fines" style="font-size:1.5rem;font-weight:700;margin:0;">–</p></div></div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem" class="two-col">' +
-      '<div class="card"><div class="card-header">Recent Rentals</div><div class="card-body"><div id="recent-rentals" class="table-wrap"></div></div></div>' +
-      '<div class="card"><div class="card-header">Overdue Books</div><div class="card-body"><div id="overdue-books" class="table-wrap"></div></div></div></div>';
+      '<div class="stat-card secondary"><h3 id="stat-fines">–</h3><p>Outstanding Fines</p></div></div>' +
+      '<h2 class="page-title" style="margin-top:1.5rem;font-size:1.35rem">Queries</h2>' +
+      '<p class="page-subtitle">Open any query</p>' +
+      '<div id="dashboard-report-cards" class="report-grid"></div></div>';
     API.stats().then(s => {
-      el('stat-books').textContent = (s.total_books || 0) + ' (' + (s.total_copies || 0) + ' copies)';
+      el('stat-books').innerHTML = (s.total_books || 0) + '<br><span style="font-size:0.8em;font-weight:600">(' + (s.total_copies || 0) + ' copies)</span>';
       el('stat-members').textContent = s.active_members || 0;
       el('stat-overdue').textContent = s.overdue_count || 0;
       el('stat-rentals').textContent = s.active_rentals || 0;
-      el('stat-fines').textContent = '$' + Number(s.outstanding_fines != null ? s.outstanding_fines : 0).toFixed(2) + ' outstanding';
+      el('stat-fines').textContent = '$' + Number(s.outstanding_fines != null ? s.outstanding_fines : 0).toFixed(2);
     }).catch(() => { if (el('stat-fines')) el('stat-fines').textContent = 'Unable to load stats'; });
-    API.recentRentals().then(rows => {
-      const w = el('recent-rentals');
-      if (!w) return;
-      if (!rows || !rows.length) { w.innerHTML = '<p class="empty-state">No recent rentals</p>'; return; }
-      w.innerHTML = '<table><thead><tr><th>Book</th><th>Member</th><th>Date</th><th>Status</th></tr></thead><tbody>' +
-        rows.map(r => '<tr><td>' + escapeHtml(r.title) + '</td><td>' + escapeHtml(r.member_name) + '</td><td>' + (r.rental_date || '') + '</td><td><span class="badge ' + (r.status === 'active' ? 'success' : 'warning') + '">' + escapeHtml(r.status) + '</span></td></tr>').join('') + '</tbody></table>';
-    }).catch(() => { if (el('recent-rentals')) el('recent-rentals').innerHTML = '<p class="empty-state">No recent rentals</p>'; });
-    API.overdue().then(rows => {
-      const w = el('overdue-books');
-      if (!w) return;
-      if (!rows || !rows.length) { w.innerHTML = '<p class="empty-state">No overdue books</p>'; return; }
-      w.innerHTML = '<table><thead><tr><th>Book</th><th>Member</th><th>Days Overdue</th></tr></thead><tbody>' +
-        rows.map(r => '<tr><td>' + escapeHtml(r.title) + '</td><td>' + escapeHtml(r.member_name) + '</td><td><span class="badge danger">' + (r.days_overdue || 0) + ' days</span></td></tr>').join('') + '</tbody></table>';
-    }).catch(() => { if (el('overdue-books')) el('overdue-books').innerHTML = '<p class="empty-state">No overdue books</p>'; });
+    renderDashboardReportCards();
+  }
+
+  function renderDashboardReportCards() {
+    const host = el('dashboard-report-cards');
+    if (!host) return;
+    const dashboardOrder = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    const orderedMeta = dashboardOrder.map(function (id) {
+      return REPORT_META.find(function (r) { return r.id === id; });
+    }).filter(Boolean);
+    host.innerHTML = orderedMeta.map(function (r) {
+      return '<a href="#report-' + r.id + '" class="report-card"><div class="icon">' + r.icon + '</div><h3>' + escapeHtml(r.title) + '</h3><p>' + escapeHtml(r.desc) + '</p><span class="btn btn-secondary">View Query</span></a>';
+    }).join('');
   }
 
   // ----- Books -----
@@ -73,7 +85,6 @@
     app.innerHTML = '<div class="actions"><h1 class="page-title" style="margin:0">Books</h1><button type="button" class="btn btn-primary" id="btn-add">+ Add Book</button></div><p class="page-subtitle">Catalog</p>' +
       '<div class="card"><div class="card-body">' +
       '<div class="filters"><div class="form-group"><label>Search</label><input type="text" id="filter-search" placeholder="Title, author, ISBN"></div>' +
-      '<div class="form-group"><label>Category</label><select id="filter-category"><option value="All">All</option></select></div>' +
       '<button type="button" class="btn btn-primary" id="btn-search">Search</button></div>' +
       '<div id="table-wrap" class="table-wrap"></div></div></div>' +
       '<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10;align-items:center;justify-content:center;"><div style="background:white;padding:1.5rem;border-radius:8px;max-width:480px;width:90%;max-height:90vh;overflow:auto;">' +
@@ -87,21 +98,10 @@
     const modal = el('modal');
     const form = el('form-book');
 
-    function loadCategories() {
-      API.categories().then(cats => {
-        const sel = el('filter-category');
-        if (!sel) return;
-        const current = sel.value;
-        sel.innerHTML = '<option value="All">All</option>' + (cats || []).map(c => '<option value="' + escapeHtml(c) + '"' + (c === current ? ' selected' : '') + '>' + escapeHtml(c) + '</option>').join('');
-      });
-    }
-
     function loadBooks() {
       const search = (el('filter-search') || {}).value || '';
-      const category = (el('filter-category') || {}).value || 'All';
       const params = {};
       if (search) params.search = search;
-      if (category !== 'All') params.category = category;
       API.books(params).then(rows => {
         const wrap = el('table-wrap');
         if (!wrap) return;
@@ -150,7 +150,6 @@
     el('btn-cancel').addEventListener('click', () => { modal.style.display = 'none'; if (el('book-isbn')) el('book-isbn').readOnly = false; });
     el('btn-add').addEventListener('click', openAdd);
     el('btn-search').addEventListener('click', loadBooks);
-    loadCategories();
     loadBooks();
   }
 
@@ -159,8 +158,6 @@
     app.innerHTML = '<div class="actions"><h1 class="page-title" style="margin:0">Members</h1><button type="button" class="btn btn-primary" id="btn-add">+ Add Member</button></div><p class="page-subtitle">Directory</p>' +
       '<div class="card"><div class="card-body">' +
       '<div class="filters"><div class="form-group"><label>Search</label><input type="text" id="filter-search" placeholder="Name or email"></div>' +
-      '<div class="form-group"><label>Type</label><select id="filter-type"><option value="All">All</option><option value="Student">Student</option><option value="Faculty">Faculty</option><option value="Staff">Staff</option></select></div>' +
-      '<div class="form-group"><label>Status</label><select id="filter-status"><option value="All">All</option><option value="active">Active</option><option value="suspended">Suspended</option><option value="expired">Expired</option></select></div>' +
       '<button type="button" class="btn btn-primary" id="btn-search">Search</button></div><div id="table-wrap" class="table-wrap"></div></div></div>' +
       '<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10;align-items:center;justify-content:center;"><div style="background:white;padding:1.5rem;border-radius:8px;max-width:480px;width:90%;max-height:90vh;overflow:auto;">' +
       '<h2 style="margin-top:0" id="modal-title">Add Member</h2><form id="form-member">' +
@@ -174,12 +171,8 @@
 
     function loadMembers() {
       const search = (el('filter-search') || {}).value || '';
-      const type = (el('filter-type') || {}).value || 'All';
-      const status = (el('filter-status') || {}).value || 'All';
       const params = {};
       if (search) params.search = search;
-      if (type !== 'All') params.type = type;
-      if (status !== 'All') params.status = status;
       API.members(params).then(rows => {
         const wrap = el('table-wrap');
         if (!wrap) return;
@@ -303,12 +296,9 @@
   function viewFines() {
     app.innerHTML = '<h1 class="page-title">Fines</h1><p class="page-subtitle">Fine records</p>' +
       '<div class="card"><div class="card-body">' +
-      '<div class="filters"><div class="form-group"><label>Status</label><select id="filter-status"><option value="All">All</option><option value="unpaid">Unpaid</option><option value="partial">Partial</option><option value="paid">Paid</option></select></div>' +
-      '<button type="button" class="btn btn-primary" id="btn-search">Apply</button></div><div id="table-wrap" class="table-wrap"></div></div></div>';
+      '<div id="table-wrap" class="table-wrap"></div></div></div>';
     function load() {
-      const status = (el('filter-status') || {}).value || 'All';
-      const params = status !== 'All' ? { status } : {};
-      API.fines(params).then(rows => {
+      API.fines().then(rows => {
         const wrap = el('table-wrap');
         if (!wrap) return;
         if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No fines found</p>'; return; }
@@ -316,7 +306,6 @@
           rows.map(f => '<tr><td>' + f.fine_id + '</td><td>' + escapeHtml(f.member_name) + '</td><td>' + escapeHtml(f.book_title) + '</td><td>' + escapeHtml(f.fine_reason) + '</td><td>$' + Number(f.fine_amount).toFixed(2) + '</td><td>$' + Number(f.paid_amount || 0).toFixed(2) + '</td><td><strong>$' + Number(f.outstanding || 0).toFixed(2) + '</strong></td><td><span class="badge ' + (f.paid_status === 'paid' ? 'success' : 'warning') + '">' + escapeHtml(f.paid_status) + '</span></td><td>' + (f.fine_date || '') + '</td></tr>').join('') + '</tbody></table>';
       }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert alert-error">Failed to load fines</p>'; });
     }
-    el('btn-search').addEventListener('click', load);
     load();
   }
 
@@ -340,9 +329,9 @@
   const REPORT_TABLE_COLUMNS = {
     1: ['book_id', 'book_title', 'member_id', 'member_name', 'rental_id', 'rental_date', 'due_date', 'days_overdue', 'estimated_fine'],
     2: ['book_id', 'title', 'author', 'category', 'total_copies', 'available_copies', 'copies_on_loan', 'availability_status', 'next_available_date'],
-    3: ['title', 'author', 'category', 'publication_year', 'total_copies', 'book_id'],
-    4: ['member_id', 'member_name', 'email', 'status', 'number_of_fines', 'total_fines_assessed', 'total_paid', 'outstanding_balance'],
-    5: ['book_id', 'title', 'author', 'category', 'times_borrowed', 'total_copies', 'available_copies', 'last_borrowed_date'],
+    3: ['book_id', 'title', 'author', 'category', 'times_borrowed', 'total_copies', 'available_copies', 'last_borrowed_date'],
+    4: ['title', 'author', 'category', 'publication_year', 'total_copies', 'book_id'],
+    5: ['member_id', 'member_name', 'email', 'status', 'number_of_fines', 'total_fines_assessed', 'total_paid', 'outstanding_balance'],
     6: ['rental_id', 'book_title', 'member_name', 'rental_date', 'due_date', 'rental_status', 'return_date', 'condition_status', 'return_timing'],
     7: ['rental_id', 'book_title', 'author', 'member_name', 'email', 'rental_date', 'due_date', 'rental_status'],
     8: ['return_id', 'book_title', 'member_name', 'email', 'return_date', 'fine_reason', 'fine_amount', 'paid_status'],
@@ -370,39 +359,17 @@
 
   // ----- Reports hub -----
   function viewReports() {
-    const reportMeta = [
-      { id: 1, icon: '⚠️', title: 'Overdue Books', desc: 'Past-due active and overdue rentals' },
-      { id: 2, icon: '📚', title: 'Book Availability', desc: 'Catalog stock and loan availability' },
-      { id: 3, icon: '🆕', title: 'Never Borrowed Books', desc: 'Books with no rental history' },
-      { id: 4, icon: '💵', title: 'Fines by Member', desc: 'Total fines, paid amount, outstanding balance' },
-      { id: 5, icon: '📈', title: 'Most Popular Books', desc: 'Top borrowed titles by rental count' },
-      { id: 6, icon: '🧾', title: 'Rental + Return History', desc: 'Rental timeline with return timing status' },
-      { id: 7, icon: '🗓️', title: 'Recent Rentals (7 Days)', desc: 'All checkouts created in the last week' },
-      { id: 8, icon: '🛠️', title: 'Damaged or Lost Returns', desc: 'Condition issues and related fines' },
-      { id: 9, icon: '📅', title: 'Monthly Rental Activity', desc: 'Monthly totals, members, and unique books' },
-      { id: 10, icon: '💰', title: 'Unpaid/Partial Fines', desc: 'Open fine balances by member and book' }
-    ];
-    const cards = reportMeta.map(r =>
+    const cards = REPORT_META.map(r =>
       '<a href="#report-' + r.id + '" class="report-card"><div class="icon">' + r.icon + '</div><h3>' + escapeHtml(r.title) + '</h3><p>' + escapeHtml(r.desc) + '</p><span class="btn btn-secondary">View Report</span></a>'
     ).join('');
-    app.innerHTML = '<h1 class="page-title">Reports</h1><p class="page-subtitle">Database reports and analytics</p><div class="report-grid">' + cards + '</div>';
+    app.innerHTML = '<h1 class="page-title">Queries</h1><p class="page-subtitle">Database reports and analytics</p><div class="report-grid">' + cards + '</div>';
   }
 
   function viewReportById(id) {
-    const reportTitleById = {
-      1: 'Overdue Books',
-      2: 'Book Availability',
-      3: 'Never Borrowed Books',
-      4: 'Fines by Member',
-      5: 'Most Popular Books',
-      6: 'Rental + Return History',
-      7: 'Recent Rentals (7 Days)',
-      8: 'Damaged or Lost Returns',
-      9: 'Monthly Rental Activity',
-      10: 'Unpaid/Partial Fines'
-    };
-    const reportTitle = reportTitleById[id] || ('Report ' + id);
-    app.innerHTML = '<a href="#reports" class="back-link">← Back to Reports</a><h1 class="page-title">' + escapeHtml(reportTitle) + '</h1><p class="page-subtitle">Query ' + id + ' results</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
+    const meta = REPORT_META.find(function (r) { return r.id === id; });
+    const reportTitle = meta ? meta.title : ('Report ' + id);
+    const reportTitleWithView = (id === 1 || id === 2 || id === 3) ? (reportTitle + ' VIEW') : reportTitle;
+    app.innerHTML = '<a href="#dashboard" class="back-link">← Back to Dashboard</a><h1 class="page-title">' + escapeHtml(reportTitleWithView) + '</h1><p class="page-subtitle">Query ' + id + ' results</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
     API.report(id).then(rows => {
       const wrap = el('table-wrap');
       if (!wrap) return;
@@ -422,7 +389,7 @@
 
   // ----- Report: Overdue -----
   function viewReportOverdue() {
-    app.innerHTML = '<a href="#reports" class="back-link">← Back to Reports</a><h1 class="page-title">Overdue Books</h1><p class="page-subtitle">Books past due date</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
+    app.innerHTML = '<a href="#dashboard" class="back-link">← Back to Dashboard</a><h1 class="page-title">Overdue Books</h1><p class="page-subtitle">Books past due date</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
     API.reportOverdue().then(rows => {
       const wrap = el('table-wrap');
       if (!wrap) return;
@@ -434,7 +401,7 @@
 
   // ----- Report: Unpaid Fines -----
   function viewReportUnpaidFines() {
-    app.innerHTML = '<a href="#reports" class="back-link">← Back to Reports</a><h1 class="page-title">Unpaid Fines</h1><p class="page-subtitle">Outstanding balances</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
+    app.innerHTML = '<a href="#dashboard" class="back-link">← Back to Dashboard</a><h1 class="page-title">Unpaid Fines</h1><p class="page-subtitle">Outstanding balances</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
     API.reportUnpaidFines().then(rows => {
       const wrap = el('table-wrap');
       if (!wrap) return;
@@ -446,7 +413,7 @@
 
   // ----- Report: Popular -----
   function viewReportPopular() {
-    app.innerHTML = '<a href="#reports" class="back-link">← Back to Reports</a><h1 class="page-title">Popular Books</h1><p class="page-subtitle">Most borrowed titles</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
+    app.innerHTML = '<a href="#dashboard" class="back-link">← Back to Dashboard</a><h1 class="page-title">Popular Books</h1><p class="page-subtitle">Most borrowed titles</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
     API.reportPopular().then(rows => {
       const wrap = el('table-wrap');
       if (!wrap) return;
@@ -458,7 +425,7 @@
 
   // ----- Report: Availability -----
   function viewReportAvailability() {
-    app.innerHTML = '<a href="#reports" class="back-link">← Back to Reports</a><h1 class="page-title">Book Availability</h1><p class="page-subtitle">Stock and availability</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
+    app.innerHTML = '<a href="#dashboard" class="back-link">← Back to Dashboard</a><h1 class="page-title">Book Availability</h1><p class="page-subtitle">Stock and availability</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
     API.reportAvailability().then(rows => {
       const wrap = el('table-wrap');
       if (!wrap) return;
@@ -490,12 +457,12 @@
     const reportMatch = /^report-(\d+)$/.exec(route);
     if (reportMatch) {
       viewReportById(parseInt(reportMatch[1], 10));
-      setActiveNav('reports');
+      setActiveNav('dashboard');
       return;
     }
     const view = routes[route] || viewDashboard;
     view();
-    setActiveNav(route === 'dashboard' ? 'dashboard' : route === 'checkout' ? 'rentals' : route === 'process-return' ? 'returns' : route.startsWith('report-') ? 'reports' : route);
+    setActiveNav(route === 'dashboard' ? 'dashboard' : route === 'checkout' ? 'rentals' : route === 'process-return' ? 'returns' : route.startsWith('report-') ? 'dashboard' : route);
   }
 
   window.addEventListener('hashchange', render);
