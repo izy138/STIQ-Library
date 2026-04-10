@@ -20,7 +20,7 @@ WHERE r.status IN ('overdue', 'active')
     AND r.due_date < CURDATE();
 
 -- VIEWS Query 2: Book Availability View
--- any books below 2 are low availability, any books above 2 are available, 0 are unavailable.
+-- first checks book_status to see if the book is discontinued, if copies = 0 then it is unavailable, if copies <= 2 then it is low stock, if copies >= 3 then it is available.
 CREATE OR REPLACE VIEW book_availability_view AS
 SELECT
     b.book_id,
@@ -33,8 +33,9 @@ SELECT
     b.available_copies,
     (b.total_copies - b.available_copies) AS copies_on_loan,
     CASE
+        WHEN b.book_status = 'Discontinued' THEN 'Discontinued'
         WHEN b.available_copies = 0 THEN 'Unavailable'
-        WHEN b.available_copies <= 2 THEN 'Low Availability'
+        WHEN b.available_copies <= 2 THEN 'Low Stock'
         WHEN b.available_copies >= 3 THEN 'Available'
         ELSE 'Unknown'
     END AS availability_status,

@@ -1,40 +1,33 @@
-+---------------------------------+---------+-------------------+-----------+-----------+-------------+------------+--------------+----------------+
-| book_title                      | book_id | member_name       | member_id | rental_id | rental_date | due_date   | days_overdue | estimated_fine |
-+---------------------------------+---------+-------------------+-----------+-----------+-------------+------------+--------------+----------------+
-| The Girl with the Dragon Tattoo |      25 | Alejandro Vega    |        25 |        51 | 2026-02-10  | 2026-02-24 |           43 |          43.00 |
-| The Kite Runner                 |      26 | Gabriela Mendez   |        26 |        52 | 2026-02-11  | 2026-02-25 |           42 |          42.00 |
-| Divergent                       |      19 | Daniel Martinez   |        13 |        41 | 2026-02-25  | 2026-03-11 |           28 |          28.00 |
-| Divergent                       |      19 | Ashley Rivera     |        14 |        42 | 2026-02-26  | 2026-03-12 |           27 |          27.00 |
-| The Maze Runner                 |      20 | Brandon Hernandez |        15 |        43 | 2026-02-27  | 2026-03-13 |           26 |          26.00 |
-| The Maze Runner                 |      20 | Natalie Garcia    |        16 |        44 | 2026-02-28  | 2026-03-14 |           25 |          25.00 |
-| The Catcher in the Rye          |      21 | Ethan Flores      |        17 |        45 | 2026-03-01  | 2026-03-15 |           24 |          24.00 |
-| The Catcher in the Rye          |      21 | Joshua Ramirez    |        19 |        46 | 2026-03-02  | 2026-03-16 |           23 |          23.00 |
-| The Giver                       |      22 | Valeria Morales   |        20 |        47 | 2026-03-03  | 2026-03-17 |           22 |          22.00 |
-| The Giver                       |      22 | Kayla Ortiz       |        22 |        48 | 2026-03-04  | 2026-03-18 |           21 |          21.00 |
-| Animal Farm                     |      23 | Luis Reyes        |        23 |        49 | 2026-03-05  | 2026-03-19 |           20 |          20.00 |
-| The Lord of the Flies           |      24 | Mia Cruz          |        24 |        50 | 2026-03-06  | 2026-03-20 |           19 |          19.00 |
-+---------------------------------+---------+-------------------+-----------+-----------+-------------+------------+--------------+----------------+
++-----------------------------------------+---------+-----------------+-----------+-----------+-------------+------------+--------------+----------------+
+| book_title                              | book_id | member_name     | member_id | rental_id | rental_date | due_date   | days_overdue | estimated_fine |
++-----------------------------------------+---------+-----------------+-----------+-----------+-------------+------------+--------------+----------------+
+| Harry Potter and the Chamber of Secrets |      30 | Alejandro Vega  |        25 |        50 | 2026-02-10  | 2026-02-24 |           45 |          45.00 |
+| A Game of Thrones                       |      31 | Gabriela Mendez |        26 |        51 | 2026-02-11  | 2026-02-25 |           44 |          44.00 |
+| The Kite Runner                         |      20 | Daniel Martinez |        13 |        41 | 2026-02-25  | 2026-03-11 |           30 |          30.00 |
+| The Handmaids Tale                      |      21 | Ashley Rivera   |        14 |        42 | 2026-02-26  | 2026-03-12 |           29 |          29.00 |
+| 1984                                    |      23 | Natalie Garcia  |        16 |        43 | 2026-02-28  | 2026-03-14 |           27 |          27.00 |
+| Frankenstein                            |      24 | Ethan Flores    |        17 |        44 | 2026-03-01  | 2026-03-15 |           26 |          26.00 |
+| Dune                                    |      25 | Joshua Ramirez  |        19 |        45 | 2026-03-02  | 2026-03-16 |           25 |          25.00 |
+| Enders Game                             |      26 | Valeria Morales |        20 |        46 | 2026-03-03  | 2026-03-17 |           24 |          24.00 |
+| Fahrenheit 451                          |      27 | Kayla Ortiz     |        22 |        47 | 2026-03-04  | 2026-03-18 |           23 |          23.00 |
+| The Hitchhikers Guide to the Galaxy     |      28 | Luis Reyes      |        23 |        48 | 2026-03-05  | 2026-03-19 |           22 |          22.00 |
+| Harry Potter and the Sorcerers Stone    |      29 | Mia Cruz        |        24 |        49 | 2026-03-06  | 2026-03-20 |           21 |          21.00 |
++-----------------------------------------+---------+-----------------+-----------+-----------+-------------+------------+--------------+----------------+
 +-----------------------------------------+---------------------+-----------------+---------+--------------+------------------+----------------+---------------------+---------------------+
 | title                                   | author              | category        | book_id | total_copies | available_copies | copies_on_loan | availability_status | next_available_date |
 +-----------------------------------------+---------------------+-----------------+---------+--------------+------------------+----------------+---------------------+---------------------+
-| Animal Farm                             | George Orwell       | Adult Fiction   |      23 |            4 |                3 |              1 | Available           | NULL                |
-| Gone Girl                               | Gillian Flynn       | Adult Fiction   |      28 |            3 |                2 |              1 | Low Availability    | 2026-04-29          |
-| The Alchemist                           | Paulo Coelho        | Adult Fiction   |      29 |            5 |                4 |              1 | Available           | 2026-04-30          |
-| The Girl with the Dragon Tattoo         | Stieg Larsson       | Adult Fiction   |      25 |            4 |                3 |              1 | Available           | NULL                |
-| The Handmaids Tale                      | Margaret Atwood     | Adult Fiction   |      27 |            4 |                3 |              1 | Available           | 2026-04-28          |
-| The Kite Runner                         | Khaled Hosseini     | Adult Fiction   |      26 |            5 |                4 |              1 | Available           | NULL                |
-| The Lord of the Flies                   | William Golding     | Adult Fiction   |      24 |            4 |                3 |              1 | Available           | NULL                |
-| A Game of Thrones                       | George R.R. Martin  | Fantasy         |      38 |            4 |                3 |              1 | Available           | 2026-04-29          |
-| Harry Potter and the Chamber of Secrets | J.K. Rowling        | Fantasy         |      37 |            5 |                4 |              1 | Available           | 2026-04-28          |
-| Harry Potter and the Sorcerers Stone    | J.K. Rowling        | Fantasy         |      36 |            6 |                5 |              1 | Available           | 2026-04-27          |
-| The Hobbit                              | J.R.R. Tolkien      | Fantasy         |      40 |            5 |                5 |              0 | Available           | NULL                |
-| The Lion the Witch and the Wardrobe     | C.S. Lewis          | Fantasy         |      41 |            4 |                4 |              0 | Available           | NULL                |
-| The Lord of the Rings                   | J.R.R. Tolkien      | Fantasy         |      39 |            5 |                5 |              0 | Available           | 2026-04-30          |
-| Anna Karenina                           | Leo Tolstoy         | Literature      |      13 |            3 |                3 |              0 | Available           | NULL                |
-| Crime and Punishment                    | Fyodor Dostoevsky   | Literature      |      12 |            3 |                3 |              0 | Available           | NULL                |
-| Don Quixote                             | Miguel de Cervantes | Literature      |      11 |            3 |                3 |              0 | Available           | NULL                |
+| Animal Farm                             | George Orwell       | Adult Fiction   |      18 |            4 |                4 |              0 | Available           | NULL                |
+| Gone Girl                               | Gillian Flynn       | Adult Fiction   |      22 |            1 |                0 |              1 | Unavailable         | 2026-04-26          |
+| The Handmaids Tale                      | Margaret Atwood     | Adult Fiction   |      21 |            4 |                2 |              2 | Low Availability    | 2026-04-30          |
+| The Kite Runner                         | Khaled Hosseini     | Adult Fiction   |      20 |            5 |                3 |              2 | Available           | 2026-04-29          |
+| The Lord of the Flies                   | William Golding     | Adult Fiction   |      19 |            4 |                3 |              1 | Available           | 2026-04-28          |
+| A Game of Thrones                       | George R.R. Martin  | Fantasy         |      31 |            4 |                2 |              2 | Low Availability    | 2026-04-30          |
+| Harry Potter and the Chamber of Secrets | J.K. Rowling        | Fantasy         |      30 |            5 |                3 |              2 | Available           | 2026-04-29          |
+| Harry Potter and the Sorcerers Stone    | J.K. Rowling        | Fantasy         |      29 |            6 |                4 |              2 | Available           | 2026-04-28          |
+| The Hobbit                              | J.R.R. Tolkien      | Fantasy         |      33 |            5 |                5 |              0 | Available           | NULL                |
+| The Lion the Witch and the Wardrobe     | C.S. Lewis          | Fantasy         |      34 |            0 |                0 |              0 | Unavailable         | NULL                |
+| The Lord of the Rings                   | J.R.R. Tolkien      | Fantasy         |      32 |            1 |                0 |              1 | Unavailable         | 2026-05-01          |
 | Dracula                                 | Bram Stoker         | Literature      |       8 |            2 |                2 |              0 | Low Availability    | NULL                |
-| Great Expectations                      | Charles Dickens     | Literature      |      14 |            3 |                3 |              0 | Available           | NULL                |
 | Jane Eyre                               | Charlotte Brontë    | Literature      |       6 |            3 |                3 |              0 | Available           | NULL                |
 | Moby-Dick                               | Herman Melville     | Literature      |      10 |            2 |                2 |              0 | Low Availability    | NULL                |
 | Oliver Twist                            | Charles Dickens     | Literature      |       9 |            3 |                3 |              0 | Available           | NULL                |
@@ -42,46 +35,44 @@
 | Romeo and Juliet                        | William Shakespeare | Literature      |       1 |            5 |                5 |              0 | Available           | NULL                |
 | The Great Gatsby                        | F. Scott Fitzgerald | Literature      |       4 |            4 |                4 |              0 | Available           | NULL                |
 | The Odyssey                             | Homer               | Literature      |       7 |            3 |                3 |              0 | Available           | NULL                |
-| The Scarlet Letter                      | Nathaniel Hawthorne | Literature      |      15 |            2 |                2 |              0 | Low Availability    | NULL                |
+| The Scarlet Letter                      | Nathaniel Hawthorne | Literature      |      11 |            2 |                2 |              0 | Low Availability    | NULL                |
 | To Kill a Mockingbird                   | Harper Lee          | Literature      |       5 |            5 |                5 |              0 | Available           | NULL                |
 | Wuthering Heights                       | Emily Brontë        | Literature      |       3 |            4 |                4 |              0 | Available           | NULL                |
-| 1984                                    | George Orwell       | Science Fiction |      30 |            3 |                2 |              1 | Low Availability    | 2026-04-26          |
-| Dune                                    | Frank Herbert       | Science Fiction |      32 |            5 |                4 |              1 | Available           | 2026-04-28          |
-| Enders Game                             | Orson Scott Card    | Science Fiction |      33 |            4 |                3 |              1 | Available           | 2026-04-29          |
-| Fahrenheit 451                          | Ray Bradbury        | Science Fiction |      34 |            4 |                3 |              1 | Available           | 2026-04-30          |
-| Frankenstein                            | Mary Shelley        | Science Fiction |      31 |            4 |                3 |              1 | Available           | 2026-04-27          |
-| Ready Player One                        | Ernest Cline        | Science Fiction |      43 |            3 |                2 |              1 | Low Availability    | NULL                |
-| The Hitchhikers Guide to the Galaxy     | Douglas Adams       | Science Fiction |      35 |            4 |                3 |              1 | Available           | 2026-04-26          |
-| The Martian                             | Andy Weir           | Science Fiction |      42 |            4 |                4 |              0 | Available           | NULL                |
-| Divergent                               | Veronica Roth       | Young Adult     |      19 |            3 |                2 |              1 | Low Availability    | NULL                |
-| The Catcher in the Rye                  | J.D. Salinger       | Young Adult     |      21 |            4 |                3 |              1 | Available           | NULL                |
-| The Fault in Our Stars                  | John Green          | Young Adult     |      18 |            4 |                3 |              1 | Available           | NULL                |
-| The Giver                               | Lois Lowry          | Young Adult     |      22 |            4 |                3 |              1 | Available           | NULL                |
-| The Hunger Games                        | Suzanne Collins     | Young Adult     |      16 |            5 |                4 |              1 | Available           | NULL                |
-| The Maze Runner                         | James Dashner       | Young Adult     |      20 |            3 |                2 |              1 | Low Availability    | NULL                |
-| Twilight                                | Stephenie Meyer     | Young Adult     |      17 |            4 |                3 |              1 | Available           | NULL                |
+| 1984                                    | George Orwell       | Science Fiction |      23 |            3 |                1 |              2 | Low Availability    | 2026-04-27          |
+| Dune                                    | Frank Herbert       | Science Fiction |      25 |            5 |                3 |              2 | Available           | 2026-04-29          |
+| Enders Game                             | Orson Scott Card    | Science Fiction |      26 |            4 |                2 |              2 | Low Availability    | 2026-04-30          |
+| Fahrenheit 451                          | Ray Bradbury        | Science Fiction |      27 |            4 |                2 |              2 | Low Availability    | 2026-04-26          |
+| Frankenstein                            | Mary Shelley        | Science Fiction |      24 |            4 |                2 |              2 | Low Availability    | 2026-04-28          |
+| Ready Player One                        | Ernest Cline        | Science Fiction |      36 |            1 |                0 |              1 | Unavailable         | 2026-05-01          |
+| The Hitchhikers Guide to the Galaxy     | Douglas Adams       | Science Fiction |      28 |            4 |                2 |              2 | Low Availability    | 2026-04-27          |
+| The Martian                             | Andy Weir           | Science Fiction |      35 |            2 |                2 |              0 | Low Availability    | NULL                |
+| Divergent                               | Veronica Roth       | Young Adult     |      15 |            3 |                3 |              0 | Available           | NULL                |
+| The Fault in Our Stars                  | John Green          | Young Adult     |      14 |            4 |                4 |              0 | Available           | NULL                |
+| The Giver                               | Lois Lowry          | Young Adult     |      17 |            4 |                4 |              0 | Available           | NULL                |
+| The Hunger Games                        | Suzanne Collins     | Young Adult     |      12 |            5 |                5 |              0 | Available           | NULL                |
+| The Maze Runner                         | James Dashner       | Young Adult     |      16 |            3 |                3 |              0 | Available           | NULL                |
+| Twilight                                | Stephenie Meyer     | Young Adult     |      13 |            4 |                4 |              0 | Available           | NULL                |
 +-----------------------------------------+---------------------+-----------------+---------+--------------+------------------+----------------+---------------------+---------------------+
-+---------------------+-------------------+-------------+----------------+--------------+------------------+--------------------+---------+
-| title               | author            | category    | times_borrowed | total_copies | available_copies | last_borrowed_date | book_id |
-+---------------------+-------------------+-------------+----------------+--------------+------------------+--------------------+---------+
-| Divergent           | Veronica Roth     | Young Adult |              3 |            3 |                2 | 2026-03-12         |      19 |
-| Pride and Prejudice | Jane Austen       | Literature  |              3 |            5 |                5 | 2026-02-05         |       2 |
-| Twilight            | Stephenie Meyer   | Young Adult |              3 |            4 |                3 | 2026-03-09         |      17 |
-| The Hunger Games    | Suzanne Collins   | Young Adult |              3 |            5 |                4 | 2026-03-06         |      16 |
-| Anna Karenina       | Leo Tolstoy       | Literature  |              3 |            3 |                3 | 2026-02-27         |      13 |
-| Jane Eyre           | Charlotte Brontë  | Literature  |              3 |            3 |                3 | 2026-02-13         |       6 |
-| The Odyssey         | Homer             | Literature  |              2 |            3 |                3 | 2026-02-15         |       7 |
-| Dracula             | Bram Stoker       | Literature  |              2 |            2 |                2 | 2026-02-17         |       8 |
-| The Giver           | Lois Lowry        | Young Adult |              2 |            4 |                3 | 2026-03-04         |      22 |
-| Moby-Dick           | Herman Melville   | Literature  |              2 |            2 |                2 | 2026-02-20         |      10 |
-+---------------------+-------------------+-------------+----------------+--------------+------------------+--------------------+---------+
++-----------------------+---------------------+------------+----------------+--------------+------------------+--------------------+---------+
+| title                 | author              | category   | times_borrowed | total_copies | available_copies | last_borrowed_date | book_id |
++-----------------------+---------------------+------------+----------------+--------------+------------------+--------------------+---------+
+| Pride and Prejudice   | Jane Austen         | Literature |              3 |            5 |                5 | 2026-02-05         |       2 |
+| Jane Eyre             | Charlotte Brontë    | Literature |              3 |            3 |                3 | 2026-02-13         |       6 |
+| Romeo and Juliet      | William Shakespeare | Literature |              2 |            5 |                5 | 2026-02-02         |       1 |
+| Wuthering Heights     | Emily Brontë        | Literature |              2 |            4 |                4 | 2026-02-07         |       3 |
+| To Kill a Mockingbird | Harper Lee          | Literature |              2 |            5 |                5 | 2026-02-10         |       5 |
+| The Odyssey           | Homer               | Literature |              2 |            3 |                3 | 2026-02-15         |       7 |
+| Dracula               | Bram Stoker         | Literature |              2 |            2 |                2 | 2026-02-17         |       8 |
+| Moby-Dick             | Herman Melville     | Literature |              2 |            2 |                2 | 2026-02-20         |      10 |
+| The Great Gatsby      | F. Scott Fitzgerald | Literature |              1 |            4 |                4 | 2026-02-08         |       4 |
+| Oliver Twist          | Charles Dickens     | Literature |              1 |            3 |                3 | 2026-02-18         |       9 |
++-----------------------+---------------------+------------+----------------+--------------+------------------+--------------------+---------+
 +-------------------------------------+----------------+-----------------+------------------+--------------+---------+
 | title                               | author         | category        | publication_year | total_copies | book_id |
 +-------------------------------------+----------------+-----------------+------------------+--------------+---------+
-| Ready Player One                    | Ernest Cline   | Science Fiction |             2011 |            3 |      43 |
-| The Martian                         | Andy Weir      | Science Fiction |             2011 |            4 |      42 |
-| The Lion the Witch and the Wardrobe | C.S. Lewis     | Fantasy         |             1950 |            4 |      41 |
-| The Hobbit                          | J.R.R. Tolkien | Fantasy         |             1937 |            5 |      40 |
+| The Martian                         | Andy Weir      | Science Fiction |             2011 |            2 |      35 |
+| The Lion the Witch and the Wardrobe | C.S. Lewis     | Fantasy         |             1950 |            0 |      34 |
+| The Hobbit                          | J.R.R. Tolkien | Fantasy         |             1937 |            5 |      33 |
 +-------------------------------------+----------------+-----------------+------------------+--------------+---------+
 +-----------------+--------------------------+-----------+--------+-----------------+----------------------+------------+---------------------+
 | member_name     | email                    | member_id | status | number_of_fines | total_fines_assessed | total_paid | outstanding_balance |
@@ -100,64 +91,66 @@
 | Emma Ponce      | eponce22@fiu.edu         |        34 | active |               1 |                 4.00 |       4.00 |                0.00 |
 | Gabriela Mendez | gmendez14@fiu.edu        |        26 | active |               1 |                 3.00 |       3.00 |                0.00 |
 +-----------------+--------------------------+-----------+--------+-----------------+----------------------+------------+---------------------+
-+-----------------------------------------+-------------------+-------------+------------+---------------+-------------+------------------+------------------+-----------+
-| book_title                              | member_name       | rental_date | due_date   | rental_status | return_date | condition_status | return_timing    | rental_id |
-+-----------------------------------------+-------------------+-------------+------------+---------------+-------------+------------------+------------------+-----------+
-| The Lord of the Rings                   | Anna Gonzalez     | 2026-04-09  | 2026-04-30 | active        | NULL        | NULL             | Not Returned     |        65 |
-| Fahrenheit 451                          | Ariana Salazar    | 2026-04-09  | 2026-04-30 | active        | NULL        | NULL             | Not Returned     |        60 |
-| The Alchemist                           | Paula Delgado     | 2026-04-09  | 2026-04-30 | active        | NULL        | NULL             | Not Returned     |        55 |
-| A Game of Thrones                       | Chris Lawrence    | 2026-04-08  | 2026-04-29 | active        | NULL        | NULL             | Not Returned     |        64 |
-| Enders Game                             | Sebastian Rojas   | 2026-04-08  | 2026-04-29 | active        | NULL        | NULL             | Not Returned     |        59 |
-| Gone Girl                               | Victor Navarro    | 2026-04-08  | 2026-04-29 | active        | NULL        | NULL             | Not Returned     |        54 |
-| Harry Potter and the Chamber of Secrets | Maria Lopez       | 2026-04-07  | 2026-04-28 | active        | NULL        | NULL             | Not Returned     |        63 |
-| Dune                                    | Emma Ponce        | 2026-04-07  | 2026-04-28 | active        | NULL        | NULL             | Not Returned     |        58 |
-| The Handmaids Tale                      | Ricardo Santos    | 2026-04-07  | 2026-04-28 | active        | NULL        | NULL             | Not Returned     |        53 |
-| Harry Potter and the Sorcerers Stone    | Isabella Perez    | 2026-04-06  | 2026-04-27 | active        | NULL        | NULL             | Not Returned     |        62 |
-| Frankenstein                            | Noah Jimenez      | 2026-04-06  | 2026-04-27 | active        | NULL        | NULL             | Not Returned     |        57 |
-| The Hitchhikers Guide to the Galaxy     | Chris Rodriguez   | 2026-04-05  | 2026-04-26 | active        | NULL        | NULL             | Not Returned     |        61 |
-| 1984                                    | Lucia Herrera     | 2026-04-05  | 2026-04-26 | active        | NULL        | NULL             | Not Returned     |        56 |
-| Divergent                               | Quincy Williams   | 2026-03-12  | 2026-04-02 | returned      | 2026-04-02  | Good             | Returned On Time |        40 |
-| The Fault in Our Stars                  | Anna Gonzalez     | 2026-03-11  | 2026-04-01 | returned      | 2026-04-01  | Good             | Returned On Time |        39 |
-| The Fault in Our Stars                  | Chris Lawrence    | 2026-03-10  | 2026-03-31 | returned      | 2026-04-02  | Lost             | Returned Late    |        38 |
-| Twilight                                | Ethan Flores      | 2026-03-09  | 2026-03-30 | returned      | 2026-03-30  | Good             | Returned On Time |        37 |
-| Twilight                                | Natalie Garcia    | 2026-03-08  | 2026-03-29 | returned      | 2026-03-29  | Good             | Returned On Time |        36 |
-| Twilight                                | Brandon Hernandez | 2026-03-07  | 2026-03-28 | returned      | 2026-03-28  | Good             | Returned On Time |        35 |
-| The Lord of the Flies                   | Mia Cruz          | 2026-03-06  | 2026-03-20 | overdue       | NULL        | NULL             | Not Returned     |        50 |
-+-----------------------------------------+-------------------+-------------+------------+---------------+-------------+------------------+------------------+-----------+
-+-----------------------------------------+--------------------+-----------------+-----------------------+-------------+------------+---------------+-----------+
-| book_title                              | author             | member_name     | email                 | rental_date | due_date   | rental_status | rental_id |
-+-----------------------------------------+--------------------+-----------------+-----------------------+-------------+------------+---------------+-----------+
-| The Alchemist                           | Paulo Coelho       | Paula Delgado   | pdelgado18@fiu.edu    | 2026-04-09  | 2026-04-30 | active        |        55 |
-| Fahrenheit 451                          | Ray Bradbury       | Ariana Salazar  | asalazar24@fiu.edu    | 2026-04-09  | 2026-04-30 | active        |        60 |
-| The Lord of the Rings                   | J.R.R. Tolkien     | Anna Gonzalez   | agonza@fiu.edu        | 2026-04-09  | 2026-04-30 | active        |        65 |
-| Gone Girl                               | Gillian Flynn      | Victor Navarro  | vnavarro17@fiu.edu    | 2026-04-08  | 2026-04-29 | active        |        54 |
-| Enders Game                             | Orson Scott Card   | Sebastian Rojas | srojas23@fiu.edu      | 2026-04-08  | 2026-04-29 | active        |        59 |
-| A Game of Thrones                       | George R.R. Martin | Chris Lawrence  | clawre@fiu.edu        | 2026-04-08  | 2026-04-29 | active        |        64 |
-| The Handmaids Tale                      | Margaret Atwood    | Ricardo Santos  | rsantos15@fiu.edu     | 2026-04-07  | 2026-04-28 | active        |        53 |
-| Dune                                    | Frank Herbert      | Emma Ponce      | eponce22@fiu.edu      | 2026-04-07  | 2026-04-28 | active        |        58 |
-| Harry Potter and the Chamber of Secrets | J.K. Rowling       | Maria Lopez     | mlopez@fiu.edu        | 2026-04-07  | 2026-04-28 | active        |        63 |
-| Frankenstein                            | Mary Shelley       | Noah Jimenez    | njimenez21@fiu.edu    | 2026-04-06  | 2026-04-27 | active        |        57 |
-| Harry Potter and the Sorcerers Stone    | J.K. Rowling       | Isabella Perez  | iperez@fiu.edu        | 2026-04-06  | 2026-04-27 | active        |        62 |
-| 1984                                    | George Orwell      | Lucia Herrera   | lherrera20@fiu.edu    | 2026-04-05  | 2026-04-26 | active        |        56 |
-| The Hitchhikers Guide to the Galaxy     | Douglas Adams      | Chris Rodriguez | crodriguez032@fiu.edu | 2026-04-05  | 2026-04-26 | active        |        61 |
-+-----------------------------------------+--------------------+-----------------+-----------------------+-------------+------------+---------------+-----------+
-+------------------------+---------------+----------------+--------------------+-------------+------------------+-------------+-------------+-------------+-----------+-----------+
-| book_title             | isbn          | member_name    | email              | return_date | condition_status | fine_reason | fine_amount | paid_status | rental_id | return_id |
-+------------------------+---------------+----------------+--------------------+-------------+------------------+-------------+-------------+-------------+-----------+-----------+
-| The Fault in Our Stars | 9780525478812 | Chris Lawrence | clawre@fiu.edu     | 2026-04-02  | Lost             | Lost        |       50.00 | paid        |        38 |        38 |
-| The Scarlet Letter     | 9780143105442 | Ariana Salazar | asalazar24@fiu.edu | 2026-03-23  | Damaged          | Damaged     |       25.00 | paid        |        30 |        30 |
-| Anna Karenina          | 9780140449174 | Paula Delgado  | pdelgado18@fiu.edu | 2026-03-21  | Damaged          | Damaged     |       25.00 | paid        |        25 |        25 |
-| Moby-Dick              | 9780142437247 | Mia Cruz       | mcruz12@fiu.edu    | 2026-03-15  | Lost             | Lost        |       50.00 | partial     |        20 |        20 |
-| Jane Eyre              | 9780194614443 | Ashley Rivera  | arivera02@fiu.edu  | 2026-03-11  | Damaged          | Damaged     |       25.00 | unpaid      |        12 |        12 |
-| Oliver Twist           | 9780141439747 | Kayla Ortiz    | kortiz10@fiu.edu   | 2026-03-11  | Damaged          | Damaged     |       25.00 | paid        |        18 |        18 |
-| Wuthering Heights      | 9780141439556 | Maria Lopez    | mlopez@fiu.edu     | 2026-02-28  | Damaged          | Damaged     |       25.00 | paid        |         7 |         7 |
-+------------------------+---------------+----------------+--------------------+-------------+------------------+-------------+-------------+-------------+-----------+-----------+
++-----------------------------------------+-----------------+-------------+------------+---------------+-------------+------------------+------------------+-----------+
+| book_title                              | member_name     | rental_date | due_date   | rental_status | return_date | condition_status | return_timing    | rental_id |
++-----------------------------------------+-----------------+-------------+------------+---------------+-------------+------------------+------------------+-----------+
+| Ready Player One                        | Isabella Correa | 2026-04-10  | 2026-05-01 | active        | NULL        | NULL             | Not Returned     |        66 |
+| The Lord of the Rings                   | Quincy Jones    | 2026-04-10  | 2026-05-01 | active        | NULL        | NULL             | Not Returned     |        65 |
+| A Game of Thrones                       | Anna Gonzalez   | 2026-04-09  | 2026-04-30 | active        | NULL        | NULL             | Not Returned     |        64 |
+| Enders Game                             | Ariana Salazar  | 2026-04-09  | 2026-04-30 | active        | NULL        | NULL             | Not Returned     |        59 |
+| The Handmaids Tale                      | Paula Delgado   | 2026-04-09  | 2026-04-30 | active        | NULL        | NULL             | Not Returned     |        54 |
+| Harry Potter and the Chamber of Secrets | Chris Lawrence  | 2026-04-08  | 2026-04-29 | active        | NULL        | NULL             | Not Returned     |        63 |
+| Dune                                    | Sebastian Rojas | 2026-04-08  | 2026-04-29 | active        | NULL        | NULL             | Not Returned     |        58 |
+| The Kite Runner                         | Victor Navarro  | 2026-04-08  | 2026-04-29 | active        | NULL        | NULL             | Not Returned     |        53 |
+| Harry Potter and the Sorcerers Stone    | Maria Lopez     | 2026-04-07  | 2026-04-28 | active        | NULL        | NULL             | Not Returned     |        62 |
+| Frankenstein                            | Emma Ponce      | 2026-04-07  | 2026-04-28 | active        | NULL        | NULL             | Not Returned     |        57 |
+| The Lord of the Flies                   | Ricardo Santos  | 2026-04-07  | 2026-04-28 | active        | NULL        | NULL             | Not Returned     |        52 |
+| The Hitchhikers Guide to the Galaxy     | Isabella Perez  | 2026-04-06  | 2026-04-27 | active        | NULL        | NULL             | Not Returned     |        61 |
+| 1984                                    | Noah Jimenez    | 2026-04-06  | 2026-04-27 | active        | NULL        | NULL             | Not Returned     |        56 |
+| Fahrenheit 451                          | Chris Rodriguez | 2026-04-05  | 2026-04-26 | active        | NULL        | NULL             | Not Returned     |        60 |
+| Gone Girl                               | Lucia Herrera   | 2026-04-05  | 2026-04-26 | active        | NULL        | NULL             | Not Returned     |        55 |
+| The Lord of the Flies                   | Quincy Williams | 2026-03-12  | 2026-04-02 | returned      | 2026-04-02  | Good             | Returned On Time |        40 |
+| Animal Farm                             | Anna Gonzalez   | 2026-03-11  | 2026-04-01 | returned      | 2026-04-01  | Good             | Returned On Time |        39 |
+| Animal Farm                             | Chris Lawrence  | 2026-03-10  | 2026-03-31 | returned      | 2026-04-02  | Lost             | Returned Late    |        38 |
+| The Giver                               | Ethan Flores    | 2026-03-09  | 2026-03-30 | returned      | 2026-03-30  | Good             | Returned On Time |        37 |
+| The Giver                               | Natalie Garcia  | 2026-03-08  | 2026-03-29 | returned      | 2026-03-29  | Good             | Returned On Time |        36 |
++-----------------------------------------+-----------------+-------------+------------+---------------+-------------+------------------+------------------+-----------+
++-----------------------------------------+--------------------+-----------------+------------------------+-------------+------------+---------------+-----------+
+| book_title                              | author             | member_name     | email                  | rental_date | due_date   | rental_status | rental_id |
++-----------------------------------------+--------------------+-----------------+------------------------+-------------+------------+---------------+-----------+
+| The Lord of the Rings                   | J.R.R. Tolkien     | Quincy Jones    | qjones@library.fiu.edu | 2026-04-10  | 2026-05-01 | active        |        65 |
+| Ready Player One                        | Ernest Cline       | Isabella Correa | icorr014@fiu.edu       | 2026-04-10  | 2026-05-01 | active        |        66 |
+| The Handmaids Tale                      | Margaret Atwood    | Paula Delgado   | pdelgado18@fiu.edu     | 2026-04-09  | 2026-04-30 | active        |        54 |
+| Enders Game                             | Orson Scott Card   | Ariana Salazar  | asalazar24@fiu.edu     | 2026-04-09  | 2026-04-30 | active        |        59 |
+| A Game of Thrones                       | George R.R. Martin | Anna Gonzalez   | agonza@fiu.edu         | 2026-04-09  | 2026-04-30 | active        |        64 |
+| The Kite Runner                         | Khaled Hosseini    | Victor Navarro  | vnavarro17@fiu.edu     | 2026-04-08  | 2026-04-29 | active        |        53 |
+| Dune                                    | Frank Herbert      | Sebastian Rojas | srojas23@fiu.edu       | 2026-04-08  | 2026-04-29 | active        |        58 |
+| Harry Potter and the Chamber of Secrets | J.K. Rowling       | Chris Lawrence  | clawre@fiu.edu         | 2026-04-08  | 2026-04-29 | active        |        63 |
+| The Lord of the Flies                   | William Golding    | Ricardo Santos  | rsantos15@fiu.edu      | 2026-04-07  | 2026-04-28 | active        |        52 |
+| Frankenstein                            | Mary Shelley       | Emma Ponce      | eponce22@fiu.edu       | 2026-04-07  | 2026-04-28 | active        |        57 |
+| Harry Potter and the Sorcerers Stone    | J.K. Rowling       | Maria Lopez     | mlopez@fiu.edu         | 2026-04-07  | 2026-04-28 | active        |        62 |
+| 1984                                    | George Orwell      | Noah Jimenez    | njimenez21@fiu.edu     | 2026-04-06  | 2026-04-27 | active        |        56 |
+| The Hitchhikers Guide to the Galaxy     | Douglas Adams      | Isabella Perez  | iperez@fiu.edu         | 2026-04-06  | 2026-04-27 | active        |        61 |
+| Gone Girl                               | Gillian Flynn      | Lucia Herrera   | lherrera20@fiu.edu     | 2026-04-05  | 2026-04-26 | active        |        55 |
+| Fahrenheit 451                          | Ray Bradbury       | Chris Rodriguez | crodriguez032@fiu.edu  | 2026-04-05  | 2026-04-26 | active        |        60 |
++-----------------------------------------+--------------------+-----------------+------------------------+-------------+------------+---------------+-----------+
++-------------------+---------------+----------------+--------------------+-------------+------------------+-------------+-------------+-------------+-----------+-----------+
+| book_title        | isbn          | member_name    | email              | return_date | condition_status | fine_reason | fine_amount | paid_status | rental_id | return_id |
++-------------------+---------------+----------------+--------------------+-------------+------------------+-------------+-------------+-------------+-----------+-----------+
+| Animal Farm       | 9780141393056 | Chris Lawrence | clawre@fiu.edu     | 2026-04-02  | Lost             | Lost        |       50.00 | paid        |        38 |        38 |
+| Divergent         | 9780062024039 | Ariana Salazar | asalazar24@fiu.edu | 2026-03-23  | Damaged          | Damaged     |       25.00 | paid        |        30 |        30 |
+| Twilight          | 9780316015844 | Paula Delgado  | pdelgado18@fiu.edu | 2026-03-21  | Damaged          | Damaged     |       25.00 | paid        |        25 |        25 |
+| Moby-Dick         | 9780142437247 | Mia Cruz       | mcruz12@fiu.edu    | 2026-03-15  | Lost             | Lost        |       50.00 | partial     |        20 |        20 |
+| Jane Eyre         | 9780194614443 | Ashley Rivera  | arivera02@fiu.edu  | 2026-03-11  | Damaged          | Damaged     |       25.00 | unpaid      |        12 |        12 |
+| Oliver Twist      | 9780141439747 | Kayla Ortiz    | kortiz10@fiu.edu   | 2026-03-11  | Damaged          | Damaged     |       25.00 | paid        |        18 |        18 |
+| Wuthering Heights | 9780141439556 | Maria Lopez    | mlopez@fiu.edu     | 2026-02-28  | Damaged          | Damaged     |       25.00 | paid        |         7 |         7 |
++-------------------+---------------+----------------+--------------------+-------------+------------------+-------------+-------------+-------------+-----------+-----------+
 +---------+---------------+----------------+--------------+
 | month   | total_rentals | unique_members | unique_books |
 +---------+---------------+----------------+--------------+
-| 2026-04 |            13 |             13 |           13 |
-| 2026-03 |            18 |             15 |           10 |
-| 2026-02 |            34 |             28 |           18 |
+| 2026-04 |            15 |             15 |           15 |
+| 2026-03 |            18 |             15 |           12 |
+| 2026-02 |            33 |             28 |           19 |
 +---------+---------------+----------------+--------------+
 +---------------+-----------------------+-------------+-------------+-------------+---------------------+-------------+------------+---------+
 | member_name   | book_title            | fine_reason | fine_amount | paid_amount | outstanding_balance | paid_status | fine_date  | fine_id |
@@ -171,7 +164,7 @@
 +-------------+--------------+
 | total_books | total_copies |
 +-------------+--------------+
-|          43 |          166 |
+|          36 |          127 |
 +-------------+--------------+
 +----------------+
 | active_members |
@@ -181,43 +174,15 @@
 +---------------+
 | overdue_count |
 +---------------+
-|            12 |
+|            11 |
 +---------------+
 +----------------+
 | active_rentals |
 +----------------+
-|             25 |
+|             26 |
 +----------------+
 +-------------------+
 | outstanding_fines |
 +-------------------+
 |             65.00 |
 +-------------------+
-+-----------+-----------------------------------------+-----------------+-------------+------------+--------+
-| rental_id | title                                   | member_name     | rental_date | due_date   | status |
-+-----------+-----------------------------------------+-----------------+-------------+------------+--------+
-|        65 | The Lord of the Rings                   | Anna Gonzalez   | 2026-04-09  | 2026-04-30 | active |
-|        60 | Fahrenheit 451                          | Ariana Salazar  | 2026-04-09  | 2026-04-30 | active |
-|        55 | The Alchemist                           | Paula Delgado   | 2026-04-09  | 2026-04-30 | active |
-|        64 | A Game of Thrones                       | Chris Lawrence  | 2026-04-08  | 2026-04-29 | active |
-|        59 | Enders Game                             | Sebastian Rojas | 2026-04-08  | 2026-04-29 | active |
-|        54 | Gone Girl                               | Victor Navarro  | 2026-04-08  | 2026-04-29 | active |
-|        63 | Harry Potter and the Chamber of Secrets | Maria Lopez     | 2026-04-07  | 2026-04-28 | active |
-|        58 | Dune                                    | Emma Ponce      | 2026-04-07  | 2026-04-28 | active |
-|        53 | The Handmaids Tale                      | Ricardo Santos  | 2026-04-07  | 2026-04-28 | active |
-|        62 | Harry Potter and the Sorcerers Stone    | Isabella Perez  | 2026-04-06  | 2026-04-27 | active |
-+-----------+-----------------------------------------+-----------------+-------------+------------+--------+
-+-----------+---------------------------------+-------------------+------------+--------------+
-| rental_id | title                           | member_name       | due_date   | days_overdue |
-+-----------+---------------------------------+-------------------+------------+--------------+
-|        51 | The Girl with the Dragon Tattoo | Alejandro Vega    | 2026-02-24 |           43 |
-|        52 | The Kite Runner                 | Gabriela Mendez   | 2026-02-25 |           42 |
-|        41 | Divergent                       | Daniel Martinez   | 2026-03-11 |           28 |
-|        42 | Divergent                       | Ashley Rivera     | 2026-03-12 |           27 |
-|        43 | The Maze Runner                 | Brandon Hernandez | 2026-03-13 |           26 |
-|        44 | The Maze Runner                 | Natalie Garcia    | 2026-03-14 |           25 |
-|        45 | The Catcher in the Rye          | Ethan Flores      | 2026-03-15 |           24 |
-|        46 | The Catcher in the Rye          | Joshua Ramirez    | 2026-03-16 |           23 |
-|        47 | The Giver                       | Valeria Morales   | 2026-03-17 |           22 |
-|        48 | The Giver                       | Kayla Ortiz       | 2026-03-18 |           21 |
-+-----------+---------------------------------+-------------------+------------+--------------+

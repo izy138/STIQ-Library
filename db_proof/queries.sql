@@ -52,7 +52,7 @@ ORDER BY times_borrowed DESC
 LIMIT 10;
 
 -- QUERY 4: Books Never Borrowed
--- LEFT JOIN + IS NULL whicht checks for books rental id = NULL
+-- finds all books that have never been borrowed by checking rental id is NULL
 SELECT
     b.title,
     b.author,
@@ -66,7 +66,7 @@ WHERE r.rental_id IS NULL
 ORDER BY b.publication_year DESC;
 
 -- QUERY 5: Total Fines by Member
--- JOIN, GROUP BY, aggregates members who have at least one fine.
+-- joins members and fines to get the total fines accrued by a member
 SELECT
     CONCAT(m.first_name, ' ', m.last_name) AS member_name,
     m.email,
@@ -82,7 +82,7 @@ GROUP BY m.member_id, m.first_name, m.last_name, m.email, m.status
 ORDER BY outstanding_balance DESC, total_fines_assessed DESC;
 
 -- QUERY 6: Rental History with Return Details
--- Multiple JOINs, LEFT JOIN Returns for any open rentals
+-- shows all the rental history with the return details its ordered by the rental date in descending so we can see the most recent rentals first
 SELECT
     b.title AS book_title,
     CONCAT(m.first_name, ' ', m.last_name) AS member_name,
@@ -101,11 +101,10 @@ FROM Rentals r
 INNER JOIN Books b ON r.book_id = b.book_id
 INNER JOIN Members m ON r.member_id = m.member_id
 LEFT JOIN Returns ret ON r.rental_id = ret.rental_id
-ORDER BY r.rental_date DESC
-LIMIT 20;
+ORDER BY r.rental_date DESC;
 
 -- QUERY 7: Recent Rentals for the last 7 days
--- Date filter on rental_date.
+-- shows only the rentals for the last week, its ordered by the rental date 
 SELECT
     b.title AS book_title,
     b.author,
@@ -122,7 +121,7 @@ WHERE r.rental_date >= CURDATE() - INTERVAL 7 DAY
 ORDER BY r.rental_date DESC;
 
 -- QUERY 8: Damaged or Lost Books Report
--- JOINs, filter on ret.condition_status and related fines.
+-- we find books using fine_reason to display damaged or lost books only with fines included.
 SELECT
     b.title AS book_title,
     b.isbn,
@@ -145,7 +144,7 @@ WHERE ret.condition_status IN ('Damaged', 'Lost')
 ORDER BY ret.return_date DESC;
 
 -- QUERY 9: Monthly Rental Activity
--- DATE_FORMAT + GROUP BY.
+-- we group the rentals by the month and year to see how many rentals, members and books were rented in each month.
 SELECT 
     DATE_FORMAT(r.rental_date, '%Y-%m') AS month,
     COUNT(*) AS total_rentals,
@@ -156,6 +155,7 @@ GROUP BY DATE_FORMAT(r.rental_date, '%Y-%m')
 ORDER BY month DESC;
 
 -- Query 10: Unpaid / partial fines
+-- we join the fines, members and rentals to get the unpaid or partial fines for each member and books
 SELECT
     CONCAT(m.first_name, ' ', m.last_name) AS member_name,
     b.title AS book_title,
