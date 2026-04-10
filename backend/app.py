@@ -26,7 +26,7 @@ DB_Connection = {
     'host': 'localhost', #running on our local machine
     'user': 'root', #my sql username
     'password': '', #my sql password -this is usually empty just press enter if ur asked
-    'database': 'library_system' #our database name we connect to
+    'database': 'library_system' # our database name we connect to
 }
 
 #this is needed to open a connection to the database
@@ -115,7 +115,7 @@ def static_file(path):
 def api_books():
     # book search for a book by title, author, or isbn.
     search = request.args.get('search', '')
-    # we use VIEW #2 book_availability_view to get the availability status of the books.
+    # we use VIEW #2 book_availability_view to get the availability status of the books. this view also shows all the info for the books in the books table, so we use it instead of just a regular select query.
     sql = """
         SELECT v.book_id, b.isbn, v.title, v.author, b.publisher, b.publication_year, v.category,
                v.total_copies, v.available_copies,
@@ -140,15 +140,9 @@ def api_books():
     rows = query_db(sql, tuple(params) if params else None)
     return jsonify(rows or [])
 
-#this route gets all the distinct categories from the books table, it is used to display the categories in a dropdown filter on the frontend. It takes the data from the database and sends it to the frontend to display in a dropdown format.
-@app.route('/api/books/categories')
-def api_books_categories():
-    rows = query_db("SELECT DISTINCT category FROM Books WHERE category IS NOT NULL ORDER BY category")
-    return jsonify([r['category'] for r in (rows or [])])
-
 #this route lets the user add a new book to the books table, it takes the data from the frontend and inserts it into the database. 
 # POST is used to insert a new item into our database 
-# it uses data.get() for each field and adds it to our insert Query.
+# it uses data.get() for each field and adds it to our Insert query.
 @app.route('/api/books', methods=['POST'])
 def api_books_post():
     data = request.get_json()
@@ -158,6 +152,7 @@ def api_books_post():
         """INSERT INTO Books (isbn, title, author, publisher, publication_year, category, total_copies, available_copies)
            VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
         (
+            # matches the users input to the database columns, if user doesnt enter a value for a column, it will be set to None to prevent errors.
             data.get('isbn'),
             data.get('title'),
             data.get('author'),
@@ -368,12 +363,16 @@ def api_fines():
         ORDER BY f.paid_status ASC, f.fine_date DESC
     """)
     return jsonify(rows or [])
+ 
+
+#THIS IS IMPORTANT, ITS WHERE THE QUERIES ARE RUN AND DISPLAYED FOR DASHBOARD!! make sure to read and understand how this works so we can explain it properly.
 
 # these are the 5 stats at the top of the homepage, they show the total books in the library, the total members, the total overdue books, and the total active rentals. The outstanding fines is the total amount of fines that are not paid or partiall paid.
+# idecided to put these in their own seperate route so if we want to add more stats we can just add them directly to the dictionary i made for sepcifically dashboard stats, its much easier to add new ones this way.
 @app.route('/api/stats')
 def api_stats():
     stats = {}
-    # query 1 total books and copies shows the total num of books and the copies, so it uses an if statement to check display the data correct
+    # query 1 total books and copies shows the total num of books and the copies, so it uses an if statement to check and display the data correct
     query = query_db(DASHBOARD_SQL[1])
     if query: 
         stats['total_books'] = query[0]['total'] or 0
@@ -389,10 +388,10 @@ def api_stats():
     stats['outstanding_fines'] = float(query[0]['outstanding']) if query and query[0]['outstanding'] is not None else 0.0
     return jsonify(stats)
 
-#this route is used to run any of the 10 queries we made for the dashboard, it takes the query_id as a parameter and runs the corresponding sql query from queries.py. It then sends the data to the frontend to display in a table format.
+# this route is used to run all of the 10 queries we made for the dashboard, it takes the query_id as a parameter and runs the corresponding sql query from queries.py. It then sends the data to the frontend to display in a table format. so if we want to run query 1 we would go to localhost:5002/api/queries/1 it is displayed here in json format, and it would be displayed in the frotend at localhost:5002/#query-1
 @app.route('/api/queries/<int:query_id>')
 def api_query(query_id):
-    sql = QUERIES_SQL.get(query_id)
+    sql = QUERIES_SQL.get(query_id) # this is where it happens, its gets the query_id from our dictionary in queries.py
     if sql is None:
         return jsonify({'error': 'Unknown query'}), 404
     rows = query_db(sql)

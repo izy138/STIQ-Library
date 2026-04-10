@@ -11,6 +11,7 @@ DROP TRIGGER IF EXISTS prevent_rental_if_suspended;
 -- TRIGGER 1: Auto Calculate a Fine On Return
 -- This trigger is used to calculate the fine amount when a book is returned late.
 -- It is used automatically insert the fine amount into the table.
+-- It also updates the rental status to returned, and updates the available copies of the book.
 DELIMITER // 
 CREATE TRIGGER auto_calculate_fine_on_return
 AFTER INSERT ON Returns
