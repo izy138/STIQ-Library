@@ -43,8 +43,8 @@ INSERT INTO Books (isbn, title, author, publisher, publication_year, category, t
 ('9780618640157', 'The Lord of the Rings', 'J.R.R. Tolkien', 'Allen and Unwin', 1954, 'Fantasy', 5, 5),
 ('9780547928227', 'The Hobbit', 'J.R.R. Tolkien', 'Houghton Mifflin', 1937, 'Fantasy', 5, 5),
 ('9780064471046', 'The Lion the Witch and the Wardrobe', 'C.S. Lewis', 'HarperCollins', 1950, 'Fantasy', 4, 4),
-('9781101905555', 'The Martian', 'Andy Weir', 'Crown Publishing', 2011, 'Science Fiction', 4, 4),
-('9780307887450', 'Ready Player One', 'Ernest Cline', 'Crown Publishing', 2011, 'Science Fiction', 3, 2);
+('9781101905555', 'The Martian', 'Andy Weir', 'Crown Publishing', 2011, 'Science Fiction', 0, 0),
+('9780307887450', 'Ready Player One', 'Ernest Cline', 'Crown Publishing', 2011, 'Science Fiction', 0, 0);
 
 
 -- 36 members: 4 Staff, 32 students/faculty

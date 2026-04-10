@@ -43,7 +43,7 @@
   // ----- Dashboard -----
   function viewDashboard() {
     app.innerHTML = '<div class="dashboard-page"><h1 class="page-title">Dashboard</h1><p class="page-subtitle">Library overview</p>' +
-      '<div id="stats" class="stats-grid">' +
+      '<div class="stats-grid">' +
       '<a href="#books" class="stat-card stat-card-link primary"><h3 id="stat-books">–</h3><p>Total Books</p></a>' +
       '<a href="#members" class="stat-card stat-card-link success"><h3 id="stat-members">–</h3><p>Active Members</p></a>' +
       '<a href="#rentals" class="stat-card stat-card-link danger"><h3 id="stat-rentals">–</h3><p>Active Rentals</p></a>' +
@@ -106,11 +106,11 @@
         const wrap = el('table-wrap');
         if (!wrap) return;
         if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No books found</p>'; return; }
-        wrap.innerHTML = '<table><thead><tr><th>ISBN</th><th>Title</th><th>Author</th><th>Category</th><th>Copies</th><th>Available</th><th>Status</th><th>Actions</th></tr></thead><tbody>' +
-          rows.map(b => '<tr><td><small>' + escapeHtml(b.isbn) + '</small></td><td><strong>' + escapeHtml(b.title) + '</strong></td><td>' + escapeHtml(b.author) + '</td><td>' + (b.category ? '<span class="badge secondary">' + escapeHtml(b.category) + '</span>' : '–') + '</td><td>' + b.total_copies + '</td><td>' + b.available_copies + '</td><td><span class="badge ' + badgeClass(b.status) + '">' + escapeHtml(b.status) + '</span></td><td><div style="display:flex;gap:0.4rem;flex-wrap:nowrap"><button type="button" class="btn btn-secondary" data-edit="' + b.book_id + '">Edit</button><button type="button" class="btn btn-danger" data-delete="' + b.book_id + '">Delete</button></div></td></tr>').join('') + '</tbody></table>';
+        wrap.innerHTML = '<table><thead><tr><th>ISBN</th><th>Title</th><th>Author</th><th>Publisher</th><th>Year</th><th>Category</th><th>Copies</th><th>Available</th><th>Status</th><th>Actions</th></tr></thead><tbody>' +
+          rows.map(b => '<tr><td><small>' + escapeHtml(b.isbn) + '</small></td><td><strong>' + escapeHtml(b.title) + '</strong></td><td>' + escapeHtml(b.author) + '</td><td>' + (b.publisher ? escapeHtml(b.publisher) : '–') + '</td><td>' + (b.publication_year != null && b.publication_year !== '' ? escapeHtml(String(b.publication_year)) : '–') + '</td><td>' + (b.category ? '<span class="badge secondary">' + escapeHtml(b.category) + '</span>' : '–') + '</td><td>' + b.total_copies + '</td><td>' + b.available_copies + '</td><td><span class="badge ' + badgeClass(b.status) + '">' + escapeHtml(b.status) + '</span></td><td><div style="display:flex;gap:0.4rem;flex-wrap:nowrap"><button type="button" class="btn btn-secondary" data-edit="' + b.book_id + '">Edit</button><button type="button" class="btn btn-danger" data-delete="' + b.book_id + '">Delete</button></div></td></tr>').join('') + '</tbody></table>';
         wrap.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => openEdit(parseInt(btn.dataset.edit, 10))));
         wrap.querySelectorAll('[data-delete]').forEach(btn => btn.addEventListener('click', () => { if (confirm('Delete this book?')) API.deleteBook(parseInt(btn.dataset.delete, 10)).then(() => loadBooks()).catch(() => alert('Delete failed')); }));
-      }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert alert-error">Failed to load books</p>'; });
+      }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert-error">Failed to load books</p>'; });
     }
 
     function openAdd() {
@@ -180,7 +180,7 @@
         wrap.innerHTML = '<table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Type</th><th>Status</th><th>Max Books</th><th>Actions</th></tr></thead><tbody>' +
           rows.map(m => '<tr><td>' + m.member_id + '</td><td><strong>' + escapeHtml(m.name) + '</strong></td><td>' + escapeHtml(m.email) + '</td><td><span class="badge secondary">' + escapeHtml(m.membership_type) + '</span></td><td><span class="badge ' + (m.status === 'active' ? 'success' : 'warning') + '">' + escapeHtml(m.status) + '</span></td><td>' + m.max_books_allowed + '</td><td><button type="button" class="btn btn-secondary" data-edit="' + m.member_id + '">Edit</button></td></tr>').join('') + '</tbody></table>';
         wrap.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => openEdit(parseInt(btn.dataset.edit, 10))));
-      }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert alert-error">Failed to load members</p>'; });
+      }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert-error">Failed to load members</p>'; });
     }
 
     function openAdd() {
@@ -229,7 +229,7 @@
       if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No active rentals. <a href="#checkout">Check out a book</a>.</p>'; return; }
       wrap.innerHTML = '<table><thead><tr><th>Rental ID</th><th>Book</th><th>Member</th><th>Rental Date</th><th>Due Date</th><th>Status</th><th>Days Overdue</th></tr></thead><tbody>' +
         rows.map(r => '<tr><td>' + r.rental_id + '</td><td><strong>' + escapeHtml(r.title) + '</strong><br><small>' + escapeHtml(r.author) + '</small></td><td>' + escapeHtml(r.member_name) + '<br><small>' + escapeHtml(r.email) + '</small></td><td>' + (r.rental_date || '') + '</td><td>' + (r.due_date || '') + '</td><td><span class="badge ' + (r.status === 'overdue' ? 'danger' : 'success') + '">' + escapeHtml(r.status) + '</span></td><td>' + (r.days_overdue > 0 ? '<span class="badge warning">' + r.days_overdue + ' days</span>' : '–') + '</td></tr>').join('') + '</tbody></table>';
-    }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert alert-error">Failed to load rentals</p>'; });
+    }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert-error">Failed to load rentals</p>'; });
   }
 
   // ----- Returns -----
@@ -241,7 +241,7 @@
       if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No returns yet. <a href="#process-return">Process a return</a>.</p>'; return; }
       wrap.innerHTML = '<table><thead><tr><th>Return ID</th><th>Book</th><th>Member</th><th>Rental Date</th><th>Due Date</th><th>Return Date</th><th>Condition</th><th>Days Overdue</th></tr></thead><tbody>' +
         rows.map(r => '<tr><td>' + r.return_id + '</td><td><strong>' + escapeHtml(r.title) + '</strong></td><td>' + escapeHtml(r.member_name) + '</td><td>' + (r.rental_date || '') + '</td><td>' + (r.due_date || '') + '</td><td>' + (r.return_date || '') + '</td><td><span class="badge secondary">' + escapeHtml(r.condition_on_return || '') + '</span></td><td>' + (r.days_overdue > 0 ? '<span class="badge warning">' + r.days_overdue + '</span>' : '–') + '</td></tr>').join('') + '</tbody></table>';
-    }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert alert-error">Failed to load returns</p>'; });
+    }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert-error">Failed to load returns</p>'; });
   }
 
   // ----- Checkout -----
@@ -304,7 +304,7 @@
         if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No fines found</p>'; return; }
         wrap.innerHTML = '<table><thead><tr><th>Fine ID</th><th>Member</th><th>Book</th><th>Reason</th><th>Amount</th><th>Paid</th><th>Outstanding</th><th>Status</th><th>Date</th></tr></thead><tbody>' +
           rows.map(f => '<tr><td>' + f.fine_id + '</td><td>' + escapeHtml(f.member_name) + '</td><td>' + escapeHtml(f.book_title) + '</td><td>' + escapeHtml(f.fine_reason) + '</td><td>$' + Number(f.fine_amount).toFixed(2) + '</td><td>$' + Number(f.paid_amount || 0).toFixed(2) + '</td><td><strong>$' + Number(f.outstanding || 0).toFixed(2) + '</strong></td><td><span class="badge ' + (f.paid_status === 'paid' ? 'success' : 'warning') + '">' + escapeHtml(f.paid_status) + '</span></td><td>' + (f.fine_date || '') + '</td></tr>').join('') + '</tbody></table>';
-      }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert alert-error">Failed to load fines</p>'; });
+      }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert-error">Failed to load fines</p>'; });
     }
     load();
   }
@@ -328,7 +328,7 @@
   // Matches backend/queries.py SELECT order (fallback if JSON key order is lost).
   const QUERY_TABLE_COLUMNS = {
     1: ['book_id', 'book_title', 'member_id', 'member_name', 'rental_id', 'rental_date', 'due_date', 'days_overdue', 'estimated_fine'],
-    2: ['book_id', 'title', 'author', 'category', 'total_copies', 'available_copies', 'copies_on_loan', 'availability_status', 'next_available_date'],
+    2: ['book_id', 'title', 'author', 'publication_year', 'publisher', 'category', 'total_copies', 'available_copies', 'copies_on_loan', 'availability_status', 'next_available_date'],
     3: ['book_id', 'title', 'author', 'category', 'times_borrowed', 'total_copies', 'available_copies', 'last_borrowed_date'],
     4: ['title', 'author', 'category', 'publication_year', 'total_copies', 'book_id'],
     5: ['member_id', 'member_name', 'email', 'status', 'number_of_fines', 'total_fines_assessed', 'total_paid', 'outstanding_balance'],
@@ -375,7 +375,7 @@
         '</tbody></table>';
     }).catch(() => {
       const w = el('table-wrap');
-      if (w) w.innerHTML = '<p class="alert alert-error">Failed to load query.</p>';
+      if (w) w.innerHTML = '<p class="alert-error">Failed to load query.</p>';
     });
   }
 
@@ -401,7 +401,7 @@
     }
     const view = routes[route] || viewDashboard;
     view();
-    setActiveNav(route === 'dashboard' ? 'dashboard' : route === 'checkout' ? 'rentals' : route === 'process-return' ? 'returns' : route.startsWith('query-') ? 'dashboard' : route);
+    setActiveNav(route === 'dashboard' ? 'dashboard' : route === 'checkout' ? 'rentals' : route === 'process-return' ? 'returns' : route);
   }
 
   window.addEventListener('hashchange', render);

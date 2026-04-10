@@ -26,6 +26,8 @@ SELECT
     b.book_id,
     b.title,
     b.author,
+    b.publication_year,
+    b.publisher,
     b.category,
     b.total_copies,
     b.available_copies,
@@ -56,5 +58,5 @@ SELECT
     MAX(r.rental_date) AS last_borrowed_date
 FROM Books b
 INNER JOIN Rentals r ON b.book_id = r.book_id
-GROUP BY b.book_id, b.title, b.author, b.category, b.total_copies, b.available_copies;
+GROUP BY b.book_id, b.title, b.author, b.category, b.total_copies, b.available_copies
 LIMIT 10;

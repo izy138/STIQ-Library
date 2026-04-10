@@ -94,14 +94,6 @@ body {
   overflow: hidden;
 }
 
-.card-header {
-  padding: 1rem 1.25rem;
-  background: #edf2f7;
-  border-bottom: 1px solid #e2e8f0;
-  font-weight: 600;
-  color: #2d3748;
-}
-
 .card-body {
   padding: 1.25rem;
 }
@@ -148,42 +140,6 @@ body {
   margin: 0;
   font-size: 0.875rem;
   color: #718096;
-}
-
-.stat-fines-total {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0;
-}
-
-.two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.dashboard-hint {
-  margin-top: 1rem;
-}
-
-.dashboard-hint a {
-  color: var(--primary);
-}
-
-.section-heading {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #2d3748;
-  margin: 1.5rem 0 0.75rem 0;
-}
-
-.section-note {
-  margin: 0 0 0.75rem 0;
-}
-
-.section-note a {
-  color: var(--primary);
 }
 
 .report-grid {
@@ -285,28 +241,7 @@ body {
   padding: 0.25rem 0.45rem;
 }
 
-.dash-doc-row {
-  margin: 0 0 0.75rem 0;
-}
-
-.dash-doc-row:last-child {
-  margin-bottom: 0;
-}
-
-.dash-doc-row a {
-  color: var(--primary);
-  text-decoration: none;
-}
-
-.dash-doc-row a:hover {
-  text-decoration: underline;
-}
-
 @media (max-width: 768px) {
-  .two-col {
-    grid-template-columns: 1fr;
-  }
-
   .report-grid {
     grid-template-columns: 1fr;
   }
@@ -346,7 +281,6 @@ tr:hover {
   font-weight: 600;
 }
 
-.badge.primary { background: #bee3f8; color: #2b6cb0; }
 .badge.success { background: #c6f6d5; color: #276749; }
 .badge.warning { background: #feebc8; color: #c05621; }
 .badge.danger { background: #fed7d7; color: #c53030; }
@@ -367,50 +301,15 @@ tr:hover {
   margin-bottom: 1rem;
 }
 
-.report-links {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.report-links li {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.report-links li:last-child {
-  border-bottom: none;
-}
-
-.report-links a {
-  color: var(--primary);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.report-links a:hover {
-  text-decoration: underline;
-}
-
 .back-link {
+  display: inline-block;
   margin: 0 0 1rem 0;
-}
-
-.back-link a {
   color: var(--primary);
   text-decoration: none;
 }
 
-.back-link a:hover {
+.back-link:hover {
   text-decoration: underline;
-}
-
-.muted {
-  color: #718096;
-}
-
-.small {
-  font-size: 0.875rem;
 }
 
 .actions {

@@ -16,9 +16,9 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = str(_REPO_ROOT / 'frontend')
 
 #we are using flask to run the server and handle requests for us between the frontend and backend
-# this is used to serve the static frontend files to the browser.
+# This is used to serve the static frontend files to the browser.
 app = Flask(__name__, static_folder=FRONTEND_DIR)
-#if sort_keys=True then jsonify would reorder all our columns alphabetically, we dont want this so we set it to False.
+# if sort_keys=True then jsonify would reorder all our columns alphabetically, we dont want this so we set it to False.
 app.json.sort_keys = False
 
 # dictionary that stores the database connection information.
@@ -30,7 +30,7 @@ DB_Connection = {
 }
 
 #this is needed to open a connection to the database
-#if the connection fails it returns None and lets us know there is a DB error.
+#if the connection fails it returns None and lets us know there is a DB error. 
 #it takes our DB_Connection info and connects with mysql.connector.connect()
 def get_db():
     try:
@@ -47,18 +47,18 @@ def query_db(sql, params=None):
         return []
     try:
         #we create a cursor object and the cursor allows us to execute the sql query
-        #dictionary=True means we want the results to be returned as a dictionary
+        #dictionary=True means we want the results to be returned as a dictionary 
         # without this it means we get our data listed like: (1, 'The Great Gatsby', 'F. Scott Fitzgerald', 1925, 'Scribner', 'Classic') instead of including the column names, which we need to display the data in a table format.
         cursor = connection.cursor(dictionary=True)
         #we execute the sql query with the cursor.execute() method
         cursor.execute(sql, params or ())
-        # we fetch the results of the query so we can display the data in a tabel.
+        #we fetch the results of the query so we can display the data in a tabel.
         col_names = [d[0] for d in (cursor.description or [])]
         rows = cursor.fetchall()
         #we close the cursor and the connection to the database because we are done and dont need the connection to stay open
         cursor.close()
         connection.close()
-
+        
         # rebuild each row in the SELECT column order so the frontend table matches the query/view.
         #we loop through the rows, columns, and data. then  convert the date objects to isoformat so we can display the data in a table format. isoformat is a way to format dates and times. without it we get the date as a string, when we need it to be a date object.
         out = []
@@ -98,6 +98,7 @@ def execute_db(sql, params=None):
             connection.close()
         return False
 
+
 # the route for the index page, it sends the index.html file to the browser
 @app.route('/')
 def index():
@@ -113,9 +114,9 @@ def static_file(path):
 #this routes to the books table page, it sends the books data from the db to the browser to display all he books in a table.
 @app.route('/api/books')
 def api_books():
-    # book search for a book by title, author, or isbn.
+    # book search for a book by title, author, or isbn
     search = request.args.get('search', '')
-    # we use VIEW #2 book_availability_view to get the availability status of the books.
+    # if the book_availability_view exists, we use it to get the availability status of the books.
     sql = """
         SELECT v.book_id, b.isbn, v.title, v.author, b.publisher, b.publication_year, v.category,
                v.total_copies, v.available_copies,
@@ -140,15 +141,13 @@ def api_books():
     rows = query_db(sql, tuple(params) if params else None)
     return jsonify(rows or [])
 
-#this route gets all the distinct categories from the books table, it is used to display the categories in a dropdown filter on the frontend. It takes the data from the database and sends it to the frontend to display in a dropdown format.
+
 @app.route('/api/books/categories')
 def api_books_categories():
     rows = query_db("SELECT DISTINCT category FROM Books WHERE category IS NOT NULL ORDER BY category")
     return jsonify([r['category'] for r in (rows or [])])
 
-#this route lets the user add a new book to the books table, it takes the data from the frontend and inserts it into the database. 
-# POST is used to insert a new item into our database 
-# it uses data.get() for each field and adds it to our insert Query.
+
 @app.route('/api/books', methods=['POST'])
 def api_books_post():
     data = request.get_json()
@@ -172,8 +171,7 @@ def api_books_post():
         return jsonify({'error': 'Insert failed'}), 500
     return jsonify({'ok': True}), 201
 
-#this route updates an existing book in the books table, it takes the data from the frontend and updates the database.
-#PUT is used to update an existing item in the db, uses data.get() for each field to the update query edit a row in the db.
+
 @app.route('/api/books/<int:book_id>', methods=['PUT'])
 def api_books_put(book_id):
     data = request.get_json()
@@ -198,7 +196,7 @@ def api_books_put(book_id):
         return jsonify({'error': 'Update failed'}), 500
     return jsonify({'ok': True})
 
-#this route deletes a book from the books table using book_id, it takes the book_id as a parameter and deletes the corresponding row from the database.
+
 @app.route('/api/books/<int:book_id>', methods=['DELETE'])
 def api_books_delete(book_id):
     ok = execute_db("DELETE FROM Books WHERE book_id = %s", (book_id,))
@@ -225,7 +223,7 @@ def api_members():
     rows = query_db(sql, tuple(params) if params else None)
     return jsonify(rows or [])
 
-#this route lets the user add a new member to the members table, it takes the data from the frontend and inserts it into the database.
+
 @app.route('/api/members', methods=['POST'])
 def api_members_post():
     data = request.get_json()
@@ -247,7 +245,7 @@ def api_members_post():
         return jsonify({'error': 'Insert failed'}), 500
     return jsonify({'ok': True}), 201
 
-#this route updates an existing member in the members table, it takes the data from the frontend and updates the database.
+
 @app.route('/api/members/<int:member_id>', methods=['PUT'])
 def api_members_put(member_id):
     data = request.get_json()
@@ -290,7 +288,7 @@ def api_rentals():
     """)
     return jsonify(rows or [])
 
-#this route handles checking out a book, it takes the data from the frontend and inserts it into the Rentals table in the database.
+
 @app.route('/api/rentals/checkout', methods=['POST'])
 def api_checkout():
     data = request.get_json()
@@ -325,7 +323,7 @@ def api_returns():
     """)
     return jsonify(rows or [])
 
-#this route gets all active rentals that have not been returned yet, it is used to display the active rentals. It takes the data from the database and sends it to the frontend to display in a table format.
+
 @app.route('/api/returns/active-rentals')
 def api_returns_active_rentals():
     rows = query_db("""
@@ -339,7 +337,7 @@ def api_returns_active_rentals():
     """)
     return jsonify(rows or [])
 
-#this route handles returning a book, it inserts a new row into Returns, updates the rental status, and increases the available copies of the book.
+
 @app.route('/api/returns', methods=['POST'])
 def api_returns_post():
     data = request.get_json()
@@ -375,16 +373,16 @@ def api_fines():
     """)
     return jsonify(rows or [])
 
-# these are the 5 stats at the top of the homepage, they show the total books in the library, the total members, the total overdue books, and the total active rentals. The outstanding fines is the total amount of fines that are not paid or partiall paid.
+
+
+#these are the 5 stats at the top of the homepage, they show the total books in the library, the total members, the total overdue books, and the total active rentals. The outstanding fines is the total amount of fines that are not paid.
 @app.route('/api/stats')
 def api_stats():
     stats = {}
-    # query 1 total books and copies shows the total num of books and the copies, so it uses an if statement to check display the data correct
     query = query_db(DASHBOARD_SQL[1])
-    if query: 
+    if query:
         stats['total_books'] = query[0]['total'] or 0
         stats['total_copies'] = query[0]['copies'] or 0
-    # routes for the queries 2-5 shows totals for active members, overdue books, active rentals, and outstanding fines.
     query = query_db(DASHBOARD_SQL[2])
     stats['active_members'] = query[0]['total'] if query else 0
     query = query_db(DASHBOARD_SQL[3])
@@ -395,7 +393,7 @@ def api_stats():
     stats['outstanding_fines'] = float(query[0]['outstanding']) if query and query[0]['outstanding'] is not None else 0.0
     return jsonify(stats)
 
-#this route is used to run any of the 10 queries we made for the dashboard, it takes the query_id as a parameter and runs the corresponding sql query from queries.py. It then sends the data to the frontend to display in a table format.
+
 @app.route('/api/queries/<int:query_id>')
 def api_query(query_id):
     sql = QUERIES_SQL.get(query_id)
@@ -404,7 +402,7 @@ def api_query(query_id):
     rows = query_db(sql)
     return jsonify(rows or [])
 
-# this is the main function that runs the app at port 5002
+
 if __name__ == '__main__':
     print("http://localhost:5002")
     app.run(debug=True, host='0.0.0.0', port=5002)

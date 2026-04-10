@@ -35,7 +35,7 @@
     activeRentalsForReturn: () => api('/returns/active-rentals'),
     processReturn: (data) => api('/returns', { method: 'POST', body: JSON.stringify(data) }),
 
-    fines: (params) => api('/fines' + (params && Object.keys(params).length ? '?' + new URLSearchParams(params) : '')),
+    fines: () => api('/fines'),
 
     query: (id) => api('/queries/' + encodeURIComponent(id))
   };

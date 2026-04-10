@@ -56,6 +56,8 @@ SELECT
     book_id,
     title,
     author,
+    publication_year,
+    publisher,
     category,
     total_copies,
     available_copies,
