@@ -1,6 +1,6 @@
 USE library_system;
 
--- 43 books some have no rentals.
+-- 36 books some have no rentals.
 INSERT INTO Books (isbn, title, author, publisher, publication_year, category, total_copies, available_copies) VALUES
 ('9783869711423', 'Romeo and Juliet', 'William Shakespeare', 'Bantam Classics', 1980, 'Literature', 5, 5),
 ('9780141439518', 'Pride and Prejudice', 'Jane Austen', 'Penguin Classics', 2003, 'Literature', 5, 5),
@@ -12,40 +12,37 @@ INSERT INTO Books (isbn, title, author, publisher, publication_year, category, t
 ('9780141439846', 'Dracula', 'Bram Stoker', 'Penguin Classics', 2003, 'Literature', 2, 2),
 ('9780141439747', 'Oliver Twist', 'Charles Dickens', 'Penguin Classics', 2003, 'Literature', 3, 3),
 ('9780142437247', 'Moby-Dick', 'Herman Melville', 'Penguin Classics', 2003, 'Literature', 2, 2),
-('9780142437230', 'Don Quixote', 'Miguel de Cervantes', 'Penguin Classics', 2003, 'Literature', 3, 3),
-('9780486415871', 'Crime and Punishment', 'Fyodor Dostoevsky', 'Dover Publications', 2001, 'Literature', 3, 3),
-('9780140449174', 'Anna Karenina', 'Leo Tolstoy', 'Penguin Classics', 2000, 'Literature', 3, 3),
-('9780141439563', 'Great Expectations', 'Charles Dickens', 'Penguin Classics', 2003, 'Literature', 3, 3),
 ('9780143105442', 'The Scarlet Letter', 'Nathaniel Hawthorne', 'Penguin Classics', 2003, 'Literature', 2, 2),
-('9780439023528', 'The Hunger Games', 'Suzanne Collins', 'Scholastic Press', 2008, 'Young Adult', 5, 4),
-('9780316015844', 'Twilight', 'Stephenie Meyer', 'Little Brown', 2005, 'Young Adult', 4, 3),
-('9780525478812', 'The Fault in Our Stars', 'John Green', 'Dutton Books', 2012, 'Young Adult', 4, 3),
-('9780062024039', 'Divergent', 'Veronica Roth', 'Katherine Tegen Books', 2011, 'Young Adult', 3, 2),
-('9780385737951', 'The Maze Runner', 'James Dashner', 'Delacorte Press', 2010, 'Young Adult', 3, 2),
-('9780316769174', 'The Catcher in the Rye', 'J.D. Salinger', 'Little Brown', 1951, 'Young Adult', 4, 3),
-('9780544336261', 'The Giver', 'Lois Lowry', 'HarperCollins', 1993, 'Young Adult', 4, 3),
-('9780141393056', 'Animal Farm', 'George Orwell', 'Penguin Classics', 1996, 'Adult Fiction', 4, 3),
+('9780439023528', 'The Hunger Games', 'Suzanne Collins', 'Scholastic Press', 2008, 'Young Adult', 5, 5),
+('9780316015844', 'Twilight', 'Stephenie Meyer', 'Little Brown', 2005, 'Young Adult', 4, 4),
+('9780525478812', 'The Fault in Our Stars', 'John Green', 'Dutton Books', 2012, 'Young Adult', 4, 4),
+('9780062024039', 'Divergent', 'Veronica Roth', 'Katherine Tegen Books', 2011, 'Young Adult', 3, 3),
+('9780385737951', 'The Maze Runner', 'James Dashner', 'Delacorte Press', 2010, 'Young Adult', 3, 3),
+('9780544336261', 'The Giver', 'Lois Lowry', 'HarperCollins', 1993, 'Young Adult', 4, 4),
+('9780141393056', 'Animal Farm', 'George Orwell', 'Penguin Classics', 1996, 'Adult Fiction', 4, 4),
 ('9780399501487', 'The Lord of the Flies', 'William Golding', 'Penguin', 2003, 'Adult Fiction', 4, 3),
-('9780307269751', 'The Girl with the Dragon Tattoo', 'Stieg Larsson', 'Knopf', 2008, 'Adult Fiction', 4, 3),
-('9781594631931', 'The Kite Runner', 'Khaled Hosseini', 'Riverhead Books', 2003, 'Adult Fiction', 5, 4),
-('9780385490818', 'The Handmaids Tale', 'Margaret Atwood', 'McClelland and Stewart', 1985, 'Adult Fiction', 4, 3),
-('9780307588371', 'Gone Girl', 'Gillian Flynn', 'Crown Publishing', 2012, 'Adult Fiction', 3, 2),
-('9780061122415', 'The Alchemist', 'Paulo Coelho', 'HarperOne', 1988, 'Adult Fiction', 5, 4),
-('9780812416299', '1984', 'George Orwell', 'Signet Classic', 1950, 'Science Fiction', 3, 2),
-('9780486282114', 'Frankenstein', 'Mary Shelley', 'Dover Publications', 1994, 'Science Fiction', 4, 3),
-('9780441013593', 'Dune', 'Frank Herbert', 'Chilton Books', 1965, 'Science Fiction', 5, 4),
-('9780812550702', 'Enders Game', 'Orson Scott Card', 'Tor Books', 1985, 'Science Fiction', 4, 3),
-('9781451673319', 'Fahrenheit 451', 'Ray Bradbury', 'Simon and Schuster', 1953, 'Science Fiction', 4, 3),
-('9780345391803', 'The Hitchhikers Guide to the Galaxy', 'Douglas Adams', 'Del Rey', 1995, 'Science Fiction', 4, 3),
-('9780439708180', 'Harry Potter and the Sorcerers Stone', 'J.K. Rowling', 'Scholastic', 1997, 'Fantasy', 6, 5),
-('9780439064873', 'Harry Potter and the Chamber of Secrets', 'J.K. Rowling', 'Scholastic', 1999, 'Fantasy', 5, 4),
-('9780553103540', 'A Game of Thrones', 'George R.R. Martin', 'Bantam Spectra', 1996, 'Fantasy', 4, 3),
-('9780618640157', 'The Lord of the Rings', 'J.R.R. Tolkien', 'Allen and Unwin', 1954, 'Fantasy', 5, 5),
+('9781594631931', 'The Kite Runner', 'Khaled Hosseini', 'Riverhead Books', 2003, 'Adult Fiction', 5, 3),
+('9780385490818', 'The Handmaids Tale', 'Margaret Atwood', 'McClelland and Stewart', 1985, 'Adult Fiction', 4, 2),
+('9780307588371', 'Gone Girl', 'Gillian Flynn', 'Crown Publishing', 2012, 'Adult Fiction', 1, 0),
+('9780812416299', '1984', 'George Orwell', 'Signet Classic', 1950, 'Science Fiction', 3, 1),
+('9780486282114', 'Frankenstein', 'Mary Shelley', 'Dover Publications', 1994, 'Science Fiction', 4, 2),
+('9780441013593', 'Dune', 'Frank Herbert', 'Chilton Books', 1965, 'Science Fiction', 5, 3),
+('9780812550702', 'Enders Game', 'Orson Scott Card', 'Tor Books', 1985, 'Science Fiction', 4, 2),
+('9781451673319', 'Fahrenheit 451', 'Ray Bradbury', 'Simon and Schuster', 1953, 'Science Fiction', 4, 2),
+('9780345391803', 'The Hitchhikers Guide to the Galaxy', 'Douglas Adams', 'Del Rey', 1995, 'Science Fiction', 4, 2),
+('9780439708180', 'Harry Potter and the Sorcerers Stone', 'J.K. Rowling', 'Scholastic', 1997, 'Fantasy', 6, 4),
+('9780439064873', 'Harry Potter and the Chamber of Secrets', 'J.K. Rowling', 'Scholastic', 1999, 'Fantasy', 5, 3),
+('9780553103540', 'A Game of Thrones', 'George R.R. Martin', 'Bantam Spectra', 1996, 'Fantasy', 4, 2),
+('9780618640157', 'The Lord of the Rings', 'J.R.R. Tolkien', 'Allen and Unwin', 1954, 'Fantasy', 1, 0),
 ('9780547928227', 'The Hobbit', 'J.R.R. Tolkien', 'Houghton Mifflin', 1937, 'Fantasy', 5, 5),
-('9780064471046', 'The Lion the Witch and the Wardrobe', 'C.S. Lewis', 'HarperCollins', 1950, 'Fantasy', 4, 4),
-('9781101905555', 'The Martian', 'Andy Weir', 'Crown Publishing', 2011, 'Science Fiction', 0, 0),
-('9780307887450', 'Ready Player One', 'Ernest Cline', 'Crown Publishing', 2011, 'Science Fiction', 0, 0);
+('9780064471046', 'The Lion the Witch and the Wardrobe', 'C.S. Lewis', 'HarperCollins', 1950, 'Fantasy', 0, 0),
+('9781101905555', 'The Martian', 'Andy Weir', 'Crown Publishing', 2011, 'Science Fiction', 2, 2),
+('9780307887450', 'Ready Player One', 'Ernest Cline', 'Crown Publishing', 2011, 'Science Fiction', 1, 0);
 
+-- book_availability_view: available_copies = 0 → Unavailable. Gone Girl (22), LOTR (32), Ready Player One (36): each 1,0 with exactly one open rental below. Lion/Witch (34): 0,0; Discontinued for checkout API tests only.
+UPDATE Books
+SET book_status = 'Discontinued'
+WHERE isbn = '9780064471046';
 
 -- 36 members: 4 Staff, 32 students/faculty
 -- suspended members have max_books_allowed = 0
@@ -88,7 +85,7 @@ INSERT INTO Members (first_name, last_name, email, phone, membership_type, regis
 ('Sebastian', 'Rojas', 'srojas23@fiu.edu', '3055551023', 'Student', '2026-02-09', 'active', 5),
 ('Ariana', 'Salazar', 'asalazar24@fiu.edu', '3055551024', 'Student', '2026-02-11', 'active', 5);
 
--- 65 rentals: 40 returned, 12 overdue, 13 active. 
+-- 66 rentals: 40 returned, 11 overdue, 15 active. (available_copies = total_copies minus active+overdue rows per book.)
 INSERT INTO Rentals (book_id, member_id, rental_date, due_date, status) VALUES
 (1, 1, '2026-02-01', '2026-02-22', 'returned'),
 (1, 2, '2026-02-02', '2026-02-23', 'returned'),
@@ -130,31 +127,32 @@ INSERT INTO Rentals (book_id, member_id, rental_date, due_date, status) VALUES
 (18, 10, '2026-03-10', '2026-03-31', 'returned'),
 (18, 11, '2026-03-11', '2026-04-01', 'returned'),
 (19, 12, '2026-03-12', '2026-04-02', 'returned'),
-(1, 13, '2026-02-25', '2026-03-11', 'overdue'),
-(2, 14, '2026-02-26', '2026-03-12', 'overdue'),
-(3, 15, '2026-02-27', '2026-03-13', 'overdue'),
-(4, 16, '2026-02-28', '2026-03-14', 'overdue'),
-(5, 17, '2026-03-01', '2026-03-15', 'overdue'),
-(6, 19, '2026-03-02', '2026-03-16', 'overdue'),
-(7, 20, '2026-03-03', '2026-03-17', 'overdue'),
-(8, 22, '2026-03-04', '2026-03-18', 'overdue'),
-(9, 23, '2026-03-05', '2026-03-19', 'overdue'),
-(10, 24, '2026-03-06', '2026-03-20', 'overdue'),
-(12, 25, '2026-02-10', '2026-02-24', 'overdue'),
-(13, 26, '2026-02-11', '2026-02-25', 'overdue'),
-(27, 27, '2026-04-07', '2026-04-28', 'active'),
-(28, 29, '2026-04-08', '2026-04-29', 'active'),
-(29, 30, '2026-04-09', '2026-04-30', 'active'),
-(30, 32, '2026-04-05', '2026-04-26', 'active'),
-(31, 33, '2026-04-06', '2026-04-27', 'active'),
-(32, 34, '2026-04-07', '2026-04-28', 'active'),
-(33, 35, '2026-04-08', '2026-04-29', 'active'),
-(34, 36, '2026-04-09', '2026-04-30', 'active'),
-(35, 5, '2026-04-05', '2026-04-26', 'active'),
-(36, 6, '2026-04-06', '2026-04-27', 'active'),
-(37, 7, '2026-04-07', '2026-04-28', 'active'),
-(38, 10, '2026-04-08', '2026-04-29', 'active'),
-(39, 11, '2026-04-09', '2026-04-30', 'active');
+(20, 13, '2026-02-25', '2026-03-11', 'overdue'),
+(21, 14, '2026-02-26', '2026-03-12', 'overdue'),
+(23, 16, '2026-02-28', '2026-03-14', 'overdue'),
+(24, 17, '2026-03-01', '2026-03-15', 'overdue'),
+(25, 19, '2026-03-02', '2026-03-16', 'overdue'),
+(26, 20, '2026-03-03', '2026-03-17', 'overdue'),
+(27, 22, '2026-03-04', '2026-03-18', 'overdue'),
+(28, 23, '2026-03-05', '2026-03-19', 'overdue'),
+(29, 24, '2026-03-06', '2026-03-20', 'overdue'),
+(30, 25, '2026-02-10', '2026-02-24', 'overdue'),
+(31, 26, '2026-02-11', '2026-02-25', 'overdue'),
+(19, 27, '2026-04-07', '2026-04-28', 'active'),
+(20, 29, '2026-04-08', '2026-04-29', 'active'),
+(21, 30, '2026-04-09', '2026-04-30', 'active'),
+(22, 32, '2026-04-05', '2026-04-26', 'active'),
+(23, 33, '2026-04-06', '2026-04-27', 'active'),
+(24, 34, '2026-04-07', '2026-04-28', 'active'),
+(25, 35, '2026-04-08', '2026-04-29', 'active'),
+(26, 36, '2026-04-09', '2026-04-30', 'active'),
+(27, 5, '2026-04-05', '2026-04-26', 'active'),
+(28, 6, '2026-04-06', '2026-04-27', 'active'),
+(29, 7, '2026-04-07', '2026-04-28', 'active'),
+(30, 10, '2026-04-08', '2026-04-29', 'active'),
+(31, 11, '2026-04-09', '2026-04-30', 'active'),
+(32, 4, '2026-04-10', '2026-05-01', 'active'),
+(36, 2, '2026-04-10', '2026-05-01', 'active');
 
 -- 40 returns
 INSERT INTO Returns (rental_id, return_date, condition_status, notes, processed_by) VALUES

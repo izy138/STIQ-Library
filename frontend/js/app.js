@@ -1,11 +1,13 @@
 /**
- * SPA router and all views - Library Management System
+ * SPA router and all views for frontend
  */
 (function () {
   const API = window.LibraryAPI;
   if (!API) return;
 
   const app = document.getElementById('app');
+  const themeToggle = document.getElementById('theme-toggle');
+  const THEME_KEY = 'library-theme';
 
   function escapeHtml(s) {
     if (s == null) return '';
@@ -15,6 +17,29 @@
   }
 
   function el(id) { return document.getElementById(id); }
+
+  function applyTheme(theme) {
+    const dark = theme === 'dark';
+    document.body.classList.toggle('dark-mode', dark);
+    if (themeToggle) themeToggle.textContent = dark ? 'Light Mode' : 'Dark Mode';
+  }
+
+  function initTheme() {
+    let savedTheme = null;
+    try {
+      savedTheme = localStorage.getItem(THEME_KEY);
+    } catch (_) {}
+    const preferredDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(savedTheme || (preferredDark ? 'dark' : 'light'));
+  }
+
+  function toggleTheme() {
+    const nextTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+    applyTheme(nextTheme);
+    try {
+      localStorage.setItem(THEME_KEY, nextTheme);
+    } catch (_) {}
+  }
 
   function getRoute() {
     const h = (location.hash || '#').slice(1);
@@ -48,7 +73,7 @@
       '<a href="#members" class="stat-card stat-card-link success"><h3 id="stat-members">–</h3><p>Active Members</p></a>' +
       '<a href="#rentals" class="stat-card stat-card-link danger"><h3 id="stat-rentals">–</h3><p>Active Rentals</p></a>' +
       '<a href="#query-1" class="stat-card stat-card-link warning"><h3 id="stat-overdue">–</h3><p>Overdue</p></a>' +
-      '<a href="#fines" class="stat-card stat-card-link secondary"><h3 id="stat-fines">–</h3><p>Outstanding Fines</p></a></div>' +
+      '<a href="#fines" class="stat-card stat-card-link purple"><h3 id="stat-fines">–</h3><p>Outstanding Fines</p></a></div>' +
       '<h2 class="page-title" style="margin-top:1.5rem;font-size:1.35rem">Queries</h2>' +
       '<p class="page-subtitle">Open any query</p>' +
       '<div id="dashboard-query-cards" class="report-grid"></div></div>';
@@ -76,6 +101,7 @@
 
   // ----- Books -----
   function badgeClass(status) {
+    if (status === 'Discontinued') return 'secondary';
     if (status === 'Available') return 'success';
     if (status === 'Low Stock') return 'warning';
     return 'danger';
@@ -87,14 +113,20 @@
       '<div class="filters"><div class="form-group"><label>Search</label><input type="text" id="filter-search" placeholder="Title, author, ISBN"></div>' +
       '<button type="button" class="btn btn-primary" id="btn-search">Search</button></div>' +
       '<div id="table-wrap" class="table-wrap"></div></div></div>' +
-      '<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10;align-items:center;justify-content:center;"><div style="background:white;padding:1.5rem;border-radius:8px;max-width:480px;width:90%;max-height:90vh;overflow:auto;">' +
-      '<h2 style="margin-top:0" id="modal-title">Add Book</h2><form id="form-book">' +
-      '<input type="hidden" id="book-id"><div class="form-group"><label>ISBN *</label><input type="text" id="book-isbn" required></div>' +
-      '<div class="form-group"><label>Title *</label><input type="text" id="book-title" required></div><div class="form-group"><label>Author *</label><input type="text" id="book-author" required></div>' +
-      '<div class="form-group"><label>Publisher</label><input type="text" id="book-publisher"></div><div class="form-group"><label>Publication Year</label><input type="number" id="book-year" min="1400" max="2030"></div>' +
-      '<div class="form-group"><label>Category</label><input type="text" id="book-category"></div><div class="form-group"><label>Total Copies *</label><input type="number" id="book-total" min="0" value="1" required></div>' +
+      '<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10;align-items:center;justify-content:center;padding:0.35rem;"><div class="modal-panel-compact">' +
+      '<h2 class="modal-compact-title" id="modal-title">Add Book</h2>' +
+      '<form id="form-book" class="modal-form-grid">' +
+      '<input type="hidden" id="book-id">' +
+      '<div class="form-group form-group--span2"><label>ISBN *</label><input type="text" id="book-isbn" required></div>' +
+      '<div class="form-group form-group--span2"><label>Title *</label><input type="text" id="book-title" required></div>' +
+      '<div class="form-group"><label>Author *</label><input type="text" id="book-author" required></div>' +
+      '<div class="form-group"><label>Publisher</label><input type="text" id="book-publisher"></div>' +
+      '<div class="form-group"><label>Publication Year</label><input type="number" id="book-year" min="1400" max="2030"></div>' +
+      '<div class="form-group"><label>Category</label><input type="text" id="book-category"></div>' +
+      '<div class="form-group"><label>Total Copies *</label><input type="number" id="book-total" min="0" value="1" required></div>' +
       '<div class="form-group"><label>Available Copies *</label><input type="number" id="book-available" min="0" value="1" required></div>' +
-      '<div style="display:flex;gap:0.5rem;margin-top:1rem"><button type="submit" class="btn btn-primary">Save</button><button type="button" class="btn btn-secondary" id="btn-cancel">Cancel</button></div></form></div></div>';
+      '<div class="form-group form-group--span2" id="book-status-wrap" style="display:none"><label>Catalog status</label><select id="book-status"><option value="Active">Active</option><option value="Discontinued">Discontinued</option></select></div>' +
+      '<div class="modal-form-actions"><button type="submit" class="btn btn-primary">Save</button><button type="button" class="btn btn-secondary" id="btn-cancel">Cancel</button></div></form></div></div>';
     const modal = el('modal');
     const form = el('form-book');
 
@@ -106,10 +138,9 @@
         const wrap = el('table-wrap');
         if (!wrap) return;
         if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No books found</p>'; return; }
-        wrap.innerHTML = '<table><thead><tr><th>ISBN</th><th>Title</th><th>Author</th><th>Publisher</th><th>Year</th><th>Category</th><th>Copies</th><th>Available</th><th>Status</th><th>Actions</th></tr></thead><tbody>' +
-          rows.map(b => '<tr><td><small>' + escapeHtml(b.isbn) + '</small></td><td><strong>' + escapeHtml(b.title) + '</strong></td><td>' + escapeHtml(b.author) + '</td><td>' + (b.publisher ? escapeHtml(b.publisher) : '–') + '</td><td>' + (b.publication_year != null && b.publication_year !== '' ? escapeHtml(String(b.publication_year)) : '–') + '</td><td>' + (b.category ? '<span class="badge secondary">' + escapeHtml(b.category) + '</span>' : '–') + '</td><td>' + b.total_copies + '</td><td>' + b.available_copies + '</td><td><span class="badge ' + badgeClass(b.status) + '">' + escapeHtml(b.status) + '</span></td><td><div style="display:flex;gap:0.4rem;flex-wrap:nowrap"><button type="button" class="btn btn-secondary" data-edit="' + b.book_id + '">Edit</button><button type="button" class="btn btn-danger" data-delete="' + b.book_id + '">Delete</button></div></td></tr>').join('') + '</tbody></table>';
+        wrap.innerHTML = '<table class="table-books"><thead><tr><th>ISBN</th><th>Title</th><th>Author</th><th>Publisher</th><th>Year</th><th>Category</th><th>Copies</th><th>Available</th><th>Status</th><th>Actions</th></tr></thead><tbody>' +
+          rows.map(b => '<tr><td><small>' + escapeHtml(b.isbn) + '</small></td><td><strong>' + escapeHtml(b.title) + '</strong></td><td>' + escapeHtml(b.author) + '</td><td>' + (b.publisher ? escapeHtml(b.publisher) : '–') + '</td><td>' + (b.publication_year != null && b.publication_year !== '' ? escapeHtml(String(b.publication_year)) : '–') + '</td><td>' + (b.category ? '<span class="badge secondary">' + escapeHtml(b.category) + '</span>' : '–') + '</td><td>' + b.total_copies + '</td><td>' + b.available_copies + '</td><td><span class="badge ' + badgeClass(b.status) + '">' + escapeHtml(b.status) + '</span></td><td><button type="button" class="btn btn-secondary" data-edit="' + b.book_id + '">Edit</button></td></tr>').join('') + '</tbody></table>';
         wrap.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => openEdit(parseInt(btn.dataset.edit, 10))));
-        wrap.querySelectorAll('[data-delete]').forEach(btn => btn.addEventListener('click', () => { if (confirm('Delete this book?')) API.deleteBook(parseInt(btn.dataset.delete, 10)).then(() => loadBooks()).catch(() => alert('Delete failed')); }));
       }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert-error">Failed to load books</p>'; });
     }
 
@@ -119,6 +150,7 @@
       form.reset();
       el('book-total').value = '1';
       el('book-available').value = '1';
+      el('book-status-wrap').style.display = 'none';
       modal.style.display = 'flex';
     }
 
@@ -137,6 +169,8 @@
         el('book-category').value = b.category || '';
         el('book-total').value = b.total_copies;
         el('book-available').value = b.available_copies;
+        el('book-status').value = b.book_status === 'Discontinued' ? 'Discontinued' : 'Active';
+        el('book-status-wrap').style.display = '';
         modal.style.display = 'flex';
       });
     }
@@ -145,6 +179,7 @@
       e.preventDefault();
       const id = el('book-id').value;
       const payload = { isbn: el('book-isbn').value, title: el('book-title').value, author: el('book-author').value, publisher: el('book-publisher').value || null, publication_year: el('book-year').value ? parseInt(el('book-year').value, 10) : null, category: el('book-category').value || null, total_copies: parseInt(el('book-total').value, 10), available_copies: parseInt(el('book-available').value, 10) };
+      if (id) payload.book_status = el('book-status').value;
       (id ? API.updateBook(parseInt(id, 10), payload) : API.addBook(payload)).then(() => { modal.style.display = 'none'; loadBooks(); }).catch(() => alert('Save failed'));
     });
     el('btn-cancel').addEventListener('click', () => { modal.style.display = 'none'; if (el('book-isbn')) el('book-isbn').readOnly = false; });
@@ -159,15 +194,32 @@
       '<div class="card"><div class="card-body">' +
       '<div class="filters"><div class="form-group"><label>Search</label><input type="text" id="filter-search" placeholder="Name or email"></div>' +
       '<button type="button" class="btn btn-primary" id="btn-search">Search</button></div><div id="table-wrap" class="table-wrap"></div></div></div>' +
-      '<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10;align-items:center;justify-content:center;"><div style="background:white;padding:1.5rem;border-radius:8px;max-width:480px;width:90%;max-height:90vh;overflow:auto;">' +
-      '<h2 style="margin-top:0" id="modal-title">Add Member</h2><form id="form-member">' +
-      '<input type="hidden" id="member-id"><div class="form-group"><label>First Name *</label><input type="text" id="member-first" required></div><div class="form-group"><label>Last Name *</label><input type="text" id="member-last" required></div>' +
-      '<div class="form-group"><label>Email *</label><input type="email" id="member-email" required></div><div class="form-group"><label>Phone</label><input type="text" id="member-phone"></div>' +
+      '<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10;align-items:center;justify-content:center;padding:0.35rem;"><div class="modal-panel-compact">' +
+      '<h2 class="modal-compact-title" id="modal-title">Add Member</h2>' +
+      '<form id="form-member" class="modal-form-grid">' +
+      '<input type="hidden" id="member-id">' +
+      '<div class="form-group"><label>First Name *</label><input type="text" id="member-first" required></div>' +
+      '<div class="form-group"><label>Last Name *</label><input type="text" id="member-last" required></div>' +
+      '<div class="form-group form-group--span2"><label>Email *</label><input type="email" id="member-email" required></div>' +
+      '<div class="form-group"><label>Phone</label><input type="text" id="member-phone"></div>' +
       '<div class="form-group"><label>Membership Type *</label><select id="member-type"><option value="Student">Student</option><option value="Faculty">Faculty</option><option value="Staff">Staff</option></select></div>' +
-      '<div class="form-group"><label>Max Books Allowed *</label><input type="number" id="member-maxbooks" min="1" value="5" required></div>' +
-      '<div style="display:flex;gap:0.5rem;margin-top:1rem"><button type="submit" class="btn btn-primary">Save</button><button type="button" class="btn btn-secondary" id="btn-cancel">Cancel</button></div></form></div></div>';
+      '<div class="form-group form-group--span2" id="member-status-wrap" style="display:none"><label>Account status</label><select id="member-status"><option value="active">Active</option><option value="suspended">Suspended</option><option value="expired">Expired</option></select></div>' +
+      '<div class="form-group form-group--span2"><label>Max Books Allowed *</label><input type="number" id="member-maxbooks" min="0" value="5" required></div>' +
+      '<div class="modal-form-actions"><button type="submit" class="btn btn-primary">Save</button><button type="button" class="btn btn-secondary" id="btn-cancel">Cancel</button></div></form></div></div>';
     const modal = el('modal');
     const form = el('form-member');
+
+    function syncMemberStatusUi() {
+      const st = el('member-status').value;
+      const mb = el('member-maxbooks');
+      if (st === 'suspended') {
+        mb.value = '0';
+        mb.disabled = true;
+      } else {
+        mb.disabled = false;
+        if (parseInt(mb.value, 10) === 0) mb.value = '5';
+      }
+    }
 
     function loadMembers() {
       const search = (el('filter-search') || {}).value || '';
@@ -178,7 +230,7 @@
         if (!wrap) return;
         if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No members found</p>'; return; }
         wrap.innerHTML = '<table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Type</th><th>Status</th><th>Max Books</th><th>Actions</th></tr></thead><tbody>' +
-          rows.map(m => '<tr><td>' + m.member_id + '</td><td><strong>' + escapeHtml(m.name) + '</strong></td><td>' + escapeHtml(m.email) + '</td><td><span class="badge secondary">' + escapeHtml(m.membership_type) + '</span></td><td><span class="badge ' + (m.status === 'active' ? 'success' : 'warning') + '">' + escapeHtml(m.status) + '</span></td><td>' + m.max_books_allowed + '</td><td><button type="button" class="btn btn-secondary" data-edit="' + m.member_id + '">Edit</button></td></tr>').join('') + '</tbody></table>';
+          rows.map(m => '<tr><td>' + m.member_id + '</td><td><strong>' + escapeHtml(m.name) + '</strong></td><td>' + escapeHtml(m.email) + '</td><td><span class="badge secondary">' + escapeHtml(m.membership_type) + '</span></td><td><span class="badge ' + (m.status === 'active' ? 'success' : m.status === 'suspended' ? 'danger' : 'warning') + '">' + escapeHtml(m.status) + '</span></td><td>' + m.max_books_allowed + '</td><td><button type="button" class="btn btn-secondary" data-edit="' + m.member_id + '">Edit</button></td></tr>').join('') + '</tbody></table>';
         wrap.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => openEdit(parseInt(btn.dataset.edit, 10))));
       }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert-error">Failed to load members</p>'; });
     }
@@ -189,6 +241,8 @@
       form.reset();
       el('member-type').value = 'Student';
       el('member-maxbooks').value = '5';
+      el('member-maxbooks').disabled = false;
+      el('member-status-wrap').style.display = 'none';
       modal.style.display = 'flex';
     }
 
@@ -204,14 +258,27 @@
         el('member-phone').value = m.phone || '';
         el('member-type').value = m.membership_type;
         el('member-maxbooks').value = m.max_books_allowed;
+        el('member-status').value = ['active', 'suspended', 'expired'].indexOf(m.status) >= 0 ? m.status : 'active';
+        el('member-status-wrap').style.display = '';
+        syncMemberStatusUi();
         modal.style.display = 'flex';
       });
     }
+
+    el('member-status').addEventListener('change', syncMemberStatusUi);
 
     form.addEventListener('submit', e => {
       e.preventDefault();
       const id = el('member-id').value;
       const payload = { first_name: el('member-first').value, last_name: el('member-last').value, email: el('member-email').value, phone: el('member-phone').value || null, membership_type: el('member-type').value, max_books_allowed: parseInt(el('member-maxbooks').value, 10) };
+      if (id) {
+        payload.status = el('member-status').value;
+        if (payload.status === 'suspended') payload.max_books_allowed = 0;
+        else if (payload.max_books_allowed < 1) {
+          alert('Max books must be at least 1 unless the account is suspended.');
+          return;
+        }
+      }
       (id ? API.updateMember(parseInt(id, 10), payload) : API.addMember(payload)).then(() => { modal.style.display = 'none'; loadMembers(); }).catch(() => alert('Save failed'));
     });
     el('btn-cancel').addEventListener('click', () => { modal.style.display = 'none'; });
@@ -220,76 +287,142 @@
     loadMembers();
   }
 
-  // ----- Rentals -----
-  function viewRentals() {
-    app.innerHTML = '<div class="actions"><h1 class="page-title" style="margin:0">Active Rentals</h1><a href="#checkout" class="btn btn-primary">Checkout Book</a></div><p class="page-subtitle">Currently checked out</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
-    API.rentals().then(rows => {
-      const wrap = el('table-wrap');
-      if (!wrap) return;
-      if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No active rentals. <a href="#checkout">Check out a book</a>.</p>'; return; }
-      wrap.innerHTML = '<table><thead><tr><th>Rental ID</th><th>Book</th><th>Member</th><th>Rental Date</th><th>Due Date</th><th>Status</th><th>Days Overdue</th></tr></thead><tbody>' +
-        rows.map(r => '<tr><td>' + r.rental_id + '</td><td><strong>' + escapeHtml(r.title) + '</strong><br><small>' + escapeHtml(r.author) + '</small></td><td>' + escapeHtml(r.member_name) + '<br><small>' + escapeHtml(r.email) + '</small></td><td>' + (r.rental_date || '') + '</td><td>' + (r.due_date || '') + '</td><td><span class="badge ' + (r.status === 'overdue' ? 'danger' : 'success') + '">' + escapeHtml(r.status) + '</span></td><td>' + (r.days_overdue > 0 ? '<span class="badge warning">' + r.days_overdue + ' days</span>' : '–') + '</td></tr>').join('') + '</tbody></table>';
-    }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert-error">Failed to load rentals</p>'; });
-  }
-
-  // ----- Returns -----
-  function viewReturns() {
-    app.innerHTML = '<div class="actions"><h1 class="page-title" style="margin:0">Return History</h1><a href="#process-return" class="btn btn-primary">Process Return</a></div><p class="page-subtitle">Recent returns</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>';
-    API.returns().then(rows => {
-      const wrap = el('table-wrap');
-      if (!wrap) return;
-      if (!rows || !rows.length) { wrap.innerHTML = '<p class="empty-state">No returns yet. <a href="#process-return">Process a return</a>.</p>'; return; }
-      wrap.innerHTML = '<table><thead><tr><th>Return ID</th><th>Book</th><th>Member</th><th>Rental Date</th><th>Due Date</th><th>Return Date</th><th>Condition</th><th>Days Overdue</th></tr></thead><tbody>' +
-        rows.map(r => '<tr><td>' + r.return_id + '</td><td><strong>' + escapeHtml(r.title) + '</strong></td><td>' + escapeHtml(r.member_name) + '</td><td>' + (r.rental_date || '') + '</td><td>' + (r.due_date || '') + '</td><td>' + (r.return_date || '') + '</td><td><span class="badge secondary">' + escapeHtml(r.condition_on_return || '') + '</span></td><td>' + (r.days_overdue > 0 ? '<span class="badge warning">' + r.days_overdue + '</span>' : '–') + '</td></tr>').join('') + '</tbody></table>';
-    }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert-error">Failed to load returns</p>'; });
-  }
-
-  // ----- Checkout -----
-  function viewCheckout() {
-    const today = new Date().toISOString().slice(0, 10);
-    const due = new Date();
-    due.setDate(due.getDate() + 14);
-    app.innerHTML = '<a href="#rentals" class="back-link">← Back to Rentals</a><h1 class="page-title">Checkout Book</h1><p class="page-subtitle">Create a new rental</p>' +
-      '<div class="card" style="max-width:480px"><div class="card-body"><form id="form-checkout">' +
-      '<div class="form-group"><label>Member *</label><select id="member-id" required></select></div>' +
-      '<div class="form-group"><label>Book *</label><select id="book-id" required></select></div>' +
+  // ----- Rentals (+ checkout modal) -----
+  function viewRentals(opts) {
+    opts = opts || {};
+    app.innerHTML = '<div class="actions"><h1 class="page-title" style="margin:0">Active Rentals</h1><button type="button" class="btn btn-primary" id="btn-checkout-open">Checkout Book</button></div><p class="page-subtitle">Currently checked out</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>' +
+      '<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10;align-items:center;justify-content:center;padding:0.35rem;">' +
+      '<div class="modal-panel-compact">' +
+      '<h2 class="modal-compact-title">Checkout Book</h2>' +
+      '<form id="form-checkout" class="modal-form-grid">' +
+      '<div class="form-group form-group--span2"><label>Member *</label><select id="checkout-member-id" required></select></div>' +
+      '<div class="form-group form-group--span2"><label>Book *</label><select id="checkout-book-id" required></select></div>' +
       '<div class="form-group"><label>Rental Date *</label><input type="date" id="rental-date" required></div>' +
       '<div class="form-group"><label>Due Date *</label><input type="date" id="due-date" required></div>' +
-      '<button type="submit" class="btn btn-primary">Check Out</button></form></div></div>';
-    el('rental-date').value = today;
-    el('due-date').value = due.toISOString().slice(0, 10);
-    API.members().then(rows => {
-      const sel = el('member-id');
-      sel.innerHTML = '<option value="">Select member</option>' + (rows || []).map(m => '<option value="' + m.member_id + '">' + (m.name || m.first_name + ' ' + m.last_name) + ' (' + m.email + ')</option>').join('');
-    });
-    API.books().then(rows => {
-      const available = (rows || []).filter(b => b.available_copies > 0);
-      el('book-id').innerHTML = '<option value="">Select book</option>' + available.map(b => '<option value="' + b.book_id + '">' + b.title + ' – ' + b.author + ' (avail: ' + b.available_copies + ')</option>').join('');
-    });
-    el('form-checkout').addEventListener('submit', e => {
+      '<div class="modal-form-actions"><button type="submit" class="btn btn-primary">Check Out</button><button type="button" class="btn btn-secondary" id="btn-checkout-cancel">Cancel</button></div>' +
+      '</form></div></div>';
+    const modal = el('modal');
+
+    function loadRentalsTable() {
+      API.rentals().then(rows => {
+        const wrap = el('table-wrap');
+        if (!wrap) return;
+        if (!rows || !rows.length) {
+          wrap.innerHTML = '<p class="empty-state">No active rentals. <button type="button" class="empty-inline-btn" id="btn-checkout-empty">Check out a book</button>.</p>';
+          const eb = el('btn-checkout-empty');
+          if (eb) eb.addEventListener('click', openCheckoutModal);
+          return;
+        }
+        wrap.innerHTML = '<table><thead><tr><th>Rental ID</th><th>Book</th><th>Member</th><th>Rental Date</th><th>Due Date</th><th>Status</th><th>Days Overdue</th></tr></thead><tbody>' +
+          rows.map(r => '<tr><td>' + r.rental_id + '</td><td><strong>' + escapeHtml(r.title) + '</strong><br><small>' + escapeHtml(r.author) + '</small></td><td>' + escapeHtml(r.member_name) + '<br><small>' + escapeHtml(r.email) + '</small></td><td>' + (r.rental_date || '') + '</td><td>' + (r.due_date || '') + '</td><td><span class="badge ' + (r.status === 'overdue' ? 'danger' : 'success') + '">' + escapeHtml(r.status) + '</span></td><td>' + (r.days_overdue > 0 ? '<span class="badge warning">' + r.days_overdue + ' days</span>' : '–') + '</td></tr>').join('') + '</tbody></table>';
+      }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert-error">Failed to load rentals</p>'; });
+    }
+
+    function openCheckoutModal() {
+      const today = new Date().toISOString().slice(0, 10);
+      const due = new Date();
+      due.setDate(due.getDate() + 14);
+      el('rental-date').value = today;
+      el('due-date').value = due.toISOString().slice(0, 10);
+      API.members().then(rows => {
+        const sel = el('checkout-member-id');
+        if (!sel) return;
+        sel.innerHTML = '<option value="">Select member</option>' + (rows || []).map(m => '<option value="' + m.member_id + '">' + (m.name || m.first_name + ' ' + m.last_name) + ' (' + m.email + ')</option>').join('');
+      });
+      API.books().then(rows => {
+        const sel = el('checkout-book-id');
+        if (!sel) return;
+        const available = (rows || []).filter(b => b.available_copies > 0 && b.status !== 'Discontinued');
+        sel.innerHTML = '<option value="">Select book</option>' + available.map(b => '<option value="' + b.book_id + '">' + escapeHtml(b.title) + ' – ' + escapeHtml(b.author) + ' (avail: ' + b.available_copies + ')</option>').join('');
+      });
+      modal.style.display = 'flex';
+    }
+
+    function closeCheckoutModal() {
+      modal.style.display = 'none';
+      if (location.hash === '#checkout') location.hash = 'rentals';
+    }
+
+    el('btn-checkout-open').addEventListener('click', openCheckoutModal);
+    el('btn-checkout-cancel').addEventListener('click', closeCheckoutModal);
+    el('form-checkout').addEventListener('submit', function (e) {
       e.preventDefault();
-      const payload = { member_id: parseInt(el('member-id').value, 10), book_id: parseInt(el('book-id').value, 10), rental_date: el('rental-date').value, due_date: el('due-date').value };
-      API.checkout(payload).then(() => { alert('Checkout successful'); location.hash = 'rentals'; }).catch(() => alert('Checkout failed'));
+      const payload = {
+        member_id: parseInt(el('checkout-member-id').value, 10),
+        book_id: parseInt(el('checkout-book-id').value, 10),
+        rental_date: el('rental-date').value,
+        due_date: el('due-date').value
+      };
+      API.checkout(payload).then(function () {
+        alert('Checkout successful');
+        closeCheckoutModal();
+        loadRentalsTable();
+      }).catch(function () { alert('Checkout failed'); });
     });
+
+    loadRentalsTable();
+    if (opts.openCheckout) setTimeout(openCheckoutModal, 0);
   }
 
-  // ----- Process Return -----
-  function viewProcessReturn() {
-    app.innerHTML = '<a href="#returns" class="back-link">← Back to Returns</a><h1 class="page-title">Process Return</h1><p class="page-subtitle">Record a book return</p>' +
-      '<div class="card" style="max-width:480px"><div class="card-body"><form id="form-return">' +
-      '<div class="form-group"><label>Rental *</label><select id="rental-id" required></select></div>' +
+  // ----- Returns (+ process return modal) -----
+  function viewReturns(opts) {
+    opts = opts || {};
+    app.innerHTML = '<div class="actions"><h1 class="page-title" style="margin:0">Return History</h1><button type="button" class="btn btn-primary" id="btn-return-open">Process Return</button></div><p class="page-subtitle">Recent returns</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>' +
+      '<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10;align-items:center;justify-content:center;padding:0.35rem;">' +
+      '<div class="modal-panel-compact">' +
+      '<h2 class="modal-compact-title">Process Return</h2>' +
+      '<form id="form-return" class="modal-form-grid">' +
+      '<div class="form-group form-group--span2"><label>Rental *</label><select id="return-rental-id" required></select></div>' +
       '<div class="form-group"><label>Return Date *</label><input type="date" id="return-date" required></div>' +
       '<div class="form-group"><label>Condition *</label><select id="condition"><option value="Good">Good</option><option value="Damaged">Damaged</option><option value="Lost">Lost</option></select></div>' +
-      '<button type="submit" class="btn btn-primary">Submit Return</button></form></div></div>';
-    el('return-date').value = new Date().toISOString().slice(0, 10);
-    API.activeRentalsForReturn().then(rows => {
-      el('rental-id').innerHTML = '<option value="">Select rental</option>' + (rows || []).map(r => '<option value="' + r.rental_id + '">' + r.rental_id + ' – ' + r.title + ' (by ' + r.member_name + ', due ' + r.due_date + ')</option>').join('');
-    });
-    el('form-return').addEventListener('submit', e => {
+      '<div class="modal-form-actions"><button type="submit" class="btn btn-primary">Submit Return</button><button type="button" class="btn btn-secondary" id="btn-return-cancel">Cancel</button></div>' +
+      '</form></div></div>';
+    const modal = el('modal');
+
+    function loadReturnsTable() {
+      API.returns().then(rows => {
+        const wrap = el('table-wrap');
+        if (!wrap) return;
+        if (!rows || !rows.length) {
+          wrap.innerHTML = '<p class="empty-state">No returns yet. <button type="button" class="empty-inline-btn" id="btn-return-empty">Process a return</button>.</p>';
+          const eb = el('btn-return-empty');
+          if (eb) eb.addEventListener('click', openReturnModal);
+          return;
+        }
+        wrap.innerHTML = '<table><thead><tr><th>Return ID</th><th>Book</th><th>Member</th><th>Rental Date</th><th>Due Date</th><th>Return Date</th><th>Condition</th><th>Days Overdue</th></tr></thead><tbody>' +
+          rows.map(r => '<tr><td>' + r.return_id + '</td><td><strong>' + escapeHtml(r.title) + '</strong></td><td>' + escapeHtml(r.member_name) + '</td><td>' + (r.rental_date || '') + '</td><td>' + (r.due_date || '') + '</td><td>' + (r.return_date || '') + '</td><td><span class="badge secondary">' + escapeHtml(r.condition_on_return || '') + '</span></td><td>' + (r.days_overdue > 0 ? '<span class="badge warning">' + r.days_overdue + '</span>' : '–') + '</td></tr>').join('') + '</tbody></table>';
+      }).catch(() => { const w = el('table-wrap'); if (w) w.innerHTML = '<p class="alert-error">Failed to load returns</p>'; });
+    }
+
+    function openReturnModal() {
+      el('return-date').value = new Date().toISOString().slice(0, 10);
+      API.activeRentalsForReturn().then(rows => {
+        const sel = el('return-rental-id');
+        if (!sel) return;
+        sel.innerHTML = '<option value="">Select rental</option>' + (rows || []).map(r => '<option value="' + r.rental_id + '">' + r.rental_id + ' – ' + escapeHtml(r.title) + ' (by ' + escapeHtml(r.member_name) + ', due ' + (r.due_date || '') + ')</option>').join('');
+      });
+      modal.style.display = 'flex';
+    }
+
+    function closeReturnModal() {
+      modal.style.display = 'none';
+      if (location.hash === '#process-return') location.hash = 'returns';
+    }
+
+    el('btn-return-open').addEventListener('click', openReturnModal);
+    el('btn-return-cancel').addEventListener('click', closeReturnModal);
+    el('form-return').addEventListener('submit', function (e) {
       e.preventDefault();
-      const payload = { rental_id: parseInt(el('rental-id').value, 10), return_date: el('return-date').value, condition_status: el('condition').value };
-      API.processReturn(payload).then(() => { alert('Return recorded successfully.'); location.hash = 'returns'; }).catch(() => alert('Return failed'));
+      const payload = { rental_id: parseInt(el('return-rental-id').value, 10), return_date: el('return-date').value, condition_status: el('condition').value };
+      API.processReturn(payload).then(function () {
+        alert('Return recorded successfully.');
+        closeReturnModal();
+        loadReturnsTable();
+      }).catch(function () { alert('Return failed'); });
     });
+
+    loadReturnsTable();
+    if (opts.openReturn) setTimeout(openReturnModal, 0);
   }
 
   // ----- Fines -----
@@ -386,8 +519,8 @@
     'members': viewMembers,
     'rentals': viewRentals,
     'returns': viewReturns,
-    'checkout': viewCheckout,
-    'process-return': viewProcessReturn,
+    'checkout': function () { viewRentals({ openCheckout: true }); },
+    'process-return': function () { viewReturns({ openReturn: true }); },
     'fines': viewFines
   };
 
@@ -405,5 +538,7 @@
   }
 
   window.addEventListener('hashchange', render);
+  if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+  initTheme();
   render();
 })();

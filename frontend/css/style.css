@@ -7,6 +7,7 @@
   --success: #38a169;
   --warning: #d69e2e;
   --danger: #e53e3e;
+  --purple: #805ad5;
   --card-shadow: 0 1px 3px rgba(0,0,0,0.1);
   --radius: 8px;
 }
@@ -32,6 +33,10 @@ body {
   gap: 1.5rem;
   flex-wrap: wrap;
   box-shadow: var(--card-shadow);
+}
+
+.theme-toggle {
+  margin-left: auto;
 }
 
 .nav-brand {
@@ -128,6 +133,7 @@ body {
 .stat-card.success { border-left: 4px solid var(--success); }
 .stat-card.warning { border-left: 4px solid var(--warning); }
 .stat-card.danger { border-left: 4px solid var(--danger); }
+.stat-card.purple { border-left: 4px solid var(--purple); }
 
 .stat-card h3 {
   margin: 0 0 0.25rem 0;
@@ -249,6 +255,65 @@ body {
 
 .table-wrap {
   overflow-x: auto;
+}
+
+/* Books catalog: auto column widths; parent scrolls so ISBN/title don’t overlap */
+.table-books {
+  width: 100%;
+  min-width: 58rem;
+}
+
+.table-books td {
+  vertical-align: top;
+}
+
+.table-books th:nth-child(1),
+.table-books td:nth-child(1) {
+  white-space: nowrap;
+}
+
+.table-books th:nth-child(2),
+.table-books td:nth-child(2) {
+  min-width: 12rem;
+}
+
+.table-books th:nth-child(3),
+.table-books td:nth-child(3) {
+  min-width: 7rem;
+}
+
+.table-books th:nth-child(4),
+.table-books td:nth-child(4) {
+  min-width: 6.5rem;
+}
+
+.table-books th:nth-child(5),
+.table-books td:nth-child(5) {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.table-books th:nth-child(7),
+.table-books td:nth-child(7),
+.table-books th:nth-child(8),
+.table-books td:nth-child(8) {
+  width: 1%;
+  white-space: nowrap;
+  text-align: center;
+  padding-left: 0.45rem;
+  padding-right: 0.45rem;
+}
+
+.table-books th:nth-child(9),
+.table-books td:nth-child(9) {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.table-books th:nth-child(10),
+.table-books td:nth-child(10) {
+  white-space: nowrap;
+  width: 1%;
 }
 
 table {
@@ -420,6 +485,163 @@ select:focus {
   display: none;
 }
 
-#modal .form-group {
-  min-width: 100%;
+/* Book / member modals: dense two-column layout */
+.modal-panel-compact {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 0.5rem 0.9rem 0.75rem;
+  max-width: 520px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-compact-title {
+  margin: 0 0 0.35rem 0;
+  padding: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #1a202c;
+}
+
+.modal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 0.65rem;
+  align-items: end;
+}
+
+.modal-form-grid > .form-group {
+  margin: 0;
+  min-width: 0;
+  gap: 0.2rem;
+}
+
+.modal-form-grid > .form-group--span2 {
+  grid-column: 1 / -1;
+}
+
+.modal-form-grid .form-group label {
+  font-size: 0.8rem;
+}
+
+.modal-form-grid input[type="text"],
+.modal-form-grid input[type="email"],
+.modal-form-grid input[type="number"],
+.modal-form-grid input[type="date"],
+.modal-form-grid select {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+.empty-state .empty-inline-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.empty-state .empty-inline-btn:hover {
+  color: #2b6cb0;
+}
+
+body.dark-mode .empty-state .empty-inline-btn {
+  color: #63b3ed;
+}
+
+body.dark-mode .empty-state .empty-inline-btn:hover {
+  color: #90cdf4;
+}
+
+.modal-form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.2rem;
+  padding-top: 0.15rem;
+}
+
+body.dark-mode .modal-panel-compact {
+  background: #1e293b;
+}
+
+body.dark-mode .modal-compact-title {
+  color: #f8fafc;
+}
+
+@media (max-width: 420px) {
+  .modal-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-form-grid > .form-group--span2 {
+    grid-column: 1;
+  }
+}
+
+body.dark-mode {
+  --nav-bg: #111827;
+  --nav-text: #cbd5e1;
+  --nav-hover: #1f2937;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+body.dark-mode .page-title,
+body.dark-mode .stat-card h3,
+body.dark-mode .report-card h3 {
+  color: #f8fafc;
+}
+
+body.dark-mode .page-subtitle,
+body.dark-mode .stat-card p,
+body.dark-mode .report-card p,
+body.dark-mode .empty-state,
+body.dark-mode .form-group label {
+  color: #94a3b8;
+}
+
+body.dark-mode .card,
+body.dark-mode .stat-card,
+body.dark-mode .report-card {
+  background: #1e293b;
+  box-shadow: none;
+}
+
+body.dark-mode th {
+  background: #1f2937;
+  color: #cbd5e1;
+}
+
+body.dark-mode td,
+body.dark-mode th {
+  border-bottom-color: #334155;
+}
+
+body.dark-mode tr:hover {
+  background: #273449;
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="number"],
+body.dark-mode input[type="date"],
+body.dark-mode select {
+  background: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+body.dark-mode .btn-secondary {
+  background: #334155;
+  color: #e2e8f0;
+  border-color: #475569;
+}
+
+body.dark-mode .btn-secondary:hover {
+  background: #475569;
 }

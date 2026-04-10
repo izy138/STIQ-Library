@@ -18,11 +18,12 @@
 
   window.LibraryAPI = {
     stats: () => api('/stats'),
+    query: (id) => api('/queries/' + encodeURIComponent(id)),
 
     books: (params) => api('/books' + (params && Object.keys(params).length ? '?' + new URLSearchParams(params) : '')),
     addBook: (data) => api('/books', { method: 'POST', body: JSON.stringify(data) }),
     updateBook: (id, data) => api('/books/' + id, { method: 'PUT', body: JSON.stringify(data) }),
-    deleteBook: (id) => api('/books/' + id, { method: 'DELETE' }),
+    // deleteBook: (id) => api('/books/' + id, { method: 'DELETE' }),
 
     members: (params) => api('/members' + (params && Object.keys(params).length ? '?' + new URLSearchParams(params) : '')),
     addMember: (data) => api('/members', { method: 'POST', body: JSON.stringify(data) }),
@@ -35,8 +36,7 @@
     activeRentalsForReturn: () => api('/returns/active-rentals'),
     processReturn: (data) => api('/returns', { method: 'POST', body: JSON.stringify(data) }),
 
-    fines: () => api('/fines'),
+    fines: () => api('/fines')
 
-    query: (id) => api('/queries/' + encodeURIComponent(id))
   };
 })();

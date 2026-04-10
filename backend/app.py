@@ -39,7 +39,8 @@ def get_db():
         print(f"Database connection error: {e}")
         return None
 
-#sql is the sql query we want to execute. params is used when we add search and filters to the query later.
+#this is the sql query we want to execute. params is used when we add search and filters to the query later.
+# query_db is used for every GET sql command, we use it to get data from our db, and then display it they way we want based on the query we write in this commad
 def query_db(sql, params=None):
     #we open the connection to the database by calling get_db()
     connection = get_db()
@@ -66,6 +67,7 @@ def query_db(sql, params=None):
             new_row = {}
             for column in col_names:
                 data = row[column]
+                # new_row is a dictionary that stores the data for each column. we need it because the data is returned as a list of dictionaries by default
                 if isinstance(data, (date, datetime)):
                     new_row[column] = data.isoformat()
                 elif isinstance(data, Decimal):
@@ -81,14 +83,18 @@ def query_db(sql, params=None):
         return []
 
 # this is used for CRUD, it lets the user add new, update, and delete data directly on the app.
+# execute_db is used for every single POST and PUT sql command, if we dont have this , then we cant add or update new data from the frontend. ! very important to understand how this works guys
 def execute_db(sql, params=None):
     connection = get_db()
     if not connection:
         return False
     try:
         cursor = connection.cursor()
+        # this executes the sql query with the cursor.execute() method it sends the parameters to the query
         cursor.execute(sql, params or ())
+        # this commits the changes to the database
         connection.commit()
+        # this closes the cursor and the connection to the database.
         cursor.close()
         connection.close()
         return True
@@ -116,10 +122,13 @@ def api_books():
     # book search for a book by title, author, or isbn.
     search = request.args.get('search', '')
     # we use VIEW #2 book_availability_view to get the availability status of the books. this view also shows all the info for the books in the books table, so we use it instead of just a regular select query.
+    #book_status was added to the view 
     sql = """
         SELECT v.book_id, b.isbn, v.title, v.author, b.publisher, b.publication_year, v.category,
+               b.book_status,
                v.total_copies, v.available_copies,
                CASE
+                   WHEN b.book_status = 'Discontinued' THEN 'Discontinued'
                    WHEN v.availability_status = 'Low Availability' THEN 'Low Stock'
                    ELSE v.availability_status
                END AS status
@@ -134,8 +143,7 @@ def api_books():
         # this appends the search keyword to the books table query.
         sql += " AND (v.title LIKE %s OR v.author LIKE %s OR b.isbn LIKE %s)"
         params.extend([like, like, like])
-    #orders the books by title
-    sql += " ORDER BY v.title"
+    sql += " ORDER BY CASE b.book_status WHEN 'Active' THEN 0 ELSE 1 END, v.title"
     # executes query and returns the book data from the db
     rows = query_db(sql, tuple(params) if params else None)
     return jsonify(rows or [])
@@ -165,18 +173,24 @@ def api_books_post():
     )
     if not ok:
         return jsonify({'error': 'Insert failed'}), 500
-    return jsonify({'ok': True}), 201
+    return jsonify({'ok': True}), 201 
 
 #this route updates an existing book in the books table, it takes the data from the frontend and updates the database.
-#PUT is used to update an existing item in the db, uses data.get() for each field to the update query edit a row in the db.
+#PUT is used to update an existing item in the db.
 @app.route('/api/books/<int:book_id>', methods=['PUT'])
 def api_books_put(book_id):
-    data = request.get_json()
+    data = request.get_json() # it gets the data through get_json() which is a method that converts the json data from the frontend to a python dictionary.
     if not data:
         return jsonify({'error': 'JSON body required'}), 400
+    # then the data is passed to the execute_db() function to update the database using data.get() for each field to the update queery to edit a row in the db.
+    # this checks if the book_status is valid, if not it returns an error.
+    book_status = data.get('book_status', 'Active')
+    if book_status not in ('Active', 'Discontinued'):
+        return jsonify({'error': 'Invalid book_status'}), 400
     ok = execute_db(
+        # this is the update query that updates the database with the new data.
         """UPDATE Books
-           SET title=%s, author=%s, publisher=%s, publication_year=%s, category=%s, total_copies=%s, available_copies=%s
+           SET title=%s, author=%s, publisher=%s, publication_year=%s, category=%s, total_copies=%s, available_copies=%s, book_status=%s
            WHERE book_id=%s""",
         (
             data.get('title'),
@@ -186,6 +200,7 @@ def api_books_put(book_id):
             data.get('category') or None,
             int(data.get('total_copies', 1)),
             int(data.get('available_copies', 0)),
+            book_status, #we added book_status to the update query so the user can update the book_status themselves.
             book_id,
         ),
     )
@@ -193,13 +208,16 @@ def api_books_put(book_id):
         return jsonify({'error': 'Update failed'}), 500
     return jsonify({'ok': True})
 
+# !!!! not sure if we should keep this, it deletes a book from the table, but maybe we dont want to be deleting book records.
+# i used this to delete my test book records for the POST and PUT functions. 
+#instead of deleting the book records, we can just set the book_status to 'Discontinued' so it doesnt show up in the books table.
 #this route deletes a book from the books table using book_id, it takes the book_id as a parameter and deletes the corresponding row from the database.
-@app.route('/api/books/<int:book_id>', methods=['DELETE'])
-def api_books_delete(book_id):
-    ok = execute_db("DELETE FROM Books WHERE book_id = %s", (book_id,))
-    if not ok:
-        return jsonify({'error': 'Delete failed'}), 400
-    return jsonify({'ok': True})
+# @app.route('/api/books/<int:book_id>', methods=['DELETE'])
+# def api_books_delete(book_id):
+#     ok = execute_db("DELETE FROM Books WHERE book_id = %s", (book_id,))
+#     if not ok:
+#         return jsonify({'error': 'Delete failed'}), 400
+#     return jsonify({'ok': True})
 
 #this routes to the members table page, it sends the members data from the db to the browser to display all the members in a table.
 @app.route('/api/members')
@@ -248,9 +266,24 @@ def api_members_put(member_id):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'JSON body required'}), 400
+    #the user can update a members status and max books allowed.
+    # this checks if the status is valid, if not it returns an error.
+    status = data.get('status', 'active')
+    # this checks if the status is valid, if not it returns an error.
+    if status not in ('active', 'suspended', 'expired'):
+        return jsonify({'error': 'Invalid status'}), 400
+    # this checks if the max books allowed is valid, if not it returns an error.
+    max_books = int(data.get('max_books_allowed', 5))
+    # if the membersstatus is suspended, the max books allowed is set to 0.
+    if status == 'suspended':
+        max_books = 0
+    elif max_books < 1:
+        return jsonify({'error': 'max_books_allowed must be at least 1 unless status is suspended'}), 400
+    # this is the update query that updates the database with the new data.
     ok = execute_db(
+        # i added status to this so the user can update a member status in the modal too
         """UPDATE Members
-           SET first_name=%s, last_name=%s, email=%s, phone=%s, membership_type=%s, max_books_allowed=%s
+           SET first_name=%s, last_name=%s, email=%s, phone=%s, membership_type=%s, max_books_allowed=%s, status=%s
            WHERE member_id=%s""",
         (
             data.get('first_name'),
@@ -258,7 +291,8 @@ def api_members_put(member_id):
             data.get('email'),
             data.get('phone') or None,
             data.get('membership_type'),
-            int(data.get('max_books_allowed', 5)),
+            max_books,
+            status, #we also added status here like in books to the update query so the user can update a members status 
             member_id,
         ),
     )
@@ -285,13 +319,20 @@ def api_rentals():
     """)
     return jsonify(rows or [])
 
-#this route handles checking out a book, it takes the data from the frontend and inserts it into the Rentals table in the database.
+# this route handles checking out a book, it takes the data from the frontend and inserts it into the Rentals table in the database.
 @app.route('/api/rentals/checkout', methods=['POST'])
 def api_checkout():
     data = request.get_json()
     if not data:
         return jsonify({'error': 'JSON body required'}), 400
     book_id = data.get('book_id')
+    #this checks if the book is available for checkout, it checks the book_status column in the books table. if it is 'Discontinued' then it is not available for checkout. We set one book to discontinued to test this.
+    book_row = query_db(
+        "SELECT book_status FROM Books WHERE book_id = %s",
+        (book_id,),
+    )
+    if not book_row or book_row[0].get('book_status') != 'Active':
+        return jsonify({'error': 'Book is not available for checkout'}), 400
     ok = execute_db(
         """INSERT INTO Rentals (book_id, member_id, rental_date, due_date, status)
            VALUES (%s,%s,%s,%s,'active')""",
@@ -364,7 +405,7 @@ def api_fines():
     """)
     return jsonify(rows or [])
  
-
+ 
 #THIS IS IMPORTANT, ITS WHERE THE QUERIES ARE RUN AND DISPLAYED FOR DASHBOARD!! make sure to read and understand how this works so we can explain it properly.
 
 # these are the 5 stats at the top of the homepage, they show the total books in the library, the total members, the total overdue books, and the total active rentals. The outstanding fines is the total amount of fines that are not paid or partiall paid.
