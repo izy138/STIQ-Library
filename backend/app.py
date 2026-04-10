@@ -304,10 +304,6 @@ def api_checkout():
     )
     if not ok:
         return jsonify({'error': 'Checkout failed'}), 500
-    execute_db(
-        "UPDATE Books SET available_copies = available_copies - 1 WHERE book_id = %s AND available_copies > 0",
-        (book_id,),
-    )
     return jsonify({'ok': True}), 201
 
 #this routes to the returns table page, it sends the returns data from the db to the browser to display all the returns in a table.
@@ -356,8 +352,6 @@ def api_returns_post():
     )
     if not ok:
         return jsonify({'error': 'Return failed'}), 500
-    execute_db("UPDATE Rentals SET status = 'returned' WHERE rental_id = %s", (rental_id,))
-    execute_db("UPDATE Books SET available_copies = available_copies + 1 WHERE book_id = %s", (member_row[0]['book_id'],))
     return jsonify({'ok': True}), 201
 
 #this routes to the fines table page, it sends the fines data from the db to the browser to display all the fines in a table.
@@ -371,7 +365,7 @@ def api_fines():
         JOIN Members m ON f.member_id = m.member_id
         JOIN Rentals r ON f.rental_id = r.rental_id
         JOIN Books b ON r.book_id = b.book_id
-        ORDER BY f.fine_date DESC
+        ORDER BY f.paid_status ASC, f.fine_date DESC
     """)
     return jsonify(rows or [])
 
