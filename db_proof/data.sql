@@ -85,7 +85,7 @@ INSERT INTO Members (first_name, last_name, email, phone, membership_type, regis
 ('Sebastian', 'Rojas', 'srojas@fiu.edu', '3055551023', 'Student', '2026-02-09', 'active', 5),
 ('Ariana', 'Salazar', 'asalazar@fiu.edu', '3055551024', 'Student', '2026-02-11', 'active', 5);
 
--- 60 rentals: 35 returned, 11 overdue, 14 active. (available_copies = total_copies minus active+overdue rows per book.)
+-- 60 rentals: 35 returned, 11 overdue, 14 active
 INSERT INTO Rentals (book_id, member_id, rental_date, due_date, status) VALUES
 (1, 1, '2026-02-01', '2026-02-22', 'returned'),
 (1, 2, '2026-02-02', '2026-02-23', 'returned'),
@@ -148,7 +148,7 @@ INSERT INTO Rentals (book_id, member_id, rental_date, due_date, status) VALUES
 (32, 4, '2026-04-10', '2026-05-01', 'active'),
 (36, 2, '2026-04-10', '2026-05-01', 'active');
 
--- 35 returns (one per returned rental; rental_id matches insert order above)
+-- 35 returns one for each returned rental
 INSERT INTO Returns (rental_id, return_date, condition_status, notes, processed_by) VALUES
 (1, '2026-02-22', 'Good', '', 1),
 (2, '2026-02-23', 'Good', '', 2),
@@ -186,7 +186,8 @@ INSERT INTO Returns (rental_id, return_date, condition_status, notes, processed_
 (34, '2026-04-01', 'Good', '', 3),
 (35, '2026-04-02', 'Good', '', 4);
 
--- Fine rules: Overdue = $1.00 x days after due_date
+-- 15 Fines 
+-- Overdue = $1.00 x days after due_date
 -- Damaged - $25.00 in addition to any overdue
 -- Lost - $50.00 flat
 INSERT INTO Fines (rental_id, member_id, fine_amount, fine_reason, fine_date, paid_status, paid_amount, paid_date) VALUES

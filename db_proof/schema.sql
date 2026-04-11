@@ -1,4 +1,4 @@
--- Create database and select it
+-- Create database 
 CREATE DATABASE IF NOT EXISTS library_system;
 USE library_system;
 
@@ -77,7 +77,7 @@ CREATE TABLE Rentals (
 
 -- TABLE: Returns
 -- tracks book returns, book conditions and who processed the return
--- each rental can only be returned once (1:1 relationship)
+-- each rental can only be returned once 1:1 relationship
 CREATE TABLE Returns (
     return_id INT AUTO_INCREMENT,
     rental_id INT UNIQUE NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE Returns (
 
 -- TABLE: Fines
 -- links a fine to rentals and members, tracks payment and amount due.
--- a rental can have multiple fines (overdue + damage)
+-- a rental can have multiple fines for overdue and damage
 CREATE TABLE Fines (
     fine_id INT AUTO_INCREMENT,
     rental_id INT NOT NULL,

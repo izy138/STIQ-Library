@@ -1,6 +1,6 @@
 -- IMPORTATN!!! For query_outputs.txt:
 -- we used mysql -t -u root -p library_system < db_proof/queries.sql > db_proof/query_outputs.txt to output the queries from queries.sql. 
--- Some tables do not have 5 rows for example table 4 is for the query 4 Books never borrowed and shows only 3 rows. 
+-- Some tables do not have 5 rows for example table 4 is for the query 4 Books never borrowed and shows only 4 books 
 -- table 9 for query 9 also only have 3 rows because its for monthly rntal activity and we only have data for 3 months.
 
 -- 10 queries: JOINs, aggregates, GROUP BY, CASE, LEFT JOIN, date filters, HAVING.
