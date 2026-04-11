@@ -1,3 +1,5 @@
+Group Members: Isabella Correa, Quincy Joseph, Sofia Murillo, Tiffany Ortiz
+
 Install requirements
 ```pip3 install -r backend/requirements.txt```
 
