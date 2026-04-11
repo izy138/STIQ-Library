@@ -17,7 +17,7 @@ INSERT INTO Books (isbn, title, author, publisher, publication_year, category, t
 VALUES ('9783869711423', 'Duplicate Book', 'Test Author', 'Test Publisher', 2020, 'Test', 1, 1);
 -- ERROR 1062 (23000) at line 16: Duplicate entry '9783869711423' for key 'books.isbn'
 
--- Attempt to insert a member with a duplicate email.
+-- Attempt to insert a member with a duplicate email (matches Chris Rodriguez in data.sql).
 INSERT INTO Members (first_name, last_name, email, phone, membership_type, registration_date, status, max_books_allowed)
 VALUES ('Test', 'User', 'crodri@fiu.edu', '3055550000', 'Student', '2026-03-10', 'active', 5);
 -- ERROR 1062 (23000) at line 21: Duplicate entry 'crodriguez032@fiu.edu' for key 'members.email'

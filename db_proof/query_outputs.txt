@@ -60,9 +60,9 @@
 +---------------+--------------------------+-----------+--------+-----------------+----------------------+------------+---------------------+
 | member_name   | email                    | member_id | status | number_of_fines | total_fines_assessed | total_paid | outstanding_balance |
 +---------------+--------------------------+-----------+--------+-----------------+----------------------+------------+---------------------+
-| Mia Cruz      | mcruz12@fiu.edu          |        24 | active |               1 |                50.00 |      25.00 |               25.00 |
-| Ashley Rivera | arivera02@fiu.edu        |        14 | active |               2 |                31.00 |       6.00 |               25.00 |
-| Ethan Flores  | eflores05@fiu.edu        |        17 | active |               1 |                 6.00 |       0.00 |                6.00 |
+| Mia Cruz      | mcruz@fiu.edu          |        24 | active |               1 |                50.00 |      25.00 |               25.00 |
+| Ashley Rivera | arivera@fiu.edu        |        14 | active |               2 |                31.00 |       6.00 |               25.00 |
+| Ethan Flores  | eflores@fiu.edu        |        17 | active |               1 |                 6.00 |       0.00 |                6.00 |
 | Anna Gonzalez | agonza@fiu.edu           |        11 | active |               1 |                 5.00 |       0.00 |                5.00 |
 | Sofia Murillo | smurillo@library.fiu.edu |         3 | active |               1 |                 4.00 |       0.00 |                4.00 |
 +---------------+--------------------------+-----------+--------+-----------------+----------------------+------------+---------------------+

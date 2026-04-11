@@ -1,4 +1,4 @@
-# All SQL used by backend/app.py in one place.
+# All SQL used by backend/app.py in one file, easier for us to manage and change if we need
 
 # Dashboard basic statsqueries:
 # 1 total books + copies

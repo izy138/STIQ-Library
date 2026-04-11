@@ -21,7 +21,7 @@ INSERT INTO Books (isbn, title, author, publisher, publication_year, category, t
 ('9780544336261', 'The Giver', 'Lois Lowry', 'HarperCollins', 1993, 'Young Adult', 4, 4),
 ('9780141393056', 'Animal Farm', 'George Orwell', 'Penguin Classics', 1996, 'Adult Fiction', 4, 4),
 ('9780399501487', 'The Lord of the Flies', 'William Golding', 'Penguin', 2003, 'Adult Fiction', 4, 3),
-('9781594631931', 'The Kite Runner', 'Khaled Hosseini', 'Riverhead Books', 2003, 'Adult Fiction', 5, 3),
+('9781594631931', 'The Kite Runner', 'Khaled Hosseini', 'Riverhead Books', 2003, 'Adult Fiction', 5, 4),
 ('9780385490818', 'The Handmaids Tale', 'Margaret Atwood', 'McClelland and Stewart', 1985, 'Adult Fiction', 4, 2),
 ('9780307588371', 'Gone Girl', 'Gillian Flynn', 'Crown Publishing', 2012, 'Adult Fiction', 1, 0),
 ('9780812416299', '1984', 'George Orwell', 'Signet Classic', 1950, 'Science Fiction', 3, 1),
@@ -49,10 +49,10 @@ WHERE isbn = '9780064471046';
 -- member_id 8, 9, 18, 21, 28, 31 are suspended/expired
 INSERT INTO Members (first_name, last_name, email, phone, membership_type, registration_date, status, max_books_allowed) VALUES
 ('Tiffany', 'Ortiz', 'tortiz@library.fiu.edu', '3055552000', 'Staff', '2026-01-01', 'active', 10),
-('Isabella', 'Correa', 'icorr014@fiu.edu', '7865210000', 'Staff', '2026-01-01', 'active', 10),
+('Isabella', 'Correa', 'icorr@fiu.edu', '7865210000', 'Staff', '2026-01-01', 'active', 10),
 ('Sofia', 'Murillo', 'smurillo@library.fiu.edu', '3055552001', 'Staff', '2026-01-01', 'active', 10),
 ('Quincy', 'Jones', 'qjones@library.fiu.edu', '3055552002', 'Staff', '2026-01-01', 'active', 10),
-('Chris', 'Rodriguez', 'crodriguez032@fiu.edu', '3055551234', 'Student', '2026-01-06', 'active', 5),
+('Chris', 'Rodriguez', 'crodri@fiu.edu', '3055551234', 'Student', '2026-01-06', 'active', 5),
 ('Isabella', 'Perez', 'iperez@fiu.edu', '3055555678', 'Student', '2026-01-02', 'active', 5),
 ('Maria', 'Lopez', 'mlopez@fiu.edu', '3055559012', 'Faculty', '2026-02-02', 'active', 10),
 ('Kevin', 'Smith', 'ksmith@fiu.edu', '3055553456', 'Faculty', '2026-01-23', 'suspended', 0),
@@ -61,31 +61,31 @@ INSERT INTO Members (first_name, last_name, email, phone, membership_type, regis
 ('Anna', 'Gonzalez', 'agonza@fiu.edu', '3055553121', 'Student', '2026-02-15', 'active', 5),
 ('Quincy', 'Williams', 'qwilliams@fiu.edu', '3055550000', 'Faculty', '2026-01-01', 'active', 10),
 ('Daniel', 'Martinez', 'dmartinez01@fiu.edu', '3055551001', 'Student', '2026-01-08', 'active', 5),
-('Ashley', 'Rivera', 'arivera02@fiu.edu', '3055551002', 'Student', '2026-01-10', 'active', 5),
-('Brandon', 'Hernandez', 'bhernandez03@fiu.edu', '3055551003', 'Student', '2026-01-12', 'active', 5),
-('Natalie', 'Garcia', 'ngarcia04@fiu.edu', '3055551004', 'Student', '2026-01-14', 'active', 5),
-('Ethan', 'Flores', 'eflores05@fiu.edu', '3055551005', 'Student', '2026-01-16', 'active', 5),
-('Camila', 'Torres', 'ctorres06@fiu.edu', '3055551006', 'Student', '2026-01-18', 'expired', 5),
-('Joshua', 'Ramirez', 'jramirez07@fiu.edu', '3055551007', 'Student', '2026-01-20', 'active', 5),
-('Valeria', 'Morales', 'vmorales08@fiu.edu', '3055551008', 'Student', '2026-01-22', 'active', 5),
-('Gabriel', 'Castro', 'gcastro09@fiu.edu', '3055551009', 'Student', '2026-01-24', 'suspended', 0),
-('Kayla', 'Ortiz', 'kortiz10@fiu.edu', '3055551010', 'Student', '2026-01-26', 'active', 5),
-('Luis', 'Reyes', 'lreyes11@fiu.edu', '3055551011', 'Student', '2026-01-28', 'active', 5),
-('Mia', 'Cruz', 'mcruz12@fiu.edu', '3055551012', 'Student', '2026-02-01', 'active', 5),
-('Alejandro', 'Vega', 'avega13@fiu.edu', '3055551013', 'Faculty', '2026-01-09', 'active', 10),
-('Gabriela', 'Mendez', 'gmendez14@fiu.edu', '3055551014', 'Faculty', '2026-01-11', 'active', 10),
-('Ricardo', 'Santos', 'rsantos15@fiu.edu', '3055551015', 'Faculty', '2026-01-13', 'active', 10),
-('Elena', 'Diaz', 'ediaz16@fiu.edu', '3055551016', 'Faculty', '2026-01-15', 'suspended', 0),
-('Victor', 'Navarro', 'vnavarro17@fiu.edu', '3055551017', 'Faculty', '2026-01-17', 'active', 10),
-('Paula', 'Delgado', 'pdelgado18@fiu.edu', '3055551018', 'Faculty', '2026-01-19', 'active', 10),
-('Andres', 'Suarez', 'asuarez19@fiu.edu', '3055551019', 'Faculty', '2026-01-21', 'expired', 5),
-('Lucia', 'Herrera', 'lherrera20@fiu.edu', '3055551020', 'Faculty', '2026-01-25', 'active', 10),
-('Noah', 'Jimenez', 'njimenez21@fiu.edu', '3055551021', 'Student', '2026-02-05', 'active', 5),
-('Emma', 'Ponce', 'eponce22@fiu.edu', '3055551022', 'Student', '2026-02-07', 'active', 5),
-('Sebastian', 'Rojas', 'srojas23@fiu.edu', '3055551023', 'Student', '2026-02-09', 'active', 5),
-('Ariana', 'Salazar', 'asalazar24@fiu.edu', '3055551024', 'Student', '2026-02-11', 'active', 5);
+('Ashley', 'Rivera', 'arivera@fiu.edu', '3055551002', 'Student', '2026-01-10', 'active', 5),
+('Brandon', 'Hernandez', 'bherna@fiu.edu', '3055551003', 'Student', '2026-01-12', 'active', 5),
+('Natalie', 'Garcia', 'ngarcia@fiu.edu', '3055551004', 'Student', '2026-01-14', 'active', 5),
+('Ethan', 'Flores', 'eflores@fiu.edu', '3055551005', 'Student', '2026-01-16', 'active', 5),
+('Camila', 'Torres', 'ctorres@fiu.edu', '3055551006', 'Student', '2026-01-18', 'expired', 5),
+('Joshua', 'Ramirez', 'jramirez@fiu.edu', '3055551007', 'Student', '2026-01-20', 'active', 5),
+('Valeria', 'Morales', 'vmorales@fiu.edu', '3055551008', 'Student', '2026-01-22', 'active', 5),
+('Gabriel', 'Castro', 'gcastro@fiu.edu', '3055551009', 'Student', '2026-01-24', 'suspended', 0),
+('Kayla', 'Ortiz', 'kortiz@fiu.edu', '3055551010', 'Student', '2026-01-26', 'active', 5),
+('Luis', 'Reyes', 'lreyes@fiu.edu', '3055551011', 'Student', '2026-01-28', 'active', 5),
+('Mia', 'Cruz', 'mcruz@fiu.edu', '3055551012', 'Student', '2026-02-01', 'active', 5),
+('Alejandro', 'Vega', 'avega@fiu.edu', '3055551013', 'Faculty', '2026-01-09', 'active', 10),
+('Gabriela', 'Mendez', 'gmendez@fiu.edu', '3055551014', 'Faculty', '2026-01-11', 'active', 10),
+('Ricardo', 'Santos', 'rsantos@fiu.edu', '3055551015', 'Faculty', '2026-01-13', 'active', 10),
+('Elena', 'Diaz', 'ediaz@fiu.edu', '3055551016', 'Faculty', '2026-01-15', 'suspended', 0),
+('Victor', 'Navarro', 'vnavarro@fiu.edu', '3055551017', 'Faculty', '2026-01-17', 'active', 10),
+('Paula', 'Delgado', 'pdelgado@fiu.edu', '3055551018', 'Faculty', '2026-01-19', 'active', 10),
+('Andres', 'Suarez', 'asuarez@fiu.edu', '3055551019', 'Faculty', '2026-01-21', 'expired', 5),
+('Lucia', 'Herrera', 'lherrera@fiu.edu', '3055551020', 'Faculty', '2026-01-25', 'active', 10),
+('Noah', 'Jimenez', 'njimenez@fiu.edu', '3055551021', 'Student', '2026-02-05', 'active', 5),
+('Emma', 'Ponce', 'eponce@fiu.edu', '3055551022', 'Student', '2026-02-07', 'active', 5),
+('Sebastian', 'Rojas', 'srojas@fiu.edu', '3055551023', 'Student', '2026-02-09', 'active', 5),
+('Ariana', 'Salazar', 'asalazar@fiu.edu', '3055551024', 'Student', '2026-02-11', 'active', 5);
 
--- 66 rentals: 40 returned, 11 overdue, 15 active. (available_copies = total_copies minus active+overdue rows per book.)
+-- 60 rentals: 35 returned, 11 overdue, 14 active. (available_copies = total_copies minus active+overdue rows per book.)
 INSERT INTO Rentals (book_id, member_id, rental_date, due_date, status) VALUES
 (1, 1, '2026-02-01', '2026-02-22', 'returned'),
 (1, 2, '2026-02-02', '2026-02-23', 'returned'),
@@ -118,12 +118,7 @@ INSERT INTO Rentals (book_id, member_id, rental_date, due_date, status) VALUES
 (14, 35, '2026-03-01', '2026-03-22', 'returned'),
 (15, 36, '2026-03-02', '2026-03-23', 'returned'),
 (15, 11, '2026-03-03', '2026-03-24', 'returned'),
-(16, 12, '2026-03-04', '2026-03-25', 'returned'),
-(16, 13, '2026-03-05', '2026-03-26', 'returned'),
 (16, 14, '2026-03-06', '2026-03-27', 'returned'),
-(17, 15, '2026-03-07', '2026-03-28', 'returned'),
-(17, 16, '2026-03-08', '2026-03-29', 'returned'),
-(17, 17, '2026-03-09', '2026-03-30', 'returned'),
 (18, 10, '2026-03-10', '2026-03-31', 'returned'),
 (18, 11, '2026-03-11', '2026-04-01', 'returned'),
 (19, 12, '2026-03-12', '2026-04-02', 'returned'),
@@ -138,7 +133,6 @@ INSERT INTO Rentals (book_id, member_id, rental_date, due_date, status) VALUES
 (29, 24, '2026-03-06', '2026-03-20', 'overdue'),
 (30, 25, '2026-02-10', '2026-02-24', 'overdue'),
 (31, 26, '2026-02-11', '2026-02-25', 'overdue'),
-(19, 27, '2026-04-07', '2026-04-28', 'active'),
 (20, 29, '2026-04-08', '2026-04-29', 'active'),
 (21, 30, '2026-04-09', '2026-04-30', 'active'),
 (22, 32, '2026-04-05', '2026-04-26', 'active'),
@@ -154,7 +148,7 @@ INSERT INTO Rentals (book_id, member_id, rental_date, due_date, status) VALUES
 (32, 4, '2026-04-10', '2026-05-01', 'active'),
 (36, 2, '2026-04-10', '2026-05-01', 'active');
 
--- 40 returns
+-- 35 returns (one per returned rental; rental_id matches insert order above)
 INSERT INTO Returns (rental_id, return_date, condition_status, notes, processed_by) VALUES
 (1, '2026-02-22', 'Good', '', 1),
 (2, '2026-02-23', 'Good', '', 2),
@@ -187,15 +181,10 @@ INSERT INTO Returns (rental_id, return_date, condition_status, notes, processed_
 (29, '2026-03-22', 'Good', '', 1),
 (30, '2026-03-23', 'Damaged', 'Damage fee assessed.', 2),
 (31, '2026-03-24', 'Good', '', 3),
-(32, '2026-03-25', 'Good', '', 4),
-(33, '2026-03-26', 'Good', '', 1),
-(34, '2026-04-01', 'Good', 'Returned 5 day(s) late.', 2),
-(35, '2026-03-28', 'Good', '', 3),
-(36, '2026-03-29', 'Good', '', 4),
-(37, '2026-03-30', 'Good', '', 1),
-(38, '2026-04-02', 'Lost', 'Declared lost at return processing.', 2),
-(39, '2026-04-01', 'Good', '', 3),
-(40, '2026-04-02', 'Good', '', 4);
+(32, '2026-04-01', 'Good', 'Returned 5 day(s) late.', 2),
+(33, '2026-04-02', 'Lost', 'Declared lost at return processing.', 2),
+(34, '2026-04-01', 'Good', '', 3),
+(35, '2026-04-02', 'Good', '', 4);
 
 -- Fine rules: Overdue = $1.00 x days after due_date
 -- Damaged - $25.00 in addition to any overdue
@@ -214,5 +203,5 @@ INSERT INTO Fines (rental_id, member_id, fine_amount, fine_reason, fine_date, pa
 (25, 30, 25.00, 'Damaged', '2026-03-21', 'paid', 25.00, '2026-03-21'),
 (28, 34, 4.00, 'Overdue', '2026-03-25', 'paid', 4.00, '2026-03-25'),
 (30, 36, 25.00, 'Damaged', '2026-03-23', 'paid', 25.00, '2026-03-23'),
-(34, 4, 5.00, 'Overdue', '2026-04-01', 'paid', 5.00, '2026-04-01'),
-(38, 10, 50.00, 'Lost', '2026-04-02', 'paid', 50.00, '2026-04-02');
+(32, 4, 5.00, 'Overdue', '2026-04-01', 'paid', 5.00, '2026-04-01'),
+(33, 10, 50.00, 'Lost', '2026-04-02', 'paid', 50.00, '2026-04-02');
