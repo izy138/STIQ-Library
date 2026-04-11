@@ -116,22 +116,17 @@ def static_file(path):
         return jsonify({'error': 'Not found'}), 404
     return send_from_directory(FRONTEND_DIR, path)
 
-#this routes to the books table page, it sends the books data from the db to the browser to display all he books in a table.
+# BOOKS TABLE routes to the books page, it sends the books data from the db to the browser to display all he books in a table.
 @app.route('/api/books')
 def api_books():
     # book search for a book by title, author, or isbn.
     search = request.args.get('search', '')
     # we use VIEW #2 book_availability_view to get the availability status of the books. this view also shows all the info for the books in the books table, so we use it instead of just a regular select query.
-    #book_status was added to the view 
     sql = """
         SELECT v.book_id, b.isbn, v.title, v.author, b.publisher, b.publication_year, v.category,
                b.book_status,
                v.total_copies, v.available_copies,
-               CASE
-                   WHEN b.book_status = 'Discontinued' THEN 'Discontinued'
-                   WHEN v.availability_status = 'Low Availability' THEN 'Low Stock'
-                   ELSE v.availability_status
-               END AS status
+               v.availability_status AS status
         FROM book_availability_view v
         INNER JOIN Books b ON b.book_id = v.book_id
         WHERE 1=1
@@ -148,7 +143,7 @@ def api_books():
     rows = query_db(sql, tuple(params) if params else None)
     return jsonify(rows or [])
 
-#this route lets the user add a new book to the books table, it takes the data from the frontend and inserts it into the database. 
+# ADD A NEW BOOK POST command, route lets the user add a new book to the books table, it takes the data from the frontend and inserts it into the database. 
 # POST is used to insert a new item into our database 
 # it uses data.get() for each field and adds it to our Insert query.
 @app.route('/api/books', methods=['POST'])
@@ -175,7 +170,7 @@ def api_books_post():
         return jsonify({'error': 'Insert failed'}), 500
     return jsonify({'ok': True}), 201 
 
-#this route updates an existing book in the books table, it takes the data from the frontend and updates the database.
+# UPDATE EXISTINGBOOK PUT command, route updates an existing book in the books table, it takes the data from the frontend and updates the database.
 #PUT is used to update an existing item in the db.
 @app.route('/api/books/<int:book_id>', methods=['PUT'])
 def api_books_put(book_id):
@@ -219,6 +214,7 @@ def api_books_put(book_id):
 #         return jsonify({'error': 'Delete failed'}), 400
 #     return jsonify({'ok': True})
 
+# MEMBERS TABLE all members, this displays every member in the db active or not
 #this routes to the members table page, it sends the members data from the db to the browser to display all the members in a table.
 @app.route('/api/members')
 def api_members():
@@ -229,6 +225,7 @@ def api_members():
         FROM Members
         WHERE 1=1
     """
+    # search feature for members where the user can search my email first name or last name using LIKE 
     params = []
     if search:
         like = f"%{search}%"
@@ -238,7 +235,7 @@ def api_members():
     rows = query_db(sql, tuple(params) if params else None)
     return jsonify(rows or [])
 
-#this route lets the user add a new member to the members table, it takes the data from the frontend and inserts it into the database.
+#ADD A NEW MEMBER POST command, exact same way for books, this route lets the user add a new member to the members table, it takes the data from the frontend and inserts it into the database. POST is used to insert a new item into our database and it uses data.get() for each field and adds it to Insert query.
 @app.route('/api/members', methods=['POST'])
 def api_members_post():
     data = request.get_json()
@@ -260,26 +257,25 @@ def api_members_post():
         return jsonify({'error': 'Insert failed'}), 500
     return jsonify({'ok': True}), 201
 
-#this route updates an existing member in the members table, it takes the data from the frontend and updates the database.
+#UPDATE AMEMBER PUT command, same way for books, we can edit any info we need for existin members. it takes the data from the frontend and updatesour database.
 @app.route('/api/members/<int:member_id>', methods=['PUT'])
 def api_members_put(member_id):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'JSON body required'}), 400
     #the user can update a members status and max books allowed.
-    # this checks if the status is valid, if not it returns an error.
     status = data.get('status', 'active')
-    # this checks if the status is valid, if not it returns an error.
+    # checks if the status is valid
     if status not in ('active', 'suspended', 'expired'):
         return jsonify({'error': 'Invalid status'}), 400
-    # this checks if the max books allowed is valid, if not it returns an error.
+    #checks if the max books allowed is valid
     max_books = int(data.get('max_books_allowed', 5))
     # if the membersstatus is suspended, the max books allowed is set to 0.
     if status == 'suspended':
         max_books = 0
     elif max_books < 1:
         return jsonify({'error': 'max_books_allowed must be at least 1 unless status is suspended'}), 400
-    # this is the update query that updates the database with the new data.
+    # our update query that updates the database with the new data.
     ok = execute_db(
         # i added status to this so the user can update a member status in the modal too
         """UPDATE Members
@@ -300,7 +296,8 @@ def api_members_put(member_id):
         return jsonify({'error': 'Update failed'}), 500
     return jsonify({'ok': True})
 
-#this routes to the rentals table page, it sends the rentals data from the db to the browser to display all the rentals in a table.
+# RENTALS select query routes to the rentals table page, it sends the rentals data from the db to the browser to display all the rentals in a table.
+# it displays all rentals in the db. Its ordered by the rental date so recent ones at the top. maybe we can add a filter at somepoint 
 @app.route('/api/rentals')
 def api_rentals():
     rows = query_db("""
@@ -319,18 +316,19 @@ def api_rentals():
     """)
     return jsonify(rows or [])
 
-# this route handles checking out a book, it takes the data from the frontend and inserts it into the Rentals table in the database.
-@app.route('/api/rentals/checkout', methods=['POST'])
+# CHECKOUT BOOK POST command, this route handles checking out a book, it takes the data from the frontend and inserts it into the Rentals table in the database.
+@app.route('/api/rentals', methods=['POST'])
 def api_checkout():
     data = request.get_json()
     if not data:
         return jsonify({'error': 'JSON body required'}), 400
     book_id = data.get('book_id')
-    #this checks if the book is available for checkout, it checks the book_status column in the books table. if it is 'Discontinued' then it is not available for checkout. We set one book to discontinued to test this.
+   
     book_row = query_db(
         "SELECT book_status FROM Books WHERE book_id = %s",
         (book_id,),
     )
+    # checks if the book is available for checkout, it checks the book_status column in the books table. if it is 'Discontinued' then it is not available for checkout. We set one book to discontinued to test that its book isbn = '9780064471046' Lion the Witch and the Wardrobe if you want to test it out you will see an error cmoe up
     if not book_row or book_row[0].get('book_status') != 'Active':
         return jsonify({'error': 'Book is not available for checkout'}), 400
     ok = execute_db(
@@ -342,7 +340,7 @@ def api_checkout():
         return jsonify({'error': 'Checkout failed'}), 500
     return jsonify({'ok': True}), 201
 
-#this routes to the returns table page, it sends the returns data from the db to the browser to display all the returns in a table.
+#RETURNS TABLE select query for returns page, it sends the returns data from the db to the browser to display all the returns in a table.
 @app.route('/api/returns')
 def api_returns():
     rows = query_db("""
@@ -357,21 +355,8 @@ def api_returns():
     """)
     return jsonify(rows or [])
 
-#this route gets all active rentals that have not been returned yet, it is used to display the active rentals. It takes the data from the database and sends it to the frontend to display in a table format.
-@app.route('/api/returns/active-rentals')
-def api_returns_active_rentals():
-    rows = query_db("""
-        SELECT r.rental_id, b.title, CONCAT(m.first_name,' ',m.last_name) as member_name, r.due_date
-        FROM Rentals r
-        JOIN Books b ON r.book_id = b.book_id
-        JOIN Members m ON r.member_id = m.member_id
-        WHERE r.status IN ('active','overdue')
-          AND NOT EXISTS (SELECT 1 FROM Returns ret WHERE ret.rental_id = r.rental_id)
-        ORDER BY r.due_date
-    """)
-    return jsonify(rows or [])
-
-#this route handles returning a book, it inserts a new row into Returns, updates the rental status, and increases the available copies of the book.
+# RETURN A RENTED BOOK POST command, this route handles returning a book, it inserts a new row into Returns, updates the  rental status
+# trigger 3 is used everytime book is returned, mysql auto updates the available copies of the book when insert command is used here.
 @app.route('/api/returns', methods=['POST'])
 def api_returns_post():
     data = request.get_json()
@@ -383,6 +368,7 @@ def api_returns_post():
         return jsonify({'error': 'Rental not found'}), 404
     processed_by = member_row[0]['member_id']
     ok = execute_db(
+        # the trigger 3 is triggered by this command here. 
         "INSERT INTO Returns (rental_id, return_date, condition_status, processed_by) VALUES (%s,%s,%s,%s)",
         (rental_id, data.get('return_date'), data.get('condition_status', 'Good'), processed_by),
     )
@@ -390,7 +376,8 @@ def api_returns_post():
         return jsonify({'error': 'Return failed'}), 500
     return jsonify({'ok': True}), 201
 
-#this routes to the fines table page, it sends the fines data from the db to the browser to display all the fines in a table.
+#FINES TABLE this routes to the fines table page, basic select query 
+# sends the fines data from the db to the browser to display all the fines in a table, ordered by the paid status first then fine date.
 @app.route('/api/fines')
 def api_fines():
     rows = query_db("""
@@ -405,10 +392,10 @@ def api_fines():
     """)
     return jsonify(rows or [])
  
- 
-#THIS IS IMPORTANT, ITS WHERE THE QUERIES ARE RUN AND DISPLAYED FOR DASHBOARD!! make sure to read and understand how this works so we can explain it properly.
+#THIS IS IMPORTANT, ITS WHERE THE QUERIES ARE RUN AND DISPLAYED FOR DASHBOARD!! make sure to read and understand how this works so we can explain properly, read all comments pls
 
-# these are the 5 stats at the top of the homepage, they show the total books in the library, the total members, the total overdue books, and the total active rentals. The outstanding fines is the total amount of fines that are not paid or partiall paid.
+#ALL 5 DSAHBOARD
+# these are the 5 stats at the top of the homepage: total books, active members, open rentals count, overdue count, outstanding fines.
 # idecided to put these in their own seperate route so if we want to add more stats we can just add them directly to the dictionary i made for sepcifically dashboard stats, its much easier to add new ones this way.
 @app.route('/api/stats')
 def api_stats():
@@ -429,7 +416,8 @@ def api_stats():
     stats['outstanding_fines'] = float(query[0]['outstanding']) if query and query[0]['outstanding'] is not None else 0.0
     return jsonify(stats)
 
-# this route is used to run all of the 10 queries we made for the dashboard, it takes the query_id as a parameter and runs the corresponding sql query from queries.py. It then sends the data to the frontend to display in a table format. so if we want to run query 1 we would go to localhost:5002/api/queries/1 it is displayed here in json format, and it would be displayed in the frotend at localhost:5002/#query-1
+# ALL 10 QUERIES 
+# route is used to run all of the 10 queries we made for the dashboard, it takes the query_id as a parameter and runs the corresponding sql query from queries.py. It then sends the data to the frontend to display in a table format. so if we want to run query 1 we would go to localhost:5002/api/queries/1 it is displayed here in json format, and it would be displayed in the frotend at localhost:5002/#query-1
 @app.route('/api/queries/<int:query_id>')
 def api_query(query_id):
     sql = QUERIES_SQL.get(query_id) # this is where it happens, its gets the query_id from our dictionary in queries.py

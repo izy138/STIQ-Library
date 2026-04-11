@@ -30,10 +30,9 @@
     updateMember: (id, data) => api('/members/' + id, { method: 'PUT', body: JSON.stringify(data) }),
 
     rentals: () => api('/rentals'),
-    checkout: (data) => api('/rentals/checkout', { method: 'POST', body: JSON.stringify(data) }),
+    addRental: (data) => api('/rentals', { method: 'POST', body: JSON.stringify(data) }),
 
     returns: () => api('/returns'),
-    activeRentalsForReturn: () => api('/returns/active-rentals'),
     processReturn: (data) => api('/returns', { method: 'POST', body: JSON.stringify(data) }),
 
     fines: () => api('/fines')

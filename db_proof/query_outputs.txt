@@ -1,3 +1,8 @@
++--------------------------------------+
+| query_title                          |
++--------------------------------------+
+| QUERY 1: All Currently Overdue Books |
++--------------------------------------+
 +-----------------------------------------+---------+-----------------+-----------+-----------+-------------+------------+--------------+----------------+
 | book_title                              | book_id | member_name     | member_id | rental_id | rental_date | due_date   | days_overdue | estimated_fine |
 +-----------------------------------------+---------+-----------------+-----------+-----------+-------------+------------+--------------+----------------+
@@ -6,53 +11,26 @@
 | The Kite Runner                         |      20 | Daniel Martinez |        13 |        41 | 2026-02-25  | 2026-03-11 |           30 |          30.00 |
 | The Handmaids Tale                      |      21 | Ashley Rivera   |        14 |        42 | 2026-02-26  | 2026-03-12 |           29 |          29.00 |
 | 1984                                    |      23 | Natalie Garcia  |        16 |        43 | 2026-02-28  | 2026-03-14 |           27 |          27.00 |
-| Frankenstein                            |      24 | Ethan Flores    |        17 |        44 | 2026-03-01  | 2026-03-15 |           26 |          26.00 |
-| Dune                                    |      25 | Joshua Ramirez  |        19 |        45 | 2026-03-02  | 2026-03-16 |           25 |          25.00 |
-| Enders Game                             |      26 | Valeria Morales |        20 |        46 | 2026-03-03  | 2026-03-17 |           24 |          24.00 |
-| Fahrenheit 451                          |      27 | Kayla Ortiz     |        22 |        47 | 2026-03-04  | 2026-03-18 |           23 |          23.00 |
-| The Hitchhikers Guide to the Galaxy     |      28 | Luis Reyes      |        23 |        48 | 2026-03-05  | 2026-03-19 |           22 |          22.00 |
-| Harry Potter and the Sorcerers Stone    |      29 | Mia Cruz        |        24 |        49 | 2026-03-06  | 2026-03-20 |           21 |          21.00 |
 +-----------------------------------------+---------+-----------------+-----------+-----------+-------------+------------+--------------+----------------+
-+-----------------------------------------+---------------------+-----------------+---------+--------------+------------------+----------------+---------------------+---------------------+
-| title                                   | author              | category        | book_id | total_copies | available_copies | copies_on_loan | availability_status | next_available_date |
-+-----------------------------------------+---------------------+-----------------+---------+--------------+------------------+----------------+---------------------+---------------------+
-| Animal Farm                             | George Orwell       | Adult Fiction   |      18 |            4 |                4 |              0 | Available           | NULL                |
-| Gone Girl                               | Gillian Flynn       | Adult Fiction   |      22 |            1 |                0 |              1 | Unavailable         | 2026-04-26          |
-| The Handmaids Tale                      | Margaret Atwood     | Adult Fiction   |      21 |            4 |                2 |              2 | Low Availability    | 2026-04-30          |
-| The Kite Runner                         | Khaled Hosseini     | Adult Fiction   |      20 |            5 |                3 |              2 | Available           | 2026-04-29          |
-| The Lord of the Flies                   | William Golding     | Adult Fiction   |      19 |            4 |                3 |              1 | Available           | 2026-04-28          |
-| A Game of Thrones                       | George R.R. Martin  | Fantasy         |      31 |            4 |                2 |              2 | Low Availability    | 2026-04-30          |
-| Harry Potter and the Chamber of Secrets | J.K. Rowling        | Fantasy         |      30 |            5 |                3 |              2 | Available           | 2026-04-29          |
-| Harry Potter and the Sorcerers Stone    | J.K. Rowling        | Fantasy         |      29 |            6 |                4 |              2 | Available           | 2026-04-28          |
-| The Hobbit                              | J.R.R. Tolkien      | Fantasy         |      33 |            5 |                5 |              0 | Available           | NULL                |
-| The Lion the Witch and the Wardrobe     | C.S. Lewis          | Fantasy         |      34 |            0 |                0 |              0 | Unavailable         | NULL                |
-| The Lord of the Rings                   | J.R.R. Tolkien      | Fantasy         |      32 |            1 |                0 |              1 | Unavailable         | 2026-05-01          |
-| Dracula                                 | Bram Stoker         | Literature      |       8 |            2 |                2 |              0 | Low Availability    | NULL                |
-| Jane Eyre                               | Charlotte Brontë    | Literature      |       6 |            3 |                3 |              0 | Available           | NULL                |
-| Moby-Dick                               | Herman Melville     | Literature      |      10 |            2 |                2 |              0 | Low Availability    | NULL                |
-| Oliver Twist                            | Charles Dickens     | Literature      |       9 |            3 |                3 |              0 | Available           | NULL                |
-| Pride and Prejudice                     | Jane Austen         | Literature      |       2 |            5 |                5 |              0 | Available           | NULL                |
-| Romeo and Juliet                        | William Shakespeare | Literature      |       1 |            5 |                5 |              0 | Available           | NULL                |
-| The Great Gatsby                        | F. Scott Fitzgerald | Literature      |       4 |            4 |                4 |              0 | Available           | NULL                |
-| The Odyssey                             | Homer               | Literature      |       7 |            3 |                3 |              0 | Available           | NULL                |
-| The Scarlet Letter                      | Nathaniel Hawthorne | Literature      |      11 |            2 |                2 |              0 | Low Availability    | NULL                |
-| To Kill a Mockingbird                   | Harper Lee          | Literature      |       5 |            5 |                5 |              0 | Available           | NULL                |
-| Wuthering Heights                       | Emily Brontë        | Literature      |       3 |            4 |                4 |              0 | Available           | NULL                |
-| 1984                                    | George Orwell       | Science Fiction |      23 |            3 |                1 |              2 | Low Availability    | 2026-04-27          |
-| Dune                                    | Frank Herbert       | Science Fiction |      25 |            5 |                3 |              2 | Available           | 2026-04-29          |
-| Enders Game                             | Orson Scott Card    | Science Fiction |      26 |            4 |                2 |              2 | Low Availability    | 2026-04-30          |
-| Fahrenheit 451                          | Ray Bradbury        | Science Fiction |      27 |            4 |                2 |              2 | Low Availability    | 2026-04-26          |
-| Frankenstein                            | Mary Shelley        | Science Fiction |      24 |            4 |                2 |              2 | Low Availability    | 2026-04-28          |
-| Ready Player One                        | Ernest Cline        | Science Fiction |      36 |            1 |                0 |              1 | Unavailable         | 2026-05-01          |
-| The Hitchhikers Guide to the Galaxy     | Douglas Adams       | Science Fiction |      28 |            4 |                2 |              2 | Low Availability    | 2026-04-27          |
-| The Martian                             | Andy Weir           | Science Fiction |      35 |            2 |                2 |              0 | Low Availability    | NULL                |
-| Divergent                               | Veronica Roth       | Young Adult     |      15 |            3 |                3 |              0 | Available           | NULL                |
-| The Fault in Our Stars                  | John Green          | Young Adult     |      14 |            4 |                4 |              0 | Available           | NULL                |
-| The Giver                               | Lois Lowry          | Young Adult     |      17 |            4 |                4 |              0 | Available           | NULL                |
-| The Hunger Games                        | Suzanne Collins     | Young Adult     |      12 |            5 |                5 |              0 | Available           | NULL                |
-| The Maze Runner                         | James Dashner       | Young Adult     |      16 |            3 |                3 |              0 | Available           | NULL                |
-| Twilight                                | Stephenie Meyer     | Young Adult     |      13 |            4 |                4 |              0 | Available           | NULL                |
-+-----------------------------------------+---------------------+-----------------+---------+--------------+------------------+----------------+---------------------+---------------------+
++---------------------------------------+
+| query_title                           |
++---------------------------------------+
+| QUERY 2: Books by Availability Status |
++---------------------------------------+
++-----------------------+-----------------+---------------+---------+--------------+------------------+----------------+---------------------+---------------------+
+| title                 | author          | category      | book_id | total_copies | available_copies | copies_on_loan | availability_status | next_available_date |
++-----------------------+-----------------+---------------+---------+--------------+------------------+----------------+---------------------+---------------------+
+| Animal Farm           | George Orwell   | Adult Fiction |      18 |            4 |                4 |              0 | Available           | NULL                |
+| Gone Girl             | Gillian Flynn   | Adult Fiction |      22 |            1 |                0 |              1 | Unavailable         | 2026-04-26          |
+| The Handmaids Tale    | Margaret Atwood | Adult Fiction |      21 |            4 |                2 |              2 | Low Availability    | 2026-04-30          |
+| The Kite Runner       | Khaled Hosseini | Adult Fiction |      20 |            5 |                3 |              2 | Available           | 2026-04-29          |
+| The Lord of the Flies | William Golding | Adult Fiction |      19 |            4 |                3 |              1 | Available           | 2026-04-28          |
++-----------------------+-----------------+---------------+---------+--------------+------------------+----------------+---------------------+---------------------+
++-----------------------------+
+| query_title                 |
++-----------------------------+
+| QUERY 3: Most Popular Books |
++-----------------------------+
 +-----------------------+---------------------+------------+----------------+--------------+------------------+--------------------+---------+
 | title                 | author              | category   | times_borrowed | total_copies | available_copies | last_borrowed_date | book_id |
 +-----------------------+---------------------+------------+----------------+--------------+------------------+--------------------+---------+
@@ -61,12 +39,12 @@
 | Romeo and Juliet      | William Shakespeare | Literature |              2 |            5 |                5 | 2026-02-02         |       1 |
 | Wuthering Heights     | Emily Brontë        | Literature |              2 |            4 |                4 | 2026-02-07         |       3 |
 | To Kill a Mockingbird | Harper Lee          | Literature |              2 |            5 |                5 | 2026-02-10         |       5 |
-| The Odyssey           | Homer               | Literature |              2 |            3 |                3 | 2026-02-15         |       7 |
-| Dracula               | Bram Stoker         | Literature |              2 |            2 |                2 | 2026-02-17         |       8 |
-| Moby-Dick             | Herman Melville     | Literature |              2 |            2 |                2 | 2026-02-20         |      10 |
-| The Great Gatsby      | F. Scott Fitzgerald | Literature |              1 |            4 |                4 | 2026-02-08         |       4 |
-| Oliver Twist          | Charles Dickens     | Literature |              1 |            3 |                3 | 2026-02-18         |       9 |
 +-----------------------+---------------------+------------+----------------+--------------+------------------+--------------------+---------+
++-------------------------------+
+| query_title                   |
++-------------------------------+
+| QUERY 4: Books Never Borrowed |
++-------------------------------+
 +-------------------------------------+----------------+-----------------+------------------+--------------+---------+
 | title                               | author         | category        | publication_year | total_copies | book_id |
 +-------------------------------------+----------------+-----------------+------------------+--------------+---------+
@@ -74,77 +52,67 @@
 | The Lion the Witch and the Wardrobe | C.S. Lewis     | Fantasy         |             1950 |            0 |      34 |
 | The Hobbit                          | J.R.R. Tolkien | Fantasy         |             1937 |            5 |      33 |
 +-------------------------------------+----------------+-----------------+------------------+--------------+---------+
-+-----------------+--------------------------+-----------+--------+-----------------+----------------------+------------+---------------------+
-| member_name     | email                    | member_id | status | number_of_fines | total_fines_assessed | total_paid | outstanding_balance |
-+-----------------+--------------------------+-----------+--------+-----------------+----------------------+------------+---------------------+
-| Mia Cruz        | mcruz12@fiu.edu          |        24 | active |               1 |                50.00 |      25.00 |               25.00 |
-| Ashley Rivera   | arivera02@fiu.edu        |        14 | active |               2 |                31.00 |       6.00 |               25.00 |
-| Ethan Flores    | eflores05@fiu.edu        |        17 | active |               1 |                 6.00 |       0.00 |                6.00 |
-| Anna Gonzalez   | agonza@fiu.edu           |        11 | active |               1 |                 5.00 |       0.00 |                5.00 |
-| Sofia Murillo   | smurillo@library.fiu.edu |         3 | active |               1 |                 4.00 |       0.00 |                4.00 |
-| Chris Lawrence  | clawre@fiu.edu           |        10 | active |               1 |                50.00 |      50.00 |                0.00 |
-| Paula Delgado   | pdelgado18@fiu.edu       |        30 | active |               2 |                28.00 |      28.00 |                0.00 |
-| Maria Lopez     | mlopez@fiu.edu           |         7 | active |               1 |                25.00 |      25.00 |                0.00 |
-| Kayla Ortiz     | kortiz10@fiu.edu         |        22 | active |               1 |                25.00 |      25.00 |                0.00 |
-| Ariana Salazar  | asalazar24@fiu.edu       |        36 | active |               1 |                25.00 |      25.00 |                0.00 |
-| Quincy Jones    | qjones@library.fiu.edu   |         4 | active |               1 |                 5.00 |       5.00 |                0.00 |
-| Emma Ponce      | eponce22@fiu.edu         |        34 | active |               1 |                 4.00 |       4.00 |                0.00 |
-| Gabriela Mendez | gmendez14@fiu.edu        |        26 | active |               1 |                 3.00 |       3.00 |                0.00 |
-+-----------------+--------------------------+-----------+--------+-----------------+----------------------+------------+---------------------+
-+-----------------------------------------+-----------------+-------------+------------+---------------+-------------+------------------+------------------+-----------+
-| book_title                              | member_name     | rental_date | due_date   | rental_status | return_date | condition_status | return_timing    | rental_id |
-+-----------------------------------------+-----------------+-------------+------------+---------------+-------------+------------------+------------------+-----------+
-| Ready Player One                        | Isabella Correa | 2026-04-10  | 2026-05-01 | active        | NULL        | NULL             | Not Returned     |        66 |
-| The Lord of the Rings                   | Quincy Jones    | 2026-04-10  | 2026-05-01 | active        | NULL        | NULL             | Not Returned     |        65 |
-| A Game of Thrones                       | Anna Gonzalez   | 2026-04-09  | 2026-04-30 | active        | NULL        | NULL             | Not Returned     |        64 |
-| Enders Game                             | Ariana Salazar  | 2026-04-09  | 2026-04-30 | active        | NULL        | NULL             | Not Returned     |        59 |
-| The Handmaids Tale                      | Paula Delgado   | 2026-04-09  | 2026-04-30 | active        | NULL        | NULL             | Not Returned     |        54 |
-| Harry Potter and the Chamber of Secrets | Chris Lawrence  | 2026-04-08  | 2026-04-29 | active        | NULL        | NULL             | Not Returned     |        63 |
-| Dune                                    | Sebastian Rojas | 2026-04-08  | 2026-04-29 | active        | NULL        | NULL             | Not Returned     |        58 |
-| The Kite Runner                         | Victor Navarro  | 2026-04-08  | 2026-04-29 | active        | NULL        | NULL             | Not Returned     |        53 |
-| Harry Potter and the Sorcerers Stone    | Maria Lopez     | 2026-04-07  | 2026-04-28 | active        | NULL        | NULL             | Not Returned     |        62 |
-| Frankenstein                            | Emma Ponce      | 2026-04-07  | 2026-04-28 | active        | NULL        | NULL             | Not Returned     |        57 |
-| The Lord of the Flies                   | Ricardo Santos  | 2026-04-07  | 2026-04-28 | active        | NULL        | NULL             | Not Returned     |        52 |
-| The Hitchhikers Guide to the Galaxy     | Isabella Perez  | 2026-04-06  | 2026-04-27 | active        | NULL        | NULL             | Not Returned     |        61 |
-| 1984                                    | Noah Jimenez    | 2026-04-06  | 2026-04-27 | active        | NULL        | NULL             | Not Returned     |        56 |
-| Fahrenheit 451                          | Chris Rodriguez | 2026-04-05  | 2026-04-26 | active        | NULL        | NULL             | Not Returned     |        60 |
-| Gone Girl                               | Lucia Herrera   | 2026-04-05  | 2026-04-26 | active        | NULL        | NULL             | Not Returned     |        55 |
-| The Lord of the Flies                   | Quincy Williams | 2026-03-12  | 2026-04-02 | returned      | 2026-04-02  | Good             | Returned On Time |        40 |
-| Animal Farm                             | Anna Gonzalez   | 2026-03-11  | 2026-04-01 | returned      | 2026-04-01  | Good             | Returned On Time |        39 |
-| Animal Farm                             | Chris Lawrence  | 2026-03-10  | 2026-03-31 | returned      | 2026-04-02  | Lost             | Returned Late    |        38 |
-| The Giver                               | Ethan Flores    | 2026-03-09  | 2026-03-30 | returned      | 2026-03-30  | Good             | Returned On Time |        37 |
-| The Giver                               | Natalie Garcia  | 2026-03-08  | 2026-03-29 | returned      | 2026-03-29  | Good             | Returned On Time |        36 |
-+-----------------------------------------+-----------------+-------------+------------+---------------+-------------+------------------+------------------+-----------+
-+-----------------------------------------+--------------------+-----------------+------------------------+-------------+------------+---------------+-----------+
-| book_title                              | author             | member_name     | email                  | rental_date | due_date   | rental_status | rental_id |
-+-----------------------------------------+--------------------+-----------------+------------------------+-------------+------------+---------------+-----------+
-| The Lord of the Rings                   | J.R.R. Tolkien     | Quincy Jones    | qjones@library.fiu.edu | 2026-04-10  | 2026-05-01 | active        |        65 |
-| Ready Player One                        | Ernest Cline       | Isabella Correa | icorr014@fiu.edu       | 2026-04-10  | 2026-05-01 | active        |        66 |
-| The Handmaids Tale                      | Margaret Atwood    | Paula Delgado   | pdelgado18@fiu.edu     | 2026-04-09  | 2026-04-30 | active        |        54 |
-| Enders Game                             | Orson Scott Card   | Ariana Salazar  | asalazar24@fiu.edu     | 2026-04-09  | 2026-04-30 | active        |        59 |
-| A Game of Thrones                       | George R.R. Martin | Anna Gonzalez   | agonza@fiu.edu         | 2026-04-09  | 2026-04-30 | active        |        64 |
-| The Kite Runner                         | Khaled Hosseini    | Victor Navarro  | vnavarro17@fiu.edu     | 2026-04-08  | 2026-04-29 | active        |        53 |
-| Dune                                    | Frank Herbert      | Sebastian Rojas | srojas23@fiu.edu       | 2026-04-08  | 2026-04-29 | active        |        58 |
-| Harry Potter and the Chamber of Secrets | J.K. Rowling       | Chris Lawrence  | clawre@fiu.edu         | 2026-04-08  | 2026-04-29 | active        |        63 |
-| The Lord of the Flies                   | William Golding    | Ricardo Santos  | rsantos15@fiu.edu      | 2026-04-07  | 2026-04-28 | active        |        52 |
-| Frankenstein                            | Mary Shelley       | Emma Ponce      | eponce22@fiu.edu       | 2026-04-07  | 2026-04-28 | active        |        57 |
-| Harry Potter and the Sorcerers Stone    | J.K. Rowling       | Maria Lopez     | mlopez@fiu.edu         | 2026-04-07  | 2026-04-28 | active        |        62 |
-| 1984                                    | George Orwell      | Noah Jimenez    | njimenez21@fiu.edu     | 2026-04-06  | 2026-04-27 | active        |        56 |
-| The Hitchhikers Guide to the Galaxy     | Douglas Adams      | Isabella Perez  | iperez@fiu.edu         | 2026-04-06  | 2026-04-27 | active        |        61 |
-| Gone Girl                               | Gillian Flynn      | Lucia Herrera   | lherrera20@fiu.edu     | 2026-04-05  | 2026-04-26 | active        |        55 |
-| Fahrenheit 451                          | Ray Bradbury       | Chris Rodriguez | crodriguez032@fiu.edu  | 2026-04-05  | 2026-04-26 | active        |        60 |
-+-----------------------------------------+--------------------+-----------------+------------------------+-------------+------------+---------------+-----------+
-+-------------------+---------------+----------------+--------------------+-------------+------------------+-------------+-------------+-------------+-----------+-----------+
-| book_title        | isbn          | member_name    | email              | return_date | condition_status | fine_reason | fine_amount | paid_status | rental_id | return_id |
-+-------------------+---------------+----------------+--------------------+-------------+------------------+-------------+-------------+-------------+-----------+-----------+
-| Animal Farm       | 9780141393056 | Chris Lawrence | clawre@fiu.edu     | 2026-04-02  | Lost             | Lost        |       50.00 | paid        |        38 |        38 |
-| Divergent         | 9780062024039 | Ariana Salazar | asalazar24@fiu.edu | 2026-03-23  | Damaged          | Damaged     |       25.00 | paid        |        30 |        30 |
-| Twilight          | 9780316015844 | Paula Delgado  | pdelgado18@fiu.edu | 2026-03-21  | Damaged          | Damaged     |       25.00 | paid        |        25 |        25 |
-| Moby-Dick         | 9780142437247 | Mia Cruz       | mcruz12@fiu.edu    | 2026-03-15  | Lost             | Lost        |       50.00 | partial     |        20 |        20 |
-| Jane Eyre         | 9780194614443 | Ashley Rivera  | arivera02@fiu.edu  | 2026-03-11  | Damaged          | Damaged     |       25.00 | unpaid      |        12 |        12 |
-| Oliver Twist      | 9780141439747 | Kayla Ortiz    | kortiz10@fiu.edu   | 2026-03-11  | Damaged          | Damaged     |       25.00 | paid        |        18 |        18 |
-| Wuthering Heights | 9780141439556 | Maria Lopez    | mlopez@fiu.edu     | 2026-02-28  | Damaged          | Damaged     |       25.00 | paid        |         7 |         7 |
-+-------------------+---------------+----------------+--------------------+-------------+------------------+-------------+-------------+-------------+-----------+-----------+
++-----------------------------------+
+| query_title                       |
++-----------------------------------+
+| -- QUERY 5: Total Fines by Member |
++-----------------------------------+
++---------------+--------------------------+-----------+--------+-----------------+----------------------+------------+---------------------+
+| member_name   | email                    | member_id | status | number_of_fines | total_fines_assessed | total_paid | outstanding_balance |
++---------------+--------------------------+-----------+--------+-----------------+----------------------+------------+---------------------+
+| Mia Cruz      | mcruz12@fiu.edu          |        24 | active |               1 |                50.00 |      25.00 |               25.00 |
+| Ashley Rivera | arivera02@fiu.edu        |        14 | active |               2 |                31.00 |       6.00 |               25.00 |
+| Ethan Flores  | eflores05@fiu.edu        |        17 | active |               1 |                 6.00 |       0.00 |                6.00 |
+| Anna Gonzalez | agonza@fiu.edu           |        11 | active |               1 |                 5.00 |       0.00 |                5.00 |
+| Sofia Murillo | smurillo@library.fiu.edu |         3 | active |               1 |                 4.00 |       0.00 |                4.00 |
++---------------+--------------------------+-----------+--------+-----------------+----------------------+------------+---------------------+
++---------------------------------------------+
+| query_title                                 |
++---------------------------------------------+
+| QUERY 6: Rental History with Return Details |
++---------------------------------------------+
++-----------------------+-----------------+-------------+------------+---------------+-------------+------------------+---------------+-----------+
+| book_title            | member_name     | rental_date | due_date   | rental_status | return_date | condition_status | return_timing | rental_id |
++-----------------------+-----------------+-------------+------------+---------------+-------------+------------------+---------------+-----------+
+| Ready Player One      | Isabella Correa | 2026-04-10  | 2026-05-01 | active        | NULL        | NULL             | Not Returned  |        66 |
+| The Lord of the Rings | Quincy Jones    | 2026-04-10  | 2026-05-01 | active        | NULL        | NULL             | Not Returned  |        65 |
+| A Game of Thrones     | Anna Gonzalez   | 2026-04-09  | 2026-04-30 | active        | NULL        | NULL             | Not Returned  |        64 |
+| Enders Game           | Ariana Salazar  | 2026-04-09  | 2026-04-30 | active        | NULL        | NULL             | Not Returned  |        59 |
+| The Handmaids Tale    | Paula Delgado   | 2026-04-09  | 2026-04-30 | active        | NULL        | NULL             | Not Returned  |        54 |
++-----------------------+-----------------+-------------+------------+---------------+-------------+------------------+---------------+-----------+
++---------------------------------------------+
+| query_title                                 |
++---------------------------------------------+
+| QUERY 7: Recent Rentals for the last 7 days |
++---------------------------------------------+
++-----------------------+--------------------+-----------------+------------------------+-------------+------------+---------------+-----------+
+| book_title            | author             | member_name     | email                  | rental_date | due_date   | rental_status | rental_id |
++-----------------------+--------------------+-----------------+------------------------+-------------+------------+---------------+-----------+
+| The Lord of the Rings | J.R.R. Tolkien     | Quincy Jones    | qjones@library.fiu.edu | 2026-04-10  | 2026-05-01 | active        |        65 |
+| Ready Player One      | Ernest Cline       | Isabella Correa | icorr014@fiu.edu       | 2026-04-10  | 2026-05-01 | active        |        66 |
+| The Handmaids Tale    | Margaret Atwood    | Paula Delgado   | pdelgado18@fiu.edu     | 2026-04-09  | 2026-04-30 | active        |        54 |
+| Enders Game           | Orson Scott Card   | Ariana Salazar  | asalazar24@fiu.edu     | 2026-04-09  | 2026-04-30 | active        |        59 |
+| A Game of Thrones     | George R.R. Martin | Anna Gonzalez   | agonza@fiu.edu         | 2026-04-09  | 2026-04-30 | active        |        64 |
++-----------------------+--------------------+-----------------+------------------------+-------------+------------+---------------+-----------+
++---------------------------------------+
+| query_title                           |
++---------------------------------------+
+| QUERY 8: Damaged or Lost Books Report |
++---------------------------------------+
++-------------+---------------+----------------+--------------------+-------------+------------------+-------------+-------------+-------------+-----------+-----------+
+| book_title  | isbn          | member_name    | email              | return_date | condition_status | fine_reason | fine_amount | paid_status | rental_id | return_id |
++-------------+---------------+----------------+--------------------+-------------+------------------+-------------+-------------+-------------+-----------+-----------+
+| Animal Farm | 9780141393056 | Chris Lawrence | clawre@fiu.edu     | 2026-04-02  | Lost             | Lost        |       50.00 | paid        |        38 |        38 |
+| Divergent   | 9780062024039 | Ariana Salazar | asalazar24@fiu.edu | 2026-03-23  | Damaged          | Damaged     |       25.00 | paid        |        30 |        30 |
+| Twilight    | 9780316015844 | Paula Delgado  | pdelgado18@fiu.edu | 2026-03-21  | Damaged          | Damaged     |       25.00 | paid        |        25 |        25 |
+| Moby-Dick   | 9780142437247 | Mia Cruz       | mcruz12@fiu.edu    | 2026-03-15  | Lost             | Lost        |       50.00 | partial     |        20 |        20 |
+| Jane Eyre   | 9780194614443 | Ashley Rivera  | arivera02@fiu.edu  | 2026-03-11  | Damaged          | Damaged     |       25.00 | unpaid      |        12 |        12 |
++-------------+---------------+----------------+--------------------+-------------+------------------+-------------+-------------+-------------+-----------+-----------+
++----------------------------------+
+| query_title                      |
++----------------------------------+
+| QUERY 9: Monthly Rental Activity |
++----------------------------------+
 +---------+---------------+----------------+--------------+
 | month   | total_rentals | unique_members | unique_books |
 +---------+---------------+----------------+--------------+
@@ -152,6 +120,11 @@
 | 2026-03 |            18 |             15 |           12 |
 | 2026-02 |            33 |             28 |           19 |
 +---------+---------------+----------------+--------------+
++----------------------------------+
+| query_title                      |
++----------------------------------+
+| QUERY 10: Unpaid / partial fines |
++----------------------------------+
 +---------------+-----------------------+-------------+-------------+-------------+---------------------+-------------+------------+---------+
 | member_name   | book_title            | fine_reason | fine_amount | paid_amount | outstanding_balance | paid_status | fine_date  | fine_id |
 +---------------+-----------------------+-------------+-------------+-------------+---------------------+-------------+------------+---------+
@@ -161,26 +134,51 @@
 | Anna Gonzalez | To Kill a Mockingbird | Overdue     |        5.00 |        0.00 |                5.00 | unpaid      | 2026-03-07 |       3 |
 | Sofia Murillo | Pride and Prejudice   | Overdue     |        4.00 |        0.00 |                4.00 | unpaid      | 2026-02-28 |       1 |
 +---------------+-----------------------+-------------+-------------+-------------+---------------------+-------------+------------+---------+
++------------------------------------------+
+| query_title                              |
++------------------------------------------+
+| Dashboard Query 1: book and copies count |
++------------------------------------------+
 +-------------+--------------+
 | total_books | total_copies |
 +-------------+--------------+
 |          36 |          127 |
 +-------------+--------------+
++-----------------------------------+
+| query_title                       |
++-----------------------------------+
+| Dashboard Query 2: active members |
++-----------------------------------+
 +----------------+
 | active_members |
 +----------------+
 |             30 |
 +----------------+
++------------------------------------+
+| query_title                        |
++------------------------------------+
+| Dashboard Query 3: overdue rentals |
++------------------------------------+
 +---------------+
 | overdue_count |
 +---------------+
 |            11 |
 +---------------+
++-----------------------------------------------+
+| query_title                                   |
++-----------------------------------------------+
+| Dashboard Query 4: all active/overdue rentals |
++-----------------------------------------------+
 +----------------+
 | active_rentals |
 +----------------+
 |             26 |
 +----------------+
++--------------------------------------+
+| query_title                          |
++--------------------------------------+
+| Dashboard Query 5: outstanding fines |
++--------------------------------------+
 +-------------------+
 | outstanding_fines |
 +-------------------+

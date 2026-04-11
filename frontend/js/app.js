@@ -71,7 +71,7 @@
       '<div class="stats-grid">' +
       '<a href="#books" class="stat-card stat-card-link primary"><h3 id="stat-books">–</h3><p>Total Books</p></a>' +
       '<a href="#members" class="stat-card stat-card-link success"><h3 id="stat-members">–</h3><p>Active Members</p></a>' +
-      '<a href="#rentals" class="stat-card stat-card-link danger"><h3 id="stat-rentals">–</h3><p>Active Rentals</p></a>' +
+      '<a href="#rentals" class="stat-card stat-card-link danger"><h3 id="stat-rentals">–</h3><p>Open rentals</p></a>' +
       '<a href="#query-1" class="stat-card stat-card-link warning"><h3 id="stat-overdue">–</h3><p>Overdue</p></a>' +
       '<a href="#fines" class="stat-card stat-card-link purple"><h3 id="stat-fines">–</h3><p>Outstanding Fines</p></a></div>' +
       '<h2 class="page-title" style="margin-top:1.5rem;font-size:1.35rem">Queries</h2>' +
@@ -290,7 +290,7 @@
   // ----- Rentals (+ checkout modal) -----
   function viewRentals(opts) {
     opts = opts || {};
-    app.innerHTML = '<div class="actions"><h1 class="page-title" style="margin:0">Active Rentals</h1><button type="button" class="btn btn-primary" id="btn-checkout-open">Checkout Book</button></div><p class="page-subtitle">Currently checked out</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>' +
+    app.innerHTML = '<div class="actions"><h1 class="page-title" style="margin:0">Rentals</h1><button type="button" class="btn btn-primary" id="btn-checkout-open">Checkout Book</button></div><p class="page-subtitle">All rental records (any status)</p><div class="card"><div class="card-body"><div id="table-wrap" class="table-wrap"></div></div></div>' +
       '<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10;align-items:center;justify-content:center;padding:0.35rem;">' +
       '<div class="modal-panel-compact">' +
       '<h2 class="modal-compact-title">Checkout Book</h2>' +
@@ -308,7 +308,7 @@
         const wrap = el('table-wrap');
         if (!wrap) return;
         if (!rows || !rows.length) {
-          wrap.innerHTML = '<p class="empty-state">No active rentals. <button type="button" class="empty-inline-btn" id="btn-checkout-empty">Check out a book</button>.</p>';
+          wrap.innerHTML = '<p class="empty-state">No rentals yet. <button type="button" class="empty-inline-btn" id="btn-checkout-empty">Check out a book</button>.</p>';
           const eb = el('btn-checkout-empty');
           if (eb) eb.addEventListener('click', openCheckoutModal);
           return;
@@ -353,7 +353,7 @@
         rental_date: el('rental-date').value,
         due_date: el('due-date').value
       };
-      API.checkout(payload).then(function () {
+      API.addRental(payload).then(function () {
         alert('Checkout successful');
         closeCheckoutModal();
         loadRentalsTable();
@@ -396,10 +396,14 @@
 
     function openReturnModal() {
       el('return-date').value = new Date().toISOString().slice(0, 10);
-      API.activeRentalsForReturn().then(rows => {
+      API.rentals().then(function (rows) {
         const sel = el('return-rental-id');
         if (!sel) return;
-        sel.innerHTML = '<option value="">Select rental</option>' + (rows || []).map(r => '<option value="' + r.rental_id + '">' + r.rental_id + ' – ' + escapeHtml(r.title) + ' (by ' + escapeHtml(r.member_name) + ', due ' + (r.due_date || '') + ')</option>').join('');
+        const open = (rows || []).filter(function (r) { return r.status === 'active' || r.status === 'overdue'; });
+        open.sort(function (a, b) { return String(a.due_date || '').localeCompare(String(b.due_date || '')); });
+        sel.innerHTML = '<option value="">Select rental</option>' + open.map(function (r) {
+          return '<option value="' + r.rental_id + '">' + r.rental_id + ' – ' + escapeHtml(r.title) + ' (by ' + escapeHtml(r.member_name) + ', due ' + (r.due_date || '') + ')</option>';
+        }).join('');
       });
       modal.style.display = 'flex';
     }

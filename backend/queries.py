@@ -4,7 +4,7 @@
 # 1 total books + copies
 # 2 active members
 # 3 overdue count
-# 4 active rentals
+# 4 active rentals count
 # 5 outstanding fines
 DASHBOARD_SQL = {
     1: """

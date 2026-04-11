@@ -1,3 +1,7 @@
+-- IMPORTATN!!! For query_outputs.txt:
+-- we used mysql -t -u root -p library_system < db_proof/queries.sql > db_proof/query_outputs.txt to output the queries from queries.sql. 
+-- Some tables do not have 5 rows for example table 4 is for the query 4 Books never borrowed and shows only 3 rows. 
+-- table 9 for query 9 also only have 3 rows because its for monthly rntal activity and we only have data for 3 months.
 
 -- 10 queries: JOINs, aggregates, GROUP BY, CASE, LEFT JOIN, date filters, HAVING.
 -- Queries 1, 2, and 3 are read from views.sql through the app.py file.
@@ -6,6 +10,7 @@
 -- QUERY 1: All Currently Overdue Books
 -- Uses view 1: overdue_books_view from backend/views.sql
 -- shows all the overdue books and it included overdue and active rentals, shows the estimated fine
+SELECT 'QUERY 1: All Currently Overdue Books' AS query_title;
 SELECT
     book_title,
     book_id,
@@ -22,6 +27,7 @@ ORDER BY days_overdue DESC;
 -- QUERY 2: Books by Availability Status
 -- Uses view 2: book_availability_view from backend/views.sql
 -- updates the availability status of each book based on the numbe of available copies.
+SELECT 'QUERY 2: Books by Availability Status' AS query_title;
 SELECT
     title,
     author,
@@ -38,6 +44,7 @@ ORDER BY category, title;
 -- QUERY 3: Most Popular Books
 -- Uses view 3: popular_books_view from backend/views.sql.
 -- It shows the top 10 most popular books by checking the num of times each book has been borrowed
+SELECT 'QUERY 3: Most Popular Books' AS query_title;
 SELECT
     title,
     author,
@@ -53,6 +60,7 @@ LIMIT 10;
 
 -- QUERY 4: Books Never Borrowed
 -- finds all books that have never been borrowed by checking rental id is NULL
+SELECT 'QUERY 4: Books Never Borrowed' AS query_title;
 SELECT
     b.title,
     b.author,
@@ -67,6 +75,7 @@ ORDER BY b.publication_year DESC;
 
 -- QUERY 5: Total Fines by Member
 -- joins members and fines to get the total fines accrued by a member
+SELECT '-- QUERY 5: Total Fines by Member' AS query_title;
 SELECT
     CONCAT(m.first_name, ' ', m.last_name) AS member_name,
     m.email,
@@ -83,6 +92,7 @@ ORDER BY outstanding_balance DESC, total_fines_assessed DESC;
 
 -- QUERY 6: Rental History with Return Details
 -- shows all the rental history with the return details its ordered by the rental date in descending so we can see the most recent rentals first
+SELECT 'QUERY 6: Rental History with Return Details' AS query_title;
 SELECT
     b.title AS book_title,
     CONCAT(m.first_name, ' ', m.last_name) AS member_name,
@@ -105,6 +115,7 @@ ORDER BY r.rental_date DESC;
 
 -- QUERY 7: Recent Rentals for the last 7 days
 -- shows only the rentals for the last week, its ordered by the rental date 
+SELECT 'QUERY 7: Recent Rentals for the last 7 days' AS query_title;
 SELECT
     b.title AS book_title,
     b.author,
@@ -122,6 +133,7 @@ ORDER BY r.rental_date DESC;
 
 -- QUERY 8: Damaged or Lost Books Report
 -- we find books using fine_reason to display damaged or lost books only with fines included.
+SELECT 'QUERY 8: Damaged or Lost Books Report' AS query_title;
 SELECT
     b.title AS book_title,
     b.isbn,
@@ -145,6 +157,7 @@ ORDER BY ret.return_date DESC;
 
 -- QUERY 9: Monthly Rental Activity
 -- we group the rentals by the month and year to see how many rentals, members and books were rented in each month.
+SELECT 'QUERY 9: Monthly Rental Activity' AS query_title;
 SELECT 
     DATE_FORMAT(r.rental_date, '%Y-%m') AS month,
     COUNT(*) AS total_rentals,
@@ -156,6 +169,7 @@ ORDER BY month DESC;
 
 -- Query 10: Unpaid / partial fines
 -- we join the fines, members and rentals to get the unpaid or partial fines for each member and books
+SELECT 'QUERY 10: Unpaid / partial fines' AS query_title;
 SELECT
     CONCAT(m.first_name, ' ', m.last_name) AS member_name,
     b.title AS book_title,
@@ -180,26 +194,31 @@ ORDER BY f.fine_date DESC;
 -- the quereies are imported to our app.py file to be used in the dashboard homepage.
 
 -- Dashboard Query 1: book titles and total copy count
+SELECT 'Dashboard Query 1: book and copies count' AS query_title;
 SELECT COUNT(*) AS total_books, COALESCE(SUM(total_copies), 0) AS total_copies
 FROM Books;
 
 -- Dashboard Query 2: members with active status
+SELECT 'Dashboard Query 2: active members' AS query_title;
 SELECT COUNT(*) AS active_members
 FROM Members
 WHERE status = 'active';
 
 -- Dashboard Query 3: rentals past due, this checks books that ar still checked out, active and overdue
+SELECT 'Dashboard Query 3: overdue rentals' AS query_title;
 SELECT COUNT(*) AS overdue_count
 FROM Rentals
 WHERE status IN ('active', 'overdue')
   AND due_date < CURDATE();
 
 -- Dashboard Query 4: all open rentals, counts overdue rentals as well.
+SELECT 'Dashboard Query 4: all active/overdue rentals' AS query_title;
 SELECT COUNT(*) AS active_rentals
 FROM Rentals
 WHERE status IN ('active', 'overdue');
 
 -- Dashboard Query 5: total outstanding fines for the entire library.
+SELECT 'Dashboard Query 5: outstanding fines' AS query_title;
 SELECT COALESCE(SUM(fine_amount - paid_amount), 0) AS outstanding_fines
 FROM Fines
 WHERE paid_status IN ('unpaid', 'partial');
