@@ -4,6 +4,7 @@
 from flask import Flask, jsonify, send_from_directory, request
 #mysql.connector is the library that we use that allows us to connect to the database
 import mysql.connector
+import os
 from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -22,11 +23,13 @@ app = Flask(__name__, static_folder=FRONTEND_DIR)
 app.json.sort_keys = False
 
 # dictionary that stores the database connection information.
+# Override for docker compose.
 DB_Connection = {
-    'host': 'localhost', #running on our local machine
-    'user': 'root', #my sql username
-    'password': '', #my sql password -this is usually empty just press enter if ur asked
-    'database': 'library_system' # our database name we connect to
+    'host': os.environ.get('MYSQL_HOST', 'localhost'),
+    'port': int(os.environ.get('MYSQL_PORT', '3306')),
+    'user': os.environ.get('MYSQL_USER', 'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_DATABASE', 'library_system'),
 }
 
 #this is needed to open a connection to the database

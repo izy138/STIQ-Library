@@ -1,0 +1,46 @@
+# MySQL + Flask from repo root: docker compose up --build  →  http://localhost:5002
+#
+# Default MySQL root / app password is "library" (override with MYSQL_ROOT_PASSWORD in .env).
+# Commit docker-compose.yml; keep secrets only in .env (already gitignored).
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: stiq-library-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-library}
+      MYSQL_DATABASE: library_system
+    ports:
+      - "${MYSQL_HOST_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db_proof/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./db_proof/data.sql:/docker-entrypoint-initdb.d/02-data.sql:ro
+      - ./backend/views.sql:/docker-entrypoint-initdb.d/03-views.sql:ro
+      - ./backend/triggers.sql:/docker-entrypoint-initdb.d/04-triggers.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" || exit 1"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+      start_period: 60s
+
+  web:
+    build: .
+    container_name: stiq-library-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_HOST_PORT:-5002}:5002"
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: "3306"
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ${MYSQL_ROOT_PASSWORD:-library}
+      MYSQL_DATABASE: library_system
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
