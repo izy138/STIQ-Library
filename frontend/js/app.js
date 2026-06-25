@@ -52,28 +52,34 @@
     });
   }
 
+  function initIcons() {
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+
   const QUERY_META = [
-    { id: 1, icon: '⚠️', title: 'Overdue Books', desc: 'Past-due active and overdue rentals' },
-    { id: 2, icon: '📚', title: 'Book Availability', desc: 'Catalog stock and loan availability' },
-    { id: 3, icon: '📈', title: 'Most Popular Books', desc: 'Top borrowed titles by rental count' },
-    { id: 4, icon: '🆕', title: 'Never Borrowed Books', desc: 'Books with no rental history' },
-    { id: 5, icon: '💵', title: 'Fines by Member', desc: 'Total fines, paid amount, outstanding balance' },
-    { id: 6, icon: '🧾', title: 'Rental + Return History', desc: 'Rental timeline with return timing status' },
-    { id: 7, icon: '🗓️', title: 'Recent Rentals (7 Days)', desc: 'All checkouts created in the last week' },
-    { id: 8, icon: '🛠️', title: 'Damaged or Lost Returns', desc: 'Condition issues and related fines' },
-    { id: 9, icon: '📅', title: 'Monthly Rental Activity', desc: 'Monthly totals, members, and unique books' },
-    { id: 10, icon: '💰', title: 'Unpaid/Partial Fines', desc: 'Open fine balances by member and book' }
+    { id: 1, icon: '<i data-lucide="alert-triangle"></i>', title: 'Overdue Books', desc: 'Past-due active and overdue rentals' },
+    { id: 2, icon: '<i data-lucide="library"></i>', title: 'Book Availability', desc: 'Catalog stock and loan availability' },
+    { id: 3, icon: '<i data-lucide="trending-up"></i>', title: 'Most Popular Books', desc: 'Top borrowed titles by rental count' },
+    { id: 4, icon: '<i data-lucide="package-x"></i>', title: 'Never Borrowed Books', desc: 'Books with no rental history' },
+    { id: 5, icon: '<i data-lucide="receipt"></i>', title: 'Fines by Member', desc: 'Total fines, paid amount, outstanding balance' },
+    { id: 6, icon: '<i data-lucide="scroll-text"></i>', title: 'Rental + Return History', desc: 'Rental timeline with return timing status' },
+    { id: 7, icon: '<i data-lucide="calendar-days"></i>', title: 'Recent Rentals (7 Days)', desc: 'All checkouts created in the last week' },
+    { id: 8, icon: '<i data-lucide="wrench"></i>', title: 'Damaged or Lost Returns', desc: 'Condition issues and related fines' },
+    { id: 9, icon: '<i data-lucide="bar-chart-2"></i>', title: 'Monthly Rental Activity', desc: 'Monthly totals, members, and unique books' },
+    { id: 10, icon: '<i data-lucide="circle-dollar-sign"></i>', title: 'Unpaid/Partial Fines', desc: 'Open fine balances by member and book' }
   ];
 
   // ----- Dashboard -----
   function viewDashboard() {
     app.innerHTML = '<div class="dashboard-page"><h1 class="page-title">Dashboard</h1><p class="page-subtitle">Library overview</p>' +
       '<div class="stats-grid">' +
-      '<a href="#books" class="stat-card stat-card-link primary"><h3 id="stat-books">–</h3><p>Total Books</p></a>' +
-      '<a href="#members" class="stat-card stat-card-link success"><h3 id="stat-members">–</h3><p>Active Members</p></a>' +
-      '<a href="#rentals" class="stat-card stat-card-link danger"><h3 id="stat-rentals">–</h3><p>Open rentals</p></a>' +
-      '<a href="#query-1" class="stat-card stat-card-link warning"><h3 id="stat-overdue">–</h3><p>Overdue</p></a>' +
-      '<a href="#fines" class="stat-card stat-card-link purple"><h3 id="stat-fines">–</h3><p>Outstanding Fines</p></a></div>' +
+      '<a href="#books" class="stat-card stat-card-link primary"><div class="stat-card-icon"><i data-lucide="book-open"></i></div><h3 id="stat-books">–</h3><p>Total Books</p></a>' +
+      '<a href="#members" class="stat-card stat-card-link success"><div class="stat-card-icon"><i data-lucide="users"></i></div><h3 id="stat-members">–</h3><p>Active Members</p></a>' +
+      '<a href="#rentals" class="stat-card stat-card-link danger"><div class="stat-card-icon"><i data-lucide="book-marked"></i></div><h3 id="stat-rentals">–</h3><p>Open rentals</p></a>' +
+      '<a href="#query-1" class="stat-card stat-card-link warning"><div class="stat-card-icon"><i data-lucide="clock"></i></div><h3 id="stat-overdue">–</h3><p>Overdue</p></a>' +
+      '<a href="#fines" class="stat-card stat-card-link purple"><div class="stat-card-icon"><i data-lucide="banknote"></i></div><h3 id="stat-fines">–</h3><p>Outstanding Fines</p></a></div>' +
       '<h2 class="page-title" style="margin-top:1.5rem;font-size:1.35rem">Queries</h2>' +
       '<p class="page-subtitle">Open any query</p>' +
       '<div id="dashboard-query-cards" class="report-grid"></div></div>';
@@ -534,11 +540,13 @@
     if (queryMatch) {
       viewQueryById(parseInt(queryMatch[1], 10));
       setActiveNav('dashboard');
+      initIcons();
       return;
     }
     const view = routes[route] || viewDashboard;
     view();
     setActiveNav(route === 'dashboard' ? 'dashboard' : route === 'checkout' ? 'rentals' : route === 'process-return' ? 'returns' : route);
+    initIcons();
   }
 
   window.addEventListener('hashchange', render);

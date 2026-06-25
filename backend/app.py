@@ -22,22 +22,22 @@ app = Flask(__name__, static_folder=FRONTEND_DIR)
 #if sort_keys=True then jsonify would reorder all our columns alphabetically, we dont want this so we set it to False.
 app.json.sort_keys = False
 
-# dictionary that stores the database connection information.
-# Override for docker compose.
-DB_Connection = {
-    'host': os.environ.get('MYSQL_HOST', 'localhost'),
-    'port': int(os.environ.get('MYSQL_PORT', '3306')),
-    'user': os.environ.get('MYSQL_USER', 'root'),
-    'password': os.environ.get('MYSQL_PASSWORD', ''),
-    'database': os.environ.get('MYSQL_DATABASE', 'library_system'),
-}
+# Build connection settings from the environment each time (Docker + Flask debug reloader).
+def _db_connection_kwargs():
+    return {
+        'host': os.environ.get('MYSQL_HOST', 'localhost'),
+        'port': int(os.environ.get('MYSQL_PORT', '3306')),
+        'user': os.environ.get('MYSQL_USER', 'root'),
+        'password': os.environ.get('MYSQL_PASSWORD', ''),
+        'database': os.environ.get('MYSQL_DATABASE', 'library_system'),
+    }
 
 #this is needed to open a connection to the database
 #if the connection fails it returns None and lets us know there is a DB error.
-#it takes our DB_Connection info and connects with mysql.connector.connect()
+#it takes our connection kwargs and connects with mysql.connector.connect()
 def get_db():
     try:
-        return mysql.connector.connect(**DB_Connection)
+        return mysql.connector.connect(**_db_connection_kwargs())
     except mysql.connector.Error as e:
         print(f"Database connection error: {e}")
         return None

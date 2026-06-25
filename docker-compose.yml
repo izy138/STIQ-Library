@@ -2,6 +2,9 @@
 #
 # Default MySQL root / app password is "library" (override with MYSQL_ROOT_PASSWORD in .env).
 # Commit docker-compose.yml; keep secrets only in .env (already gitignored).
+#
+# If you see "Access denied" (1045) after changing MYSQL_ROOT_PASSWORD: the DB volume still
+# has the old password. Reset once: docker compose down -v && docker compose up --build
 
 services:
   mysql:
@@ -19,8 +22,14 @@ services:
       - ./db_proof/data.sql:/docker-entrypoint-initdb.d/02-data.sql:ro
       - ./backend/views.sql:/docker-entrypoint-initdb.d/03-views.sql:ro
       - ./backend/triggers.sql:/docker-entrypoint-initdb.d/04-triggers.sql:ro
+    # Use mysql client, not mysqladmin ping: mysqladmin can exit 0 even when auth fails,
+    # which made "service_healthy" true while root password still did not match MYSQL_ROOT_PASSWORD.
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          'mysql -h 127.0.0.1 -uroot -p"$$MYSQL_ROOT_PASSWORD" --connect-timeout=2 -e "SELECT 1" >/dev/null',
+        ]
       interval: 3s
       timeout: 5s
       retries: 40
